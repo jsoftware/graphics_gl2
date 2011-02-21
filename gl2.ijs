@@ -5,6 +5,27 @@ coinsert 'jgtk'
 create=: destroy=: [:  
 
 locGL2=: ''    
+PS_DASH=: 1
+PS_DASHDOT=: 3
+PS_DASHDOTDOT=: 4
+PS_DOT=: 2
+PS_INSIDEFRAME=: 6
+PS_NULL=: 5
+PS_SOLID=: 0
+
+IDC_ARROW=: 32512
+IDC_IBEAM=: 32513
+IDC_WAIT=: 32514
+IDC_CROSS=: 32515
+IDC_UPARROW=: 32516
+IDC_SIZENWSE=: 32642
+IDC_SIZENESW=: 32643
+IDC_SIZEWE=: 32644
+IDC_SIZENS=: 32645
+IDC_SIZEALL=: 32646
+IDC_NO=: 32648
+IDC_APPSTARTING=: 32650
+IDC_HELP=: 32651
 glarc=: 3 : 0
 glarc__l y [[ l=. locGL2_jgl2_
 )
@@ -210,6 +231,11 @@ PForm__b=: p
 PId__b=: c
 PLocale__b=: l
 b
+)
+
+glsetlocale=: 3 : 0
+b=. locGL2_jgl2_
+PLocale__b=: y
 )
 glsel=: 3 : 0
 locGL2_jgl2_=: boxxopen y
