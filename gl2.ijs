@@ -219,7 +219,7 @@ glqtextmetrics__l y [[ l=. locGL2_jgl2_
 glroundr=: 3 : 0
 glroundr__l y [[ l=. locGL2_jgl2_
 )
-glcanvas=: 3 : 0
+glcanvas=: 0&$: : (4 : 0)
 'p c wh l'=. 4{.y
 if. 0=#>l do.
   l=. coname''
@@ -227,8 +227,9 @@ else.
   l=. boxxopen l
 end.
 locGL2_jgl2_=: b=. wh conew 'jgtkcanvas'
-PForm__b=: p
-PId__b=: c
+gloption_jgl2_=: x    
+PForm__b=: ,p
+PId__b=: ,c
 PLocale__b=: l
 b
 )
