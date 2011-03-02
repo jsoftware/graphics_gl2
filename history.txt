@@ -8,3 +8,6 @@ graphics/gl2 - change history
 
 == 1.0.2 ==
  * graphics/gl2: add opengl option
+
+== 1.0.3 ==
+ * graphics/gl2: move gtkcanvas into gl2
