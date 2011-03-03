@@ -524,7 +524,7 @@ h=. <. gtk_print_context_get_height context
 gtkwh=: w,h
 clipped=: 0
 glclear''
-paint ''
+paint__PLocale ''
 gtkpl=: 0 [ g_object_unref gtkpl
 gtkcr=: 0                                  
 0
