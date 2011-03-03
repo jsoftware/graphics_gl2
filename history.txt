@@ -11,3 +11,6 @@ graphics/gl2 - change history
 
 == 1.0.3 ==
  * graphics/gl2: move gtkcanvas into gl2
+
+== 1.0.4 ==
+ * graphics/gl2: set current opengl context in events
