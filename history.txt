@@ -14,3 +14,6 @@ graphics/gl2 - change history
 
 == 1.0.4 ==
  * graphics/gl2: set current opengl context in events
+
+== 1.0.5 ==
+ * graphics/gl2: support multiple backends
