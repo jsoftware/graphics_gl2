@@ -877,7 +877,7 @@ end.
 cairo_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkpenrgb=: gtkrgb
-gtkpenwidth=: 1>.{.y   
+gtkpenwidth=: 0>.{.y   
 gtkpenstyle=: {:y 
 if. 0=gtkcr do. 0 return. end.
 cairo_set_line_width gtkcr ; (1.1-1.1)+gtkpenwidth   
