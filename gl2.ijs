@@ -7,8 +7,12 @@ locGL2=: 0$<''
 
 FIXFONT=: PROFONT=: IFUNIX{::'"Microsoft Sans Serif" 10';'Sans 10'
 
+3 : 0''
+if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
+)
+
 GL2Backend=: GL2Backend_j_
-GL2Backend=: ((-.IFWIN) *. 3=GL2Backend){GL2Backend, 0
+GL2Backend=: ((-.IFWIN) *. GL2Backend e. 3 4){GL2Backend, 0
 PS_DASH=: 1
 PS_DASHDOT=: 3
 PS_DASHDOTDOT=: 4
@@ -256,7 +260,7 @@ EMPTY
 )
 3 : 0''
 if. IFWIN do.
-  require 'api/gdiplus'
+  require 'api/gdi32 api/gdiplus'
 end.
 EMPTY
 )
@@ -266,7 +270,7 @@ coinsert'jgtk'
 
 3 : 0''
 if. IFWIN do.
-  coinsert 'jgdiplus'
+  coinsert 'jgdi32 jgdiplus'
 end.
 EMPTY
 )
@@ -276,9 +280,11 @@ gloption=: 0
 PForm=: PId=: PLocale=: ''
 gtkcr=: gtkpl=: 0    
 gtkwin=: gtkdagc=: gtkgc=: gtkpx=: gtkpc=: gtkpl=: gtkplc=: 0    
+gtkfontangle=: gtkunderline=: 0
 TOK=: BMP=: GC=: 0
 PEN=: BRUSH=: FONT=: 0
 TXTCLR=: TXTPOS=: ''
+HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
 
 clipped=: 0
 ogl=: 0$<''
@@ -293,7 +299,7 @@ gloption=: option
 if. *./ 0<w,h do.
   gtk_widget_set_size_request canvas,w,h
 end.
-gtk_widget_set_can_focus canvas,1
+gtk_widget_set_can_focus ::0: canvas,1
 events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POINTER_MOTION_MASK,GDK_KEY_PRESS_MASK,GDK_KEY_RELEASE_MASK,GDK_FOCUS_CHANGE_MASK
 gtk_widget_add_events canvas, OR events
 
@@ -503,11 +509,17 @@ if. 0=gloption do.
     gtkpl=: pango_layout_new gtkpc
     gtkplc=: pango_layout_get_context gtkpl
   elseif. 3=GL2Backend_jgl2_ do.
-    if. 0~:TOK do. gdi_free '' end.
-    gdi_init gtkwh
-    assert. 0~:TOK,GC
+    if. 0~:TOK do. gdip_free '' end.
     gtkwin=: getGtkWidgetWindow widget
     gtkdagc=: getdagc widget
+    gdip_init gtkwh
+    assert. 0~:TOK,GC
+  elseif. 4=GL2Backend_jgl2_ do.
+    if. 0~:HDC do. gdi32_free '' end.
+    gtkwin=: getGtkWidgetWindow widget
+    gtkdagc=: getdagc widget
+    gdi32_init gtkwh
+    assert. 0~:HDC,BMP
   end.
   if. 0= initialized do.
     glclear''             
@@ -553,7 +565,13 @@ if. 0=gloption do.
   elseif. 2=GL2Backend_jgl2_ do.
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx, 0 0 0 0 _1 _1
   elseif. 3=GL2Backend_jgl2_ do.
-    argb=. gdi_glqpixels 0 0,gtkwh
+    argb=. gdip_glqpixels 0 0,gtkwh
+    gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
+    gtkpx pixbuf_setpixels 0 0,gtkwh,argb
+    gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
+    g_object_unref gtkpx
+  elseif. 4=GL2Backend_jgl2_ do.
+    argb=. gdi32_glqpixels 0 0,gtkwh
     gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
     gtkpx pixbuf_setpixels 0 0,gtkwh,argb
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
@@ -597,7 +615,9 @@ if. 0=gloption do.
     if. gtkpl do. g_object_unref gtkpl end.
     if. gtkpc do. g_object_unref gtkpc end.
   elseif. 3=GL2Backend_jgl2_ do.
-    if. 0~:TOK do. gdi_free '' end.
+    if. 0~:TOK do. gdip_free '' end.
+  elseif. 4=GL2Backend_jgl2_ do.
+    if. 0~:HDC do. gdi32_free '' end.
   end.
 end.
 
@@ -775,21 +795,51 @@ while. p<#y do.
   cmd=. (1+p){y
   dat=. (2+p+i.cnt-2){y
   select. cmd
-  case. 2029 do. cairo_glpolygon dat
-  case. 2012 do. cairo_glfont dat{a.
-  case. 2007 do. cairo_glclear dat
-  case. 2015 do. cairo_gllines dat
+  case. 2001 do. cairo_glarc dat
   case. 2004 do. cairo_glbrush dat
+  case. 2005 do. cairo_glbrushnull dat
+  case. 2062 do. ''     
+  case. 2065 do. cairo_glcaret dat
+  case. 2007 do. cairo_glclear dat
+  case. 2078 do. cairo_glclip dat
+  case. 2079 do. cairo_glclipreset dat
+  case. 2999 do. ''     
+  case. 2069 do. ''     
+  case. 2008 do. cairo_glellipse dat
+  case. 2085 do. cairo_glemfclose dat
+  case. 2084 do. cairo_glemfopen dat
+  case. 2086 do. cairo_glemfplay dat
+  case. 2066 do. cairo_glfile dat{a.
+  case. 2012 do. cairo_glfont dat{a.
+  case. 2015 do. cairo_gllines dat
+  case. 2070 do. ''     
+  case. 2071 do. ''     
+  case. 2020 do. ''     
   case. 2022 do. cairo_glpen dat
+  case. 2023 do. cairo_glpie dat
   case. 2024 do. cairo_glpixel dat
+  case. 2076 do. cairo_glpixels dat
+  case. 2075 do. cairo_glpixelsx dat
+  case. 2029 do. cairo_glpolygon dat
+  case. 2089 do. ''     
+  case. 2091 do. ''     
+  case. 2057 do. ''     
+  case. 2083 do. ''     
+  case. 2060 do. ''     
+  case. 2077 do. ''     
+  case. 2092 do. ''     
+  case. 2088 do. ''     
+  case. 2058 do. ''     
+  case. 2059 do. ''     
   case. 2031 do. cairo_glrect dat
   case. 2032 do. cairo_glrgb dat
+  case. 2033 do. cairo_glroundr dat
+  case. 2035 do. ''     
+  case. 2003 do. ''     
   case. 2038 do. cairo_gltext dat{a.
   case. 2040 do. cairo_gltextcolor dat
   case. 2056 do. cairo_gltextxy dat
-  case. 2069 do. cairo_glcursor dat
-  case. 2078 do. cairo_glclip dat
-  case. 2079 do. cairo_glclipreset dat
+  case. 2045 do. cairo_glwindoworg dat
   case. do.
     ('un-implemented glcmds ', ":cmd) 13!:8[3
   end.
@@ -815,18 +865,13 @@ gtkbrushnull=: t
 cairo_glfont=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. 1 e. ' bold' E. y=. tolower y do.
-  bold=. 1 [ y=. }. ; (<' bold') -.~ <;.1 ' ', y
-else.
-  bold=. 0
-end.
-if. 1 e. ' underline' E. y do.
-  gtkunderline=: 1 [ y=. }. ; (<' underline') -.~ <;.1 ' ', y
-else.
-  gtkunderline=: 0
-end.
+if. 0=#y=. ,y do. return. end.
+'face size style degree'=. parseFontSpec y
+'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
+gtkfontangle=: degree
+gtkunderline=: Underline
 fnt=. pango_font_description_from_string <y
-if. bold do. pango_font_description_set_weight fnt, 700 end.
+if. Bold do. pango_font_description_set_weight fnt, 700 end.
 if. 0~:gtkpl do. pango_layout_set_font_description gtkpl,fnt end.
 pango_font_description_free fnt
 0
@@ -1062,16 +1107,460 @@ cairo_glqprintpaper=: [:
 cairo_glqprintwh=: [:
 cairo_glqtextmetrics=: [:
 cairo_glroundr=: [:
-CreateStreamOnHGlobal=: 'ole32 CreateStreamOnHGlobal i x i *x'&cd
-GetHGlobalFromStream=: 'ole32 GetHGlobalFromStream i x *x'&cd
-OleRelease=: 'olecli32 OleRelease i x'&cd
+GetDC=: 'user32 GetDC > x x'&(15!:0)
+ReleaseDC=: 'user32 ReleaseDC > i x x'&(15!:0)
 
 GlobalAlloc=: 'kernel32 GlobalAlloc > x i x'&cd
 GlobalSize=: 'kernel32 GlobalSize > x x'&cd
 GlobalLock=: 'kernel32 GlobalLock > x x'&cd
 GlobalUnlock=: 'kernel32 GlobalUnlock > i x'&cd
 GlobalFree=: 'kernel32 GlobalFree > i x'&cd
-gdi_init=: 3 : 0
+
+GMEM_FIXED=: 16b0000
+GMEM_MOVEABLE=: 16b0002
+GMEM_NOCOMPACT=: 16b0010
+GMEM_NODISCARD=: 16b0020
+GMEM_ZEROINIT=: 16b0040
+GMEM_MODIFY=: 16b0080
+GMEM_DISCARDABLE=: 16b0100
+GMEM_NOT_BANKED=: 16b1000
+GMEM_SHARE=: 16b2000
+GMEM_DDESHARE=: 16b2000
+GMEM_NOTIFY=: 16b4000
+GMEM_LOWER=: GMEM_NOT_BANKED
+GMEM_DISCARDED=: 16b4000
+GMEM_LOCKCOUNT=: 16b00ff
+GMEM_INVALID_HANDLE=: 16b8000
+
+GHND=: GMEM_MOVEABLE + GMEM_ZEROINIT
+GPTR=: GMEM_FIXED + GMEM_ZEROINIT
+gdi32_init=: 3 : 0
+'w h'=. y
+hwnd=. gdk_win32_drawable_get_handle gtkwin
+hdc0=. GetDC hwnd
+HDC=: CreateCompatibleDC hdc0
+BMP=: CreateCompatibleBitmap hdc0,w,h
+OLDBMP=: SelectObject HDC,BMP
+ReleaseDC hwnd, hdc0
+assert. 0~:HDC,BMP
+PEN=: BRUSH=: FONT=: 0
+OLDPEN=: OLDBRUSH=: OLDFONT=: 0
+gtktextxy=: 2$0
+EMPTY
+)
+gdi32_free=: 3 : 0
+if. HDC do.
+  if. OLDBRUSH do. prevbrush=. SelectObject HDC,OLDBRUSH end.
+  if. OLDPEN do. prevpen=. SelectObject HDC,OLDPEN end.
+  if. OLDFONT do. prevfont=. SelectObject HDC,OLDFONT end.
+  SelectObject HDC,OLDBMP
+end.
+if. FONT do. DeleteObject FONT end.
+if. PEN do. DeleteObject PEN end.
+if. BRUSH do. DeleteObject BRUSH end.
+if. BMP do. DeleteObject BMP end.
+if. HDC do. DeleteDC HDC end.
+HDC=: BMP=: 0
+PEN=: BRUSH=: FONT=: 0
+OLDPEN=: OLDBRUSH=: OLDFONT=: 0
+gtktextxy=: 2$0
+EMPTY
+)
+RGB=: 256 256 256&#.@|.
+gdi32_setbkmode=: 3 : 0
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+SetBkMode HDC, y     
+)
+gdi32_glarc=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+prev=. SelectObject HDC, PEN
+prevb=. SelectObject HDC, GetStockObject NULL_BRUSH
+Arc HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
+SelectObject HDC, prev
+SelectObject HDC, prevb
+0
+)
+gdi32_glbrush=: 3 : 0 "1
+if. gloption do. 0 return. end.
+obj=. CreateSolidBrush RGB gtkrgb
+prev=. SelectObject HDC, obj
+if. BRUSH do.
+  assert. prev=BRUSH
+  DeleteObject BRUSH
+else.
+  OLDBRUSH=: prev
+end.
+BRUSH=: obj
+gtkbrushnull=: 0
+0
+)
+gdi32_glbrushnull=: 3 : 0 "1
+if. gloption do. 0 return. end.
+gtkbrushnull=: 1
+0
+)
+gdi32_glcapture=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+smoutput 'stub: glcapture ',":y
+select. cap=. {.y
+case. 0 do.  
+  capture=: cap
+case. 1 do.  
+  capture=: cap
+case. 5 do.  
+  capture=: cap
+case. 6 do.  
+  capture=: cap
+case. 7 do.  
+  capture=: cap
+  rect=. }.cap
+end.
+0
+)
+gdi32_glcaret=: 3 : 0 "1
+if. gloption do. 0 return. end.
+if. 0 e. _2{.y do. 0 return. end. 
+assert. 0~:HDC,BMP
+prev=. SelectObject HDC, BLACK_PEN
+prevb=. SelectObject HDC, BLACK_BRUSH
+Rectangle HDC, (2{.y), (2{.y) + 2}.y
+SelectObject HDC, prev
+SelectObject HDC, prevb
+0
+)
+gdi32_glclear=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+SetBkMode HDC, TRANSPARENT
+gdi32_glwindoworg 0 0
+gdi32_glclipreset''
+gdi32_glfont PROFONT_jgl2_
+gdi32_glrgb 255 255 255
+gdi32_glpen 1 0
+gdi32_glbrush''
+gdi32_glrect 0 0,gtkwh
+gdi32_glrgb 0 0 0
+gdi32_glpen 1 0
+gdi32_glbrushnull''
+gdi32_gltextxy 0 0
+gdi32_gltextcolor''
+gdi32_glfontangle 0
+0
+)
+gdi32_glclip=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+clipped=: 1
+BeginPath HDC
+Rectangle HDC, (2{.y), (2{.y) + 2}.y
+EndPath HDC
+SelectClipPath HDC,RGN_COPY
+0
+)
+gdi32_glclipreset=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+if. clipped do.
+  BeginPath HDC
+  Rectangle HDC, 0 0, gtkwh
+  EndPath HDC
+  SelectClipPath HDC,RGN_COPY
+  clipped=: 0
+end.
+0
+)
+gdi32_glcmds=: 3 : 0
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+p=. 0
+while. p<#y do.
+  cnt=. p{y
+  cmd=. (1+p){y
+  dat=. (2+p+i.cnt-2){y
+  select. cmd
+  case. 2001 do. gdi32_glarc dat
+  case. 2004 do. gdi32_glbrush dat
+  case. 2005 do. gdi32_glbrushnull dat
+  case. 2062 do. ''     
+  case. 2065 do. gdi32_glcaret dat
+  case. 2007 do. gdi32_glclear dat
+  case. 2078 do. gdi32_glclip dat
+  case. 2079 do. gdi32_glclipreset dat
+  case. 2999 do. ''     
+  case. 2069 do. ''     
+  case. 2008 do. gdi32_glellipse dat
+  case. 2085 do. gdi32_glemfclose dat
+  case. 2084 do. gdi32_glemfopen dat
+  case. 2086 do. gdi32_glemfplay dat
+  case. 2066 do. gdi32_glfile dat{a.
+  case. 2012 do. gdi32_glfont dat{a.
+  case. 2015 do. gdi32_gllines dat
+  case. 2070 do. ''     
+  case. 2071 do. ''     
+  case. 2020 do. ''     
+  case. 2022 do. gdi32_glpen dat
+  case. 2023 do. gdi32_glpie dat
+  case. 2024 do. gdi32_glpixel dat
+  case. 2076 do. gdi32_glpixels dat
+  case. 2075 do. gdi32_glpixelsx dat
+  case. 2029 do. gdi32_glpolygon dat
+  case. 2089 do. ''     
+  case. 2091 do. ''     
+  case. 2057 do. ''     
+  case. 2083 do. ''     
+  case. 2060 do. ''     
+  case. 2077 do. ''     
+  case. 2092 do. ''     
+  case. 2088 do. ''     
+  case. 2058 do. ''     
+  case. 2059 do. ''     
+  case. 2031 do. gdi32_glrect dat
+  case. 2032 do. gdi32_glrgb dat
+  case. 2033 do. gdi32_glroundr dat
+  case. 2035 do. ''     
+  case. 2003 do. ''     
+  case. 2038 do. gdi32_gltext dat{a.
+  case. 2040 do. gdi32_gltextcolor dat
+  case. 2056 do. gdi32_gltextxy dat
+  case. 2045 do. gdi32_glwindoworg dat
+  case. do.
+    ('un-implemented glcmds ', ":cmd) 13!:8[3
+  end.
+  p=. p+cnt
+end.
+0
+)
+gdi32_glcursor=: 3 : 0 "1
+gtkwin=. getGtkWidgetWindow canvas
+n=. y i.~ IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP
+gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK_CROSS,GDK_CENTER_PTR,GDK_BOTTOM_RIGHT_CORNER,GDK_BOTTOM_LEFT_CORNER,GDK_SB_H_DOUBLE_ARROW,GDK_SB_V_DOUBLE_ARROW,GDK_FLEUR,GDK_BLANK_CURSOR,GDK_ICON,GDK_QUESTION_ARROW
+0
+)
+gdi32_glellipse=: 3 : 0"1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+prev=. SelectObject HDC, PEN
+prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
+Ellipse HDC, (2{.y),((2{.y)+(2 3{y))
+SelectObject HDC, prev
+SelectObject HDC, prevb
+0
+)
+gdi32_glfont=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+if. 0=#y=. ,y do. return. end.
+'face size style degree'=. parseFontSpec y
+'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
+gtkfontangle=: degree
+gtkunderline=: Underline
+obj=. CreateFontW (<.size*(GetDeviceCaps HDC, LOGPIXELSY)%72); 0; (<.10*degree); (<.10*degree); (Bold{FW_NORMAL,FW_BOLD); Italic; Underline; Strikeout; DEFAULT_CHARSET; OUT_DEFAULT_PRECIS; CLIP_DEFAULT_PRECIS; PROOF_QUALITY; DEFAULT_PITCH; uucp face
+prev=. SelectObject HDC, obj
+if. FONT do.
+  assert. prev=FONT
+  DeleteObject FONT
+else.
+  OLDFONT=: prev
+end.
+FONT=: obj
+0
+)
+gdi32_glfontangle=: 3 : 0 "1
+if. gloption do. 0 return. end.
+gtkfontangle=: y
+0
+)
+gdi32_glrgb=: 3 : 0 "1
+if. gloption do. 0 return. end.
+gtkrgb=: y
+0
+)
+gdi32_gllines=: 3 : 0 "1
+if. gloption do. 0 return. end.
+if. *./ 0=y do. 0 return. end.
+assert. 0~:HDC,BMP
+c=. 2>.(+ 2&|)#y
+prev=. SelectObject HDC, PEN
+Polyline HDC; (<.c{.y); (<.-:c)
+SelectObject HDC, prev
+0
+)
+gdi32_glpaint=: 3 : 0 "1
+gtk_widget_queue_draw canvas
+0
+)
+gdi32_glpaintx=: 3 : 0 "1
+assert. 0~:HDC,BMP
+if. 0=gloption do.
+  argb=. gdi32_glqpixels 0 0,gtkwh
+  gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
+  gtkpx pixbuf_setpixels 0 0,gtkwh,argb
+  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
+  g_object_unref gtkpx
+end.
+0
+)
+
+gdi32_glpen=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+gtkpenrgb=: gtkrgb
+gtkpenwidth=: 0>.{.y   
+gtkpenstyle=: {:y 
+obj=. CreatePen gtkpenstyle , gtkpenwidth , RGB gtkpenrgb
+prev=. SelectObject HDC, obj
+if. PEN do.
+  assert. prev=PEN
+  DeleteObject PEN
+else.
+  OLDPEN=: prev
+end.
+PEN=: obj
+0
+)
+gdi32_glpie=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+prev=. SelectObject HDC, PEN
+prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
+Pie HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
+SelectObject HDC, prev
+SelectObject HDC, prevb
+0
+)
+gdi32_glpixel=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+gdi32_gdicolor gtkrgb
+GdipBitmapSetPixel BMP;(<"0 y),<RGB
+0
+)
+gdi32_glpixels=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+'a b w h'=. 4{.y
+d=. 4}.y
+d=. d OR ALPHA
+if. IF64 do. d=. 2 ic d end.
+buf=. gdk_pixbuf_new_from_data (15!:14<'d'),GDK_COLORSPACE_RGB,1,8,w,h,(4*w),0,0
+if. buf do.
+  gdk_draw_pixbuf gtkpx,0,buf,0,0,a,b,w,h,0,0,0
+end.
+g_object_unref buf
+0
+)
+gdi32_glpolygon=: 3 : 0 "1
+if. gloption do. 0 return. end.
+if. *./ 0=y do. 0 return. end.
+c=. 2>.(+ 2&|)#y
+if. -.gtkbrushnull do.
+  SetPolyFillMode HDC,ALTERNATE
+end.
+prev=. SelectObject HDC, PEN
+prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
+Polygon HDC; (<.c{.y); (<.-:c)
+SelectObject HDC, prev
+SelectObject HDC, prevb
+0
+)
+gdi32_glqpixels=: 3 : 0 "1
+if. gloption do. 0$0 return. end.
+assert. 0~:HDC,BMP
+'a b w h'=. y
+ww=. {.gtkwh
+
+bi=. 40${.a.
+bi=. (2 ic 40,ww,-h) (i.12)}bi
+bi=. (1 ic 1 32) (12+i.4)}bi
+bi=. (2 ic BI_RGB) (16+i.4)}bi
+BmpSize=. (s=. 4 * ww) * h
+hDIB=. GlobalAlloc GHND,BmpSize
+p=. GlobalLock hDIB
+GetDIBits HDC; BMP; b; h; (<p); bi; DIB_RGB_COLORS
+s=. s
+if. IF64 do.
+  z=. |.^:(s<0) ww&{."1^:(ww~:|s%4) _2&ic("1) (h,|s)$memr p,((s<0)*s*<:h),(h*<.|s),JCHAR
+else.
+  z=. |.^:(s<0) ww&{."1^:(ww~:|s%4) (h,|s%4)$memr p,((s<0)*s*<:h),(h*<.|s%4),JINT
+end.
+GlobalUnlock hDIB
+GlobalFree hDIB
+if. 0~:a do. z=. a}."1 z end.
+if. w~:{:$z do. z=. w{."1 z end.
+z=. flip_rgb ,z
+)
+gdi32_glqtextmetrics=: 3 : 0 "1
+metrics=. 64${.a.
+r=. GetTextMetrics HDC, metrics
+'h as de int ext acw mcw'=. _2 ic 28{.metric
+)
+gdi32_glqwh=: 3 : 0
+gtkwh
+)
+gdi32_glrect=: 3 : 0 "1
+if. gloption do. 0 return. end.
+if. 0 e. _2{.y do. 0 return. end. 
+assert. 0~:HDC,BMP
+prev=. SelectObject HDC, PEN
+prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
+Rectangle HDC, (2{.y), (2{.y) + 2}.y
+SelectObject HDC, prev
+SelectObject HDC, prevb
+0
+)
+gdi32_glsetbrush=: gdi32_glbrush @ gdi32_glrgb
+gdi32_glsetpen=: gdi32_glpen @ ((1 0 [ gdi32_glrgb) :((2 {. [) gdi32_glrgb))
+gdi32_gltext=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+text=. uucp ,y
+TextOutW HDC;(<"0 gtktextxy),text;#text
+0
+)
+gdi32_gltextcolor=: 3 : 0 "1
+if. gloption do. 0 return. end.
+gtktextrgb=: gtkrgb
+SetTextColor HDC, RGB gtktextrgb
+0
+)
+gdi32_gltextxy=: 3 : 0 "1
+if. gloption do. 0 return. end.
+gtktextxy=: y
+0
+)
+gdi32_glqextent=: 3 : 0 "1
+z=. 2$2-1
+if. gloption do. z return. end.
+assert. 0~:HDC,BMP
+text=. uucp ,y
+r=. GetTextExtentPointW HDC;text;(#text);z
+z
+)
+gdi32_glqextentw=: 3 : 0 "1
+{."1>gdi32_glqextent each<;._2 y,LF#~LF~:{:y
+)
+gdi32_glwindoworg=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+SetViewportOrgEx HDC;(<"0 y),<<0
+0
+)
+gdi32_glemfclose=: [:
+gdi32_glemfopen=: [:
+gdi32_glemfplay=: [:
+gdi32_glfile=: [:
+gdi32_glnodblbuf=: [:
+gdi32_glpixelsx=: [:
+gdi32_glprint=: [:
+gdi32_glprintmore=: [:
+gdi32_glqhandles=: [:
+gdi32_glqprintpaper=: [:
+gdi32_glqprintwh=: [:
+gdi32_glroundr=: [:
+gdip_init=: 3 : 0
 'w h'=. y
 MAT=: (|.y)$_1
 TOK=: {.TOK [ r=. GdiplusStartup (TOK=: ,_1);GdiplusStartupInput;0
@@ -1087,7 +1576,7 @@ TXTPOS=: 4$1.1-1.1
 RGB=: OPAC OR 16bffffff
 EMPTY
 )
-gdi_free=: 3 : 0
+gdip_free=: 3 : 0
 if. FONT do. GdipDeleteFont FONT end.
 if. PEN do. GdipDeletePen PEN end.
 if. BRUSH do. GdipDeleteBrush BRUSH end.
@@ -1098,15 +1587,15 @@ if. TOK do. GdiplusShutdown TOK end.
 TOK=: BMP=: GC=: 0
 PEN=: BRUSH=: FONT=: TXTCLR=: 0
 )
-gdi_gdicolor=: 3 : 0
+gdip_gdicolor=: 3 : 0
 RGB=: OPAC OR 256 256 256#.y
 )
-gdi_glarc2=: 3 : 0 "1
+gdip_glarc2=: 3 : 0 "1
 if. PEN do.
   GdipDrawArc GC;PEN;<"0 y
 end.
 )
-gdi_glpie2=: 3 : 0 "1
+gdip_glpie2=: 3 : 0 "1
 if. BRUSH do.
   GdipFillPie GC;BRUSH;<"0 y
 end.
@@ -1115,14 +1604,14 @@ if. PEN do.
 end.
 )
 
-gdi_glcurve=: 3 : 0 "1
+gdip_glcurve=: 3 : 0 "1
 if. PEN do.
   if. 2|#y do. 't y'=. ({. ; }.) y else. t=. 1 end.
   GdipDrawCurve GC;PEN;(<.y);(<.-:#y);t%1
 end.
 )
 
-gdi_glclosedcurve=: 3 : 0 "1
+gdip_glclosedcurve=: 3 : 0 "1
 if. 2|#y do. 't y'=. ({. ; }.) y else. t=. 1 end.
 if. BRUSH do.
   GdipFillClosedCurve GC;BRUSH;(<.y);(<.-:#y);(t%1);Winding
@@ -1131,22 +1620,22 @@ if. PEN do.
   GdipDrawClosedCurve GC;PEN;(<.y);(<.-:#y);t%1
 end.
 )
-gdi_gdiarcisi=: 3 : 0
+gdip_gdiarcisi=: 3 : 0
 ctr=. (0 1{y) + -: (2 3{y)
 'bgn end'=. - ctr calcAngle (6 7,:4 5){y
 dif=. end - bgn
 (4{.y), dfr 2p1| bgn,dif
 )
-gdi_glarc=: 3 : 0 "1
+gdip_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 t=. gtkbrushnull
 gtkbrushnull=: 1
-gdi_glarcx gdi_gdiarcisi y
+gdip_glarcx gdip_gdiarcisi y
 gtkbrushnull=: t
 0
 )
-gdi_glarcx=: 3 : 0 "1
+gdip_glarcx=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 if. -.gtkbrushnull do.
@@ -1155,22 +1644,22 @@ end.
 GdipDrawArc GC;PEN;<"0 y
 0
 )
-gdi_glbrush=: 3 : 0 "1
+gdip_glbrush=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. BRUSH do. GdipDeleteBrush BRUSH end.
-gdi_gdicolor gtkbrushrgb
+gdip_gdicolor gtkbrushrgb
 r=. GdipCreateSolidFill RGB;BRUSH=: ,_1
 assert. 0=r
 BRUSH=: {.BRUSH
 gtkbrushnull=: 0
 0
 )
-gdi_glbrushnull=: 3 : 0 "1
+gdip_glbrushnull=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkbrushnull=: 1
 0
 )
-gdi_glcapture=: 3 : 0 "1
+gdip_glcapture=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 smoutput 'stub: glcapture ',":y
@@ -1189,39 +1678,39 @@ case. 7 do.
 end.
 0
 )
-gdi_glcaret=: 3 : 0 "1
+gdip_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:TOK,GC
-gdi_gdicolor 0 0 0
+gdip_gdicolor 0 0 0
 GdipFillRectangle GC;RGB;<"0 y
 0
 )
-gdi_glclear=: 3 : 0 "1
+gdip_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gdi_glwindoworg 0 0
-gdi_glclipreset''
-gdi_glfont PROFONT_jgl2_
-gdi_glrgb 255 255 255
-gdi_glpen 1 0
-gdi_glbrush''
-gdi_glrect 0 0,gtkwh
-gdi_glrgb 0 0 0
-gdi_glpen 1 0
-gdi_glbrushnull''
-gdi_gltextxy 0 0
-gdi_gltextcolor''
-gdi_glfontangle 0
+gdip_glwindoworg 0 0
+gdip_glclipreset''
+gdip_glfont PROFONT_jgl2_
+gdip_glrgb 255 255 255
+gdip_glpen 1 0
+gdip_glbrush''
+gdip_glrect 0 0,gtkwh
+gdip_glrgb 0 0 0
+gdip_glpen 1 0
+gdip_glbrushnull''
+gdip_gltextxy 0 0
+gdip_gltextcolor''
+gdip_glfontangle 0
 0
 )
-gdi_glclip=: 3 : 0 "1
+gdip_glclip=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 clipped=: 1
 GdipSetClipRect GC;<"0 (<.y),0     
 0
 )
-gdi_glclipreset=: 3 : 0 "1
+gdip_glclipreset=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 if. clipped do.
@@ -1230,7 +1719,7 @@ if. clipped do.
 end.
 0
 )
-gdi_glcmds=: 3 : 0
+gdip_glcmds=: 3 : 0
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 p=. 0
@@ -1239,21 +1728,51 @@ while. p<#y do.
   cmd=. (1+p){y
   dat=. (2+p+i.cnt-2){y
   select. cmd
-  case. 2029 do. gdi_glpolygon dat
-  case. 2012 do. gdi_glfont dat{a.
-  case. 2007 do. gdi_glclear dat
-  case. 2015 do. gdi_gllines dat
-  case. 2004 do. gdi_glbrush dat
-  case. 2022 do. gdi_glpen dat
-  case. 2024 do. gdi_glpixel dat
-  case. 2031 do. gdi_glrect dat
-  case. 2032 do. gdi_glrgb dat
-  case. 2038 do. gdi_gltext dat{a.
-  case. 2040 do. gdi_gltextcolor dat
-  case. 2056 do. gdi_gltextxy dat
-  case. 2069 do. gdi_glcursor dat
-  case. 2078 do. gdi_glclip dat
-  case. 2079 do. gdi_glclipreset dat
+  case. 2001 do. gdip_glarc dat
+  case. 2004 do. gdip_glbrush dat
+  case. 2005 do. gdip_glbrushnull dat
+  case. 2062 do. ''     
+  case. 2065 do. gdip_glcaret dat
+  case. 2007 do. gdip_glclear dat
+  case. 2078 do. gdip_glclip dat
+  case. 2079 do. gdip_glclipreset dat
+  case. 2999 do. ''     
+  case. 2069 do. ''     
+  case. 2008 do. gdip_glellipse dat
+  case. 2085 do. gdip_glemfclose dat
+  case. 2084 do. gdip_glemfopen dat
+  case. 2086 do. gdip_glemfplay dat
+  case. 2066 do. gdip_glfile dat{a.
+  case. 2012 do. gdip_glfont dat{a.
+  case. 2015 do. gdip_gllines dat
+  case. 2070 do. ''     
+  case. 2071 do. ''     
+  case. 2020 do. ''     
+  case. 2022 do. gdip_glpen dat
+  case. 2023 do. gdip_glpie dat
+  case. 2024 do. gdip_glpixel dat
+  case. 2076 do. gdip_glpixels dat
+  case. 2075 do. gdip_glpixelsx dat
+  case. 2029 do. gdip_glpolygon dat
+  case. 2089 do. ''     
+  case. 2091 do. ''     
+  case. 2057 do. ''     
+  case. 2083 do. ''     
+  case. 2060 do. ''     
+  case. 2077 do. ''     
+  case. 2092 do. ''     
+  case. 2088 do. ''     
+  case. 2058 do. ''     
+  case. 2059 do. ''     
+  case. 2031 do. gdip_glrect dat
+  case. 2032 do. gdip_glrgb dat
+  case. 2033 do. gdip_glroundr dat
+  case. 2035 do. ''     
+  case. 2003 do. ''     
+  case. 2038 do. gdip_gltext dat{a.
+  case. 2040 do. gdip_gltextcolor dat
+  case. 2056 do. gdip_gltextxy dat
+  case. 2045 do. gdip_glwindoworg dat
   case. do.
     ('un-implemented glcmds ', ":cmd) 13!:8[3
   end.
@@ -1261,49 +1780,48 @@ while. p<#y do.
 end.
 0
 )
-gdi_glcursor=: 3 : 0 "1
+gdip_glcursor=: 3 : 0 "1
 gtkwin=. getGtkWidgetWindow canvas
 n=. y i.~ IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP
 gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK_CROSS,GDK_CENTER_PTR,GDK_BOTTOM_RIGHT_CORNER,GDK_BOTTOM_LEFT_CORNER,GDK_SB_H_DOUBLE_ARROW,GDK_SB_V_DOUBLE_ARROW,GDK_FLEUR,GDK_BLANK_CURSOR,GDK_ICON,GDK_QUESTION_ARROW
 0
 )
-gdi_glellipse=: 3 : 0"1
+gdip_glellipse=: 3 : 0"1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-gdi_glarcx y,"1 [ 0,360*64
+gdip_glarcx y,"1 [ 0,360*64
 0
 )
-gdi_glfont=: 3 : 0 "1
+gdip_glfont=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-if. 0=#y=. ,y do. return. end.
-if. -. 2 13172 e.~ 3!:0 y do.
-  smoutput 'fixme: gdi_font ';y
-  13!:8[3
-end.
-if. FONT do. FONT=: 0 [ GdipDeleteFont FONT end.
-'face size style'=. parseFontSpec y
+if. 0=#y=. ,y do. 0 return. end.
+'face size style degree'=. parseFontSpec y
+'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
+gtkfontangle=: degree
+gtkunderline=: Underline
 r=. GdipCreateFontFamilyFromName (uucp face);0;ffam=. ,_1
 if. 0~:r do. _1 return. end.
 ffam=. {.ffam
-r=. GdipCreateFont ffam;size;style;FontUnit;FONT=: ,_1
-if. 0~:r do. _1 [ FONT=: 0 return. end.
-FONT=: {.FONT
+r=. GdipCreateFont ffam;size;style;FontUnit;Font=. ,_1
+if. 0~:r do. _1 return. end.
 if. ffam do. GdipDeleteFontFamily ffam end.
+if. FONT do. GdipDeleteFont FONT end.
+FONT=: {.Font
 0
 )
-gdi_glfontangle=: 3 : 0 "1
+gdip_glfontangle=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkfontangle=: y
 0
 )
-gdi_glrgb=: 3 : 0 "1
+gdip_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkrgb=: y
-gdi_gdicolor y
+gdip_gdicolor y
 0
 )
-gdi_gllines=: 3 : 0 "1
+gdip_gllines=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 assert. 0~:TOK,GC
@@ -1312,14 +1830,14 @@ if. PEN do.
 end.
 0
 )
-gdi_glpaint=: 3 : 0 "1
+gdip_glpaint=: 3 : 0 "1
 gtk_widget_queue_draw canvas
 0
 )
-gdi_glpaintx=: 3 : 0 "1
+gdip_glpaintx=: 3 : 0 "1
 assert. 0~:TOK,GC
 if. 0=gloption do.
-  argb=. gdi_glqpixels 0 0,gtkwh
+  argb=. gdip_glqpixels 0 0,gtkwh
   gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
   gtkpx pixbuf_setpixels 0 0,gtkwh,argb
   gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
@@ -1328,15 +1846,15 @@ end.
 0
 )
 
-gdi_glpen=: 3 : 0 "1
+gdip_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkpenrgb=: gtkrgb
-gtkpenwidth=: 1>.{.y   
+gtkpenwidth=: 0>.{.y   
 gtkpenstyle=: {:y 
 if. 0=TOK do. 0 return. end.
 if. PEN do. GdipDeletePen PEN end.
 if. gtkpenwidth>0 do.
-  gdi_gdicolor gtkpenrgb
+  gdip_gdicolor gtkpenrgb
   r=. GdipCreatePen1 RGB;1;PenUnit;PEN=: ,_1
   assert. 0=r
   PEN=: {.PEN
@@ -1347,8 +1865,8 @@ else.
 end.
 0
 )
-gdi_glpie=: 3 : 0 "1
-xywha1a2=. gdi_gdiarcisi y
+gdip_glpie=: 3 : 0 "1
+xywha1a2=. gdip_gdiarcisi y
 if. -.gtkbrushnull do.
   GdipFillPie GC;BRUSH;<"0 xywha1a2
 end.
@@ -1357,14 +1875,14 @@ if. PEN do.
 end.
 0
 )
-gdi_glpixel=: 3 : 0 "1
+gdip_glpixel=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-gdi_gdicolor gtkrgb
+gdip_gdicolor gtkrgb
 GdipBitmapSetPixel BMP;(<"0 y),<RGB
 0
 )
-gdi_glpixels=: 3 : 0 "1
+gdip_glpixels=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 'a b w h'=. 4{.y
@@ -1378,7 +1896,7 @@ end.
 g_object_unref buf
 0
 )
-gdi_glpolygon=: 3 : 0 "1
+gdip_glpolygon=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 c=. 2>.(+ 2&|)#y
@@ -1390,7 +1908,7 @@ if. PEN do.
 end.
 0
 )
-gdi_glqpixels=: 3 : 0 "1
+gdip_glqpixels=: 3 : 0 "1
 if. gloption do. 0$0 return. end.
 assert. 0~:TOK,GC
 'a b w h'=. y
@@ -1410,7 +1928,7 @@ end.
 GdipBitmapUnLockBits ({.BMP);DATA
 z=. flip_rgb ,z AND NOTALPHA
 )
-gdi_glqtextmetrics=: 3 : 0 "1
+gdip_glqtextmetrics=: 3 : 0 "1
 if. FONT do.
   r=. GdipGetFamily FONT;fam=. ,_1
   assert. 0=r
@@ -1422,17 +1940,17 @@ if. FONT do.
   GdipGetCellAscent fam;style;a=. ,_1
   GdipGetCellDescent fam;style;d=. ,_1
   GdipGetLineSpacing fam;style;s=. ,_1
-  'aw ah'=. gdi_glqextent 'n'
-  mw=. {.gdi_glqextent 'W'
+  'aw ah'=. gdip_glqextent 'n'
+  mw=. {.gdip_glqextent 'W'
   <.0.5+(ah*({.s)%~h,a,d,(h-a),(s-h)),aw,mw
 else.
   ''
 end.
 )
-gdi_glqwh=: 3 : 0
+gdip_glqwh=: 3 : 0
 gtkwh
 )
-gdi_glrect=: 3 : 0 "1
+gdip_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:TOK,GC
@@ -1444,9 +1962,9 @@ if. PEN do.
 end.
 0
 )
-gdi_glsetbrush=: gdi_glbrush @ gdi_glrgb
-gdi_glsetpen=: gdi_glpen @ ((1 0 [ gdi_glrgb) :((2 {. [) gdi_glrgb))
-gdi_gltext=: 3 : 0 "1
+gdip_glsetbrush=: gdip_glbrush @ gdip_glrgb
+gdip_glsetpen=: gdip_glpen @ ((1 0 [ gdip_glrgb) :((2 {. [) gdip_glrgb))
+gdip_gltext=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 if. FONT do.
@@ -1463,21 +1981,21 @@ if. FONT do.
 end.
 0
 )
-gdi_gltextcolor=: 3 : 0 "1
+gdip_gltextcolor=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtktextrgb=: gtkrgb
-gdi_gdicolor gtktextrgb
+gdip_gdicolor gtktextrgb
 if. TXTCLR do. GdipDeleteBrush TXTCLR end.
 TXTCLR=: {.TXTCLR [ GdipCreateSolidFill RGB;TXTCLR=: ,_1
 0
 )
-gdi_gltextxy=: 3 : 0 "1
+gdip_gltextxy=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtktextxy=: y
 TXTPOS=: y, 2$1.1-1.1
 0
 )
-gdi_glqextent=: 3 : 0 "1
+gdip_glqextent=: 3 : 0 "1
 z=. 1 1
 if. gloption do. z return. end.
 assert. 0~:TOK,GC
@@ -1490,28 +2008,28 @@ if. FONT do.
 end.
 z
 )
-gdi_glqextentw=: 3 : 0 "1
-{."1>gdi_glqextent each<;._2 y,LF#~LF~:{:y
+gdip_glqextentw=: 3 : 0 "1
+{."1>gdip_glqextent each<;._2 y,LF#~LF~:{:y
 )
-gdi_glwindoworg=: 3 : 0 "1
+gdip_glwindoworg=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 GdipResetWorldTransform GC
 GdipTranslateWorldTransform GC;(<"0 y),<MatrixOrderPrepend
 0
 )
-gdi_glemfclose=: [:
-gdi_glemfopen=: [:
-gdi_glemfplay=: [:
-gdi_glfile=: [:
-gdi_glnodblbuf=: [:
-gdi_glpixelsx=: [:
-gdi_glprint=: [:
-gdi_glprintmore=: [:
-gdi_glqhandles=: [:
-gdi_glqprintpaper=: [:
-gdi_glqprintwh=: [:
-gdi_glroundr=: [:
+gdip_glemfclose=: [:
+gdip_glemfopen=: [:
+gdip_glemfplay=: [:
+gdip_glfile=: [:
+gdip_glnodblbuf=: [:
+gdip_glpixelsx=: [:
+gdip_glprint=: [:
+gdip_glprintmore=: [:
+gdip_glqhandles=: [:
+gdip_glqprintpaper=: [:
+gdip_glqprintwh=: [:
+gdip_glroundr=: [:
 pixmap_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
@@ -1613,21 +2131,51 @@ while. p<#y do.
   cmd=. (1+p){y
   dat=. (2+p+i.cnt-2){y
   select. cmd
-  case. 2029 do. pixmap_glpolygon dat
-  case. 2012 do. pixmap_glfont dat{a.
-  case. 2007 do. pixmap_glclear dat
-  case. 2015 do. pixmap_gllines dat
+  case. 2001 do. pixmap_glarc dat
   case. 2004 do. pixmap_glbrush dat
+  case. 2005 do. pixmap_glbrushnull dat
+  case. 2062 do. ''     
+  case. 2065 do. pixmap_glcaret dat
+  case. 2007 do. pixmap_glclear dat
+  case. 2078 do. pixmap_glclip dat
+  case. 2079 do. pixmap_glclipreset dat
+  case. 2999 do. ''     
+  case. 2069 do. ''     
+  case. 2008 do. pixmap_glellipse dat
+  case. 2085 do. pixmap_glemfclose dat
+  case. 2084 do. pixmap_glemfopen dat
+  case. 2086 do. pixmap_glemfplay dat
+  case. 2066 do. pixmap_glfile dat{a.
+  case. 2012 do. pixmap_glfont dat{a.
+  case. 2015 do. pixmap_gllines dat
+  case. 2070 do. ''     
+  case. 2071 do. ''     
+  case. 2020 do. ''     
   case. 2022 do. pixmap_glpen dat
+  case. 2023 do. pixmap_glpie dat
   case. 2024 do. pixmap_glpixel dat
+  case. 2076 do. pixmap_glpixels dat
+  case. 2075 do. pixmap_glpixelsx dat
+  case. 2029 do. pixmap_glpolygon dat
+  case. 2089 do. ''     
+  case. 2091 do. ''     
+  case. 2057 do. ''     
+  case. 2083 do. ''     
+  case. 2060 do. ''     
+  case. 2077 do. ''     
+  case. 2092 do. ''     
+  case. 2088 do. ''     
+  case. 2058 do. ''     
+  case. 2059 do. ''     
   case. 2031 do. pixmap_glrect dat
   case. 2032 do. pixmap_glrgb dat
+  case. 2033 do. pixmap_glroundr dat
+  case. 2035 do. ''     
+  case. 2003 do. ''     
   case. 2038 do. pixmap_gltext dat{a.
   case. 2040 do. pixmap_gltextcolor dat
   case. 2056 do. pixmap_gltextxy dat
-  case. 2069 do. pixmap_glcursor dat
-  case. 2078 do. pixmap_glclip dat
-  case. 2079 do. pixmap_glclipreset dat
+  case. 2045 do. pixmap_glwindoworg dat
   case. do.
     ('un-implemented glcmds ', ":cmd) 13!:8[3
   end.
@@ -1650,18 +2198,12 @@ pixmap_glarcx y,"1 [ 0,360*64
 pixmap_glfont=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
-if. 1 e. ' bold' E. y=. tolower y do.
-  bold=. 1 [ y=. }. ; (<' bold') -.~ <;.1 ' ', y
-else.
-  bold=. 0
-end.
-if. 1 e. ' underline' E. y do.
-  gtkunderline=: 1 [ y=. }. ; (<' underline') -.~ <;.1 ' ', y
-else.
-  gtkunderline=: 0
-end.
-fnt=. pango_font_description_from_string <y
-if. bold do. pango_font_description_set_weight fnt, 700 end.
+if. 0=#y=. ,y do. return. end.
+'face size style degree'=. parseFontSpec y
+'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
+gtkfontangle=: degree
+gtkunderline=: Underline
+if. Bold do. pango_font_description_set_weight fnt, 700 end.
 if. 0~:gtkpl do. pango_layout_set_font_description gtkpl,fnt end.
 pango_font_description_free fnt
 0
@@ -1701,7 +2243,7 @@ end.
 pixmap_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkpenrgb=: gtkrgb
-gtkpenwidth=: 1>.{.y   
+gtkpenwidth=: 0>.{.y   
 gtkpenstyle=: {:y 
 if. 0=gtkgc do. 0 return. end.
 gdk_gc_set_line_attributes gtkgc;gtkpenwidth;0;1;0
@@ -1947,14 +2489,14 @@ pango_matrix_rotate mat;y
 pango_context_set_matrix gtkplc;mat
 pango_layout_context_changed gtkpl
 )
-gdi_gditextangle=: 3 : 0
+gdip_gditextangle=: 3 : 0
 mat=. 1 0 0 1 0 0 + 1.1 - 1.1
 pango_matrix_rotate mat;y
 pango_context_set_matrix gtkplc;mat
 pango_layout_context_changed gtkpl
 )
-gtkcolor=: cairo_cairocolor`cairo_cairocolor`pixmap_gtkcolor`gdi_gdicolor@.GL2Backend_jgl2_
-gtktextangle=: cairo_cairotextangle`cairo_cairotextangle`pixmap_gtktextangle`gdi_gditextangle@.GL2Backend_jgl2_
+gtkcolor=: cairo_cairocolor`cairo_cairocolor`pixmap_gtkcolor`gdip_gdicolor`gdi32_gdicolor@.GL2Backend_jgl2_
+gtktextangle=: cairo_cairotextangle`cairo_cairotextangle`pixmap_gtktextangle`gdip_gditextangle`gdi32_gditextangle@.GL2Backend_jgl2_
 cairo_gtkarcisi=: 3 : 0
 ctr=. (0 1{y) + -: (2 3{y)
 rds=. -: 2{y
@@ -1984,58 +2526,63 @@ a: -.~ b <@(-.&'"');._1 font
 FontStyle=: ;:'regular bold italic underline strikeout'
 
 parseFontSpec=: 3 : 0
-'ns style'=. 2 split parseFontname y
+'ns styleangle'=. 2 split parseFontname y
 'face size'=. ns
 size=. 12". size
-style=. FontStyle i. tolower each style
+style=. FontStyle i. tolower each styleangle
 style=. +/2^<:(style ((> 0) *. <) #FontStyle) # style
-face;size;style
+if. 1 e. an=. ('angle'-:5&{.)&> styleangle do.
+  degree=. <. 10%~ 0". 5}.>(an i. 1){styleangle
+else.
+  degree=. 0
+end.
+face;size;style;degree
 )
-glarc=: cairo_glarc`cairo_glarc`pixmap_glarc`gdi_glarc@.GL2Backend_jgl2_
-glarcx=: cairo_glarcx`cairo_glarcx`pixmap_glarcx`gdi_glarcx@.GL2Backend_jgl2_
-glbrush=: cairo_glbrush`cairo_glbrush`pixmap_glbrush`gdi_glbrush@.GL2Backend_jgl2_
-glbrushnull=: cairo_glbrushnull`cairo_glbrushnull`pixmap_glbrushnull`gdi_glbrushnull@.GL2Backend_jgl2_
-glcapture=: cairo_glcapture`cairo_glcapture`pixmap_glcapture`gdi_glcapture@.GL2Backend_jgl2_
-glcaret=: cairo_glcaret`cairo_glcaret`pixmap_glcaret`gdi_glcaret@.GL2Backend_jgl2_
-glclear=: cairo_glclear`cairo_glclear`pixmap_glclear`gdi_glclear@.GL2Backend_jgl2_
-glclip=: cairo_glclip`cairo_glclip`pixmap_glclip`gdi_glclip@.GL2Backend_jgl2_
-glclipreset=: cairo_glclipreset`cairo_glclipreset`pixmap_glclipreset`gdi_glclipreset@.GL2Backend_jgl2_
-glcmds=: cairo_glcmds`cairo_glcmds`pixmap_glcmds`gdi_glcmds@.GL2Backend_jgl2_
-glcmds=: cairo_glcmds`cairo_glcmds`pixmap_glcmds`gdi_glcmds@.GL2Backend_jgl2_
-glcursor=: cairo_glcursor`cairo_glcursor`pixmap_glcursor`gdi_glcursor@.GL2Backend_jgl2_
-glellipse=: cairo_glellipse`cairo_glellipse`pixmap_glellipse`gdi_glellipse@.GL2Backend_jgl2_
-glfont=: cairo_glfont`cairo_glfont`pixmap_glfont`gdi_glfont@.GL2Backend_jgl2_
-glfontangle=: cairo_glfontangle`cairo_glfontangle`pixmap_glfontangle`gdi_glfontangle@.GL2Backend_jgl2_
-gllines=: cairo_gllines`cairo_gllines`pixmap_gllines`gdi_gllines@.GL2Backend_jgl2_
-glpaint=: cairo_glpaint`cairo_glpaint`pixmap_glpaint`gdi_glpaint@.GL2Backend_jgl2_
-glpaintx=: cairo_glpaintx`cairo_glpaintx`pixmap_glpaintx`gdi_glpaintx@.GL2Backend_jgl2_
-glpen=: cairo_glpen`cairo_glpen`pixmap_glpen`gdi_glpen@.GL2Backend_jgl2_
-glpie=: cairo_glpie`cairo_glpie`pixmap_glpie`gdi_glpie@.GL2Backend_jgl2_
-glpixel=: cairo_glpixel`cairo_glpixel`pixmap_glpixel`gdi_glpixel@.GL2Backend_jgl2_
-glpixels=: cairo_glpixels`cairo_glpixels`pixmap_glpixels`gdi_glpixels@.GL2Backend_jgl2_
-glpixelsx=: cairo_glpixelsx`cairo_glpixelsx`pixmap_glpixelsx`gdi_glpixelsx@.GL2Backend_jgl2_
-glpolygon=: cairo_glpolygon`cairo_glpolygon`pixmap_glpolygon`gdi_glpolygon@.GL2Backend_jgl2_
-glqextent=: cairo_glqextent`cairo_glqextent`pixmap_glqextent`gdi_glqextent@.GL2Backend_jgl2_
-glqextentw=: cairo_glqextentw`cairo_glqextentw`pixmap_glqextentw`gdi_glqextentw@.GL2Backend_jgl2_
-glqpixels=: cairo_glqpixels`cairo_glqpixels`pixmap_glqpixels`gdi_glqpixels@.GL2Backend_jgl2_
-glqwh=: cairo_glqwh`cairo_glqwh`pixmap_glqwh`gdi_glqwh@.GL2Backend_jgl2_
-glrect=: cairo_glrect`cairo_glrect`pixmap_glrect`gdi_glrect@.GL2Backend_jgl2_
-glrgb=: cairo_glrgb`cairo_glrgb`pixmap_glrgb`gdi_glrgb@.GL2Backend_jgl2_
-glsetbrush=: cairo_glsetbrush`cairo_glsetbrush`pixmap_glsetbrush`gdi_glsetbrush@.GL2Backend_jgl2_
-glsetpen=: cairo_glsetpen`cairo_glsetpen`pixmap_glsetpen`gdi_glsetpen@.GL2Backend_jgl2_
-gltext=: cairo_gltext`cairo_gltext`pixmap_gltext`gdi_gltext@.GL2Backend_jgl2_
-gltextcolor=: cairo_gltextcolor`cairo_gltextcolor`pixmap_gltextcolor`gdi_gltextcolor@.GL2Backend_jgl2_
-gltextxy=: cairo_gltextxy`cairo_gltextxy`pixmap_gltextxy`gdi_gltextxy@.GL2Backend_jgl2_
-glwindoworg=: cairo_glwindoworg`cairo_glwindoworg`pixmap_glwindoworg`gdi_glwindoworg@.GL2Backend_jgl2_
-glemfclose=: cairo_glemfclose`cairo_glemfclose`pixmap_glemfclose`gdi_glemfclose@.GL2Backend_jgl2_
-glemfopen=: cairo_glemfopen`cairo_glemfopen`pixmap_glemfopen`gdi_glemfopen@.GL2Backend_jgl2_
-glemfplay=: cairo_glemfplay`cairo_glemfplay`pixmap_glemfplay`gdi_glemfplay@.GL2Backend_jgl2_
-glfile=: cairo_glfile`cairo_glfile`pixmap_glfile`gdi_glfile@.GL2Backend_jgl2_
-glnodblbuf=: cairo_glnodblbuf`cairo_glnodblbuf`pixmap_glnodblbuf`gdi_glnodblbuf@.GL2Backend_jgl2_
-glprint=: cairo_glprint`cairo_glprint`pixmap_glprint`gdi_glprint@.GL2Backend_jgl2_
-glprintmore=: cairo_glprintmore`cairo_glprintmore`pixmap_glprintmore`gdi_glprintmore@.GL2Backend_jgl2_
-glqhandles=: cairo_glqhandles`cairo_glqhandles`pixmap_glqhandles`gdi_glqhandles@.GL2Backend_jgl2_
-glqprintpaper=: cairo_glqprintpaper`cairo_glqprintpaper`pixmap_glqprintpaper`gdi_glqprintpaper@.GL2Backend_jgl2_
-glqprintwh=: cairo_glqprintwh`cairo_glqprintwh`pixmap_glqprintwh`gdi_glqprintwh@.GL2Backend_jgl2_
-glqtextmetrics=: cairo_glqtextmetrics`cairo_glqtextmetrics`pixmap_glqtextmetrics`gdi_glqtextmetrics@.GL2Backend_jgl2_
-glroundr=: cairo_glroundr`cairo_glroundr`pixmap_glroundr`gdi_glroundr@.GL2Backend_jgl2_
+glarc=: cairo_glarc`cairo_glarc`pixmap_glarc`gdip_glarc`gdi32_glarc@.GL2Backend_jgl2_
+glarcx=: cairo_glarcx`cairo_glarcx`pixmap_glarcx`gdip_glarcx`gdi32_glarcx@.GL2Backend_jgl2_
+glbrush=: cairo_glbrush`cairo_glbrush`pixmap_glbrush`gdip_glbrush`gdi32_glbrush@.GL2Backend_jgl2_
+glbrushnull=: cairo_glbrushnull`cairo_glbrushnull`pixmap_glbrushnull`gdip_glbrushnull`gdi32_glbrushnull@.GL2Backend_jgl2_
+glcapture=: cairo_glcapture`cairo_glcapture`pixmap_glcapture`gdip_glcapture`gdi32_glcapture@.GL2Backend_jgl2_
+glcaret=: cairo_glcaret`cairo_glcaret`pixmap_glcaret`gdip_glcaret`gdi32_glcaret@.GL2Backend_jgl2_
+glclear=: cairo_glclear`cairo_glclear`pixmap_glclear`gdip_glclear`gdi32_glclear@.GL2Backend_jgl2_
+glclip=: cairo_glclip`cairo_glclip`pixmap_glclip`gdip_glclip`gdi32_glclip@.GL2Backend_jgl2_
+glclipreset=: cairo_glclipreset`cairo_glclipreset`pixmap_glclipreset`gdip_glclipreset`gdi32_glclipreset@.GL2Backend_jgl2_
+glcmds=: cairo_glcmds`cairo_glcmds`pixmap_glcmds`gdip_glcmds`gdi32_glcmds@.GL2Backend_jgl2_
+glcmds=: cairo_glcmds`cairo_glcmds`pixmap_glcmds`gdip_glcmds`gdi32_glcmds@.GL2Backend_jgl2_
+glcursor=: cairo_glcursor`cairo_glcursor`pixmap_glcursor`gdip_glcursor`gdi32_glcursor@.GL2Backend_jgl2_
+glellipse=: cairo_glellipse`cairo_glellipse`pixmap_glellipse`gdip_glellipse`gdi32_glellipse@.GL2Backend_jgl2_
+glfont=: cairo_glfont`cairo_glfont`pixmap_glfont`gdip_glfont`gdi32_glfont@.GL2Backend_jgl2_
+glfontangle=: cairo_glfontangle`cairo_glfontangle`pixmap_glfontangle`gdip_glfontangle`gdi32_glfontangle@.GL2Backend_jgl2_
+gllines=: cairo_gllines`cairo_gllines`pixmap_gllines`gdip_gllines`gdi32_gllines@.GL2Backend_jgl2_
+glpaint=: cairo_glpaint`cairo_glpaint`pixmap_glpaint`gdip_glpaint`gdi32_glpaint@.GL2Backend_jgl2_
+glpaintx=: cairo_glpaintx`cairo_glpaintx`pixmap_glpaintx`gdip_glpaintx`gdi32_glpaintx@.GL2Backend_jgl2_
+glpen=: cairo_glpen`cairo_glpen`pixmap_glpen`gdip_glpen`gdi32_glpen@.GL2Backend_jgl2_
+glpie=: cairo_glpie`cairo_glpie`pixmap_glpie`gdip_glpie`gdi32_glpie@.GL2Backend_jgl2_
+glpixel=: cairo_glpixel`cairo_glpixel`pixmap_glpixel`gdip_glpixel`gdi32_glpixel@.GL2Backend_jgl2_
+glpixels=: cairo_glpixels`cairo_glpixels`pixmap_glpixels`gdip_glpixels`gdi32_glpixels@.GL2Backend_jgl2_
+glpixelsx=: cairo_glpixelsx`cairo_glpixelsx`pixmap_glpixelsx`gdip_glpixelsx`gdi32_glpixelsx@.GL2Backend_jgl2_
+glpolygon=: cairo_glpolygon`cairo_glpolygon`pixmap_glpolygon`gdip_glpolygon`gdi32_glpolygon@.GL2Backend_jgl2_
+glqextent=: cairo_glqextent`cairo_glqextent`pixmap_glqextent`gdip_glqextent`gdi32_glqextent@.GL2Backend_jgl2_
+glqextentw=: cairo_glqextentw`cairo_glqextentw`pixmap_glqextentw`gdip_glqextentw`gdi32_glqextentw@.GL2Backend_jgl2_
+glqpixels=: cairo_glqpixels`cairo_glqpixels`pixmap_glqpixels`gdip_glqpixels`gdi32_glqpixels@.GL2Backend_jgl2_
+glqwh=: cairo_glqwh`cairo_glqwh`pixmap_glqwh`gdip_glqwh`gdi32_glqwh@.GL2Backend_jgl2_
+glrect=: cairo_glrect`cairo_glrect`pixmap_glrect`gdip_glrect`gdi32_glrect@.GL2Backend_jgl2_
+glrgb=: cairo_glrgb`cairo_glrgb`pixmap_glrgb`gdip_glrgb`gdi32_glrgb@.GL2Backend_jgl2_
+glsetbrush=: cairo_glsetbrush`cairo_glsetbrush`pixmap_glsetbrush`gdip_glsetbrush`gdi32_glsetbrush@.GL2Backend_jgl2_
+glsetpen=: cairo_glsetpen`cairo_glsetpen`pixmap_glsetpen`gdip_glsetpen`gdi32_glsetpen@.GL2Backend_jgl2_
+gltext=: cairo_gltext`cairo_gltext`pixmap_gltext`gdip_gltext`gdi32_gltext@.GL2Backend_jgl2_
+gltextcolor=: cairo_gltextcolor`cairo_gltextcolor`pixmap_gltextcolor`gdip_gltextcolor`gdi32_gltextcolor@.GL2Backend_jgl2_
+gltextxy=: cairo_gltextxy`cairo_gltextxy`pixmap_gltextxy`gdip_gltextxy`gdi32_gltextxy@.GL2Backend_jgl2_
+glwindoworg=: cairo_glwindoworg`cairo_glwindoworg`pixmap_glwindoworg`gdip_glwindoworg`gdi32_glwindoworg@.GL2Backend_jgl2_
+glemfclose=: cairo_glemfclose`cairo_glemfclose`pixmap_glemfclose`gdip_glemfclose`gdi32_glemfclose@.GL2Backend_jgl2_
+glemfopen=: cairo_glemfopen`cairo_glemfopen`pixmap_glemfopen`gdip_glemfopen`gdi32_glemfopen@.GL2Backend_jgl2_
+glemfplay=: cairo_glemfplay`cairo_glemfplay`pixmap_glemfplay`gdip_glemfplay`gdi32_glemfplay@.GL2Backend_jgl2_
+glfile=: cairo_glfile`cairo_glfile`pixmap_glfile`gdip_glfile`gdi32_glfile@.GL2Backend_jgl2_
+glnodblbuf=: cairo_glnodblbuf`cairo_glnodblbuf`pixmap_glnodblbuf`gdip_glnodblbuf`gdi32_glnodblbuf@.GL2Backend_jgl2_
+glprint=: cairo_glprint`cairo_glprint`pixmap_glprint`gdip_glprint`gdi32_glprint@.GL2Backend_jgl2_
+glprintmore=: cairo_glprintmore`cairo_glprintmore`pixmap_glprintmore`gdip_glprintmore`gdi32_glprintmore@.GL2Backend_jgl2_
+glqhandles=: cairo_glqhandles`cairo_glqhandles`pixmap_glqhandles`gdip_glqhandles`gdi32_glqhandles@.GL2Backend_jgl2_
+glqprintpaper=: cairo_glqprintpaper`cairo_glqprintpaper`pixmap_glqprintpaper`gdip_glqprintpaper`gdi32_glqprintpaper@.GL2Backend_jgl2_
+glqprintwh=: cairo_glqprintwh`cairo_glqprintwh`pixmap_glqprintwh`gdip_glqprintwh`gdi32_glqprintwh@.GL2Backend_jgl2_
+glqtextmetrics=: cairo_glqtextmetrics`cairo_glqtextmetrics`pixmap_glqtextmetrics`gdip_glqtextmetrics`gdi32_glqtextmetrics@.GL2Backend_jgl2_
+glroundr=: cairo_glroundr`cairo_glroundr`pixmap_glroundr`gdip_glroundr`gdi32_glroundr@.GL2Backend_jgl2_
