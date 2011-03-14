@@ -5,14 +5,16 @@ create=: destroy=: [:
 
 locGL2=: 0$<''         
 
-FIXFONT=: PROFONT=: IFUNIX{::'"Microsoft Sans Serif" 10';'Sans 10'
+FIXFONT=: PROFONT=: IFUNIX{::'Tahoma 10';'Sans 10'
 
 3 : 0''
 if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
+if. 0~: 4!:0 <'GL2ExtGlcmds_j_' do. GL2ExtGlcmds_j_=: 1 end.
 )
 
 GL2Backend=: GL2Backend_j_
 GL2Backend=: ((-.IFWIN) *. GL2Backend e. 3 4){GL2Backend, 0
+GL2ExtGlcmds=: GL2ExtGlcmds_j_
 PS_DASH=: 1
 PS_DASHDOT=: 3
 PS_DASHDOTDOT=: 4
@@ -271,6 +273,17 @@ coinsert'jgtk'
 3 : 0''
 if. IFWIN do.
   coinsert 'jgdi32 jgdiplus'
+  so=. 'libglcmds',((-.IF64)#'_32'),'.dll'
+else.
+  so=. 'libglcmds',((-.IF64)#'_32'),(UNAME-:'Darwin'){::'.so';'.dylib'
+end.
+LIBGLCMDS=: ''
+if. fexist f=. jpath '~addons/graphics/gl2/',so do.
+  LIBGLCMDS=: f
+elseif. fexist f=. jpath '~tools/',so do.
+  LIBGLCMDS=: f
+elseif. fexist f=. jpath '~bin/',so do.
+  LIBGLCMDS=: f
 end.
 EMPTY
 )
@@ -280,13 +293,14 @@ gloption=: 0
 PForm=: PId=: PLocale=: ''
 gtkcr=: gtkpl=: 0    
 gtkwin=: gtkdagc=: gtkgc=: gtkpx=: gtkpc=: gtkpl=: gtkplc=: 0    
-gtkfontangle=: gtkunderline=: 0
+clipped=: gtkfontangle=: gtkunderline=: 0
 TOK=: BMP=: GC=: 0
 PEN=: BRUSH=: FONT=: 0
 TXTCLR=: TXTPOS=: ''
 HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
 
-clipped=: 0
+clipped=: gtkrgb=: gtkpenrgb=: gtkbrushrgb=: gtktextrgb=: gtkbrushnull=: 0
+gtktextxy=: 0 0
 ogl=: 0$<''
 newctx=: 1     
 newsize=: 1    
@@ -477,6 +491,7 @@ end.
 configure_event=: 3 : 0
 'widget event data'=. y
 gtkwh=: _2{. getGtkWidgetAllocation widget
+gtkwin=: getGtkWidgetWindow widget
 newsize=: 1         
 if. (1=gloption) *. #ogl do.
   wh__ogl=: gtkwh
@@ -492,7 +507,6 @@ if. 0=gloption do.
   if. GL2Backend_jgl2_ e. 0 1 do.
     if. 0~:gtkpl do. gtkpl=: 0 [ g_object_unref gtkpl end.
     if. 0~:gtkcr do. gtkcr=: 0 [ cairo_destroy gtkcr end.
-    clipped=: 0
     gtkcr=: cairo_create surface=. cairo_image_surface_create CAIRO_FORMAT_RGB24,gtkwh
     cairo_surface_destroy surface  
     gtkpl=: pango_cairo_create_layout gtkcr
@@ -501,7 +515,6 @@ if. 0=gloption do.
     if. gtkgc do. g_object_unref gtkgc end.
     if. gtkpl do. g_object_unref gtkpl end.
     if. gtkpc do. g_object_unref gtkpc end.
-    gtkwin=: getGtkWidgetWindow widget
     gtkdagc=: getdagc widget
     gtkgc=: gdk_gc_new gtkwin
     gtkpx=: gdk_pixmap_new gtkwin,gtkwh,_1
@@ -510,22 +523,18 @@ if. 0=gloption do.
     gtkplc=: pango_layout_get_context gtkpl
   elseif. 3=GL2Backend_jgl2_ do.
     if. 0~:TOK do. gdip_free '' end.
-    gtkwin=: getGtkWidgetWindow widget
     gtkdagc=: getdagc widget
     gdip_init gtkwh
     assert. 0~:TOK,GC
   elseif. 4=GL2Backend_jgl2_ do.
     if. 0~:HDC do. gdi32_free '' end.
-    gtkwin=: getGtkWidgetWindow widget
     gtkdagc=: getdagc widget
     gdi32_init gtkwh
     assert. 0~:HDC,BMP
   end.
-  if. 0= initialized do.
-    glclear''             
-  end.
+  glclear''             
 end.
-initialized=: 1
+initialized=: 1         
 if. #PForm do.
   locGL2_jgl2_=: coname''
 end.
@@ -753,16 +762,12 @@ cairo_stroke gtkcr
 )
 cairo_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-cairo_glwindoworg 0 0
-cairo_glclipreset''
-cairo_glfont PROFONT_jgl2_
-cairo_glrgb 255 255 255
-cairo_glpen 1 0
-cairo_glbrush''
-cairo_glrect 0 0,gtkwh
 cairo_glrgb 0 0 0
+cairo_glfont PROFONT_jgl2_
 cairo_glpen 1 0
+cairo_glclipreset''
 cairo_glbrushnull''
+cairo_glwindoworg 0 0
 cairo_gltextxy 0 0
 cairo_gltextcolor''
 cairo_glfontangle 0
@@ -789,6 +794,14 @@ end.
 cairo_glcmds=: 3 : 0
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
+if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+  ipar=. clipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkpenrgb,gtkbrushrgb,gtktextrgb,gtkbrushnull
+  (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(,y);#y
+  'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull'=. ipar
+  clipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
+  gtkpenrgb=: penrgb [ gtkbrushrgb=:  brushrgb [ gtktextrgb=: textrgb [ gtkbrushnull=: brushnull
+  0 return.
+end.
 p=. 0
 while. p<#y do.
   cnt=. p{y
@@ -796,6 +809,7 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. cairo_glarc dat
+  case. 2003 do. ''     
   case. 2004 do. cairo_glbrush dat
   case. 2005 do. cairo_glbrushnull dat
   case. 2062 do. ''     
@@ -811,6 +825,8 @@ while. p<#y do.
   case. 2086 do. cairo_glemfplay dat
   case. 2066 do. cairo_glfile dat{a.
   case. 2012 do. cairo_glfont dat{a.
+  case. 2312 do. cairo_glfont2 dat
+  case. 2342 do. cairo_glfontangle dat
   case. 2015 do. cairo_gllines dat
   case. 2070 do. ''     
   case. 2071 do. ''     
@@ -835,7 +851,6 @@ while. p<#y do.
   case. 2032 do. cairo_glrgb dat
   case. 2033 do. cairo_glroundr dat
   case. 2035 do. ''     
-  case. 2003 do. ''     
   case. 2038 do. cairo_gltext dat{a.
   case. 2040 do. cairo_gltextcolor dat
   case. 2056 do. cairo_gltextxy dat
@@ -867,12 +882,30 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. 0=#y=. ,y do. return. end.
 'face size style degree'=. parseFontSpec y
-'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
-gtkfontangle=: degree
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: <.degree*10
 gtkunderline=: Underline
 fnt=. pango_font_description_from_string <y
-if. Bold do. pango_font_description_set_weight fnt, 700 end.
-if. 0~:gtkpl do. pango_layout_set_font_description gtkpl,fnt end.
+if. Bold do. pango_font_description_set_weight fnt, PANGO_WEIGHT_BOLD end.
+if. Italic do. pango_font_description_set_style fnt, PANGO_STYLE_ITALIC end.
+pango_font_description_set_size fnt, <.PANGO_SCALE*size
+pango_layout_set_font_description gtkpl,fnt
+pango_font_description_free fnt
+0
+)
+cairo_glfont2=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:gtkcr,gtkpl
+'size10 style degree10'=. 3{.y
+face=. a.{~3}.y
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: <.degree10
+gtkunderline=: Underline
+fnt=. pango_font_description_from_string <face
+if. Bold do. pango_font_description_set_weight fnt, PANGO_WEIGHT_BOLD end.
+if. Italic do. pango_font_description_set_style fnt, PANGO_STYLE_ITALIC end.
+pango_font_description_set_size fnt, <.PANGO_SCALE*size10%10
+pango_layout_set_font_description gtkpl,fnt
 pango_font_description_free fnt
 0
 )
@@ -883,7 +916,7 @@ gtkfontangle=: y
 )
 cairo_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkrgb=: y
+gtkrgb=: RGB y
 0
 )
 cairo_gllines=: 3 : 0 "1
@@ -1053,7 +1086,7 @@ if. 0=gtkfontangle do.
 else.
   cairo_save gtkcr
   cairo_move_to gtkcr ; <"0 gtktextxy
-  cairo_rotate gtkcr ; - rfd gtkfontangle  
+  cairo_rotate gtkcr ; - rfd gtkfontangle%10  
   pango_cairo_update_layout gtkcr, gtkpl
   pango_cairo_show_layout gtkcr, gtkpl
   cairo_restore gtkcr
@@ -1166,25 +1199,21 @@ OLDPEN=: OLDBRUSH=: OLDFONT=: 0
 gtktextxy=: 2$0
 EMPTY
 )
-RGB=: 256 256 256&#.@|.
+RGB=: 256 256 256&#.@|.         
 gdi32_setbkmode=: 3 : 0
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-SetBkMode HDC, y     
+SetBkMode HDC, y{OPAQUE,TRANSPARENT     
 )
 gdi32_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-prev=. SelectObject HDC, PEN
-prevb=. SelectObject HDC, GetStockObject NULL_BRUSH
 Arc HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
-SelectObject HDC, prev
-SelectObject HDC, prevb
 0
 )
 gdi32_glbrush=: 3 : 0 "1
 if. gloption do. 0 return. end.
-obj=. CreateSolidBrush RGB gtkrgb
+obj=. CreateSolidBrush gtkrgb
 prev=. SelectObject HDC, obj
 if. BRUSH do.
   assert. prev=BRUSH
@@ -1193,12 +1222,15 @@ else.
   OLDBRUSH=: prev
 end.
 BRUSH=: obj
-gtkbrushnull=: 0
 0
 )
 gdi32_glbrushnull=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkbrushnull=: 1
+if. BRUSH do.
+  SelectObject HDC, GetStockObject NULL_BRUSH
+  DeleteObject BRUSH
+end.
+BRUSH=: OLDBRUSH=: 0
 0
 )
 gdi32_glcapture=: 3 : 0 "1
@@ -1224,8 +1256,8 @@ gdi32_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:HDC,BMP
-prev=. SelectObject HDC, BLACK_PEN
-prevb=. SelectObject HDC, BLACK_BRUSH
+prev=. SelectObject HDC, GetStockObject BLACK_PEN
+prevb=. SelectObject HDC, GetStockObject BLACK_BRUSH
 Rectangle HDC, (2{.y), (2{.y) + 2}.y
 SelectObject HDC, prev
 SelectObject HDC, prevb
@@ -1235,16 +1267,13 @@ gdi32_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 SetBkMode HDC, TRANSPARENT
-gdi32_glwindoworg 0 0
-gdi32_glclipreset''
-gdi32_glfont PROFONT_jgl2_
-gdi32_glrgb 255 255 255
-gdi32_glpen 1 0
-gdi32_glbrush''
-gdi32_glrect 0 0,gtkwh
+SetPolyFillMode HDC,ALTERNATE
 gdi32_glrgb 0 0 0
+gdi32_glfont utf8 PROFONT_jgl2_
 gdi32_glpen 1 0
+gdi32_glclipreset''
 gdi32_glbrushnull''
+gdi32_glwindoworg 0 0
 gdi32_gltextxy 0 0
 gdi32_gltextcolor''
 gdi32_glfontangle 0
@@ -1275,6 +1304,15 @@ end.
 gdi32_glcmds=: 3 : 0
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
+if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+  xpar=. PEN,OLDPEN,BRUSH,OLDBRUSH,FONT,OLDFONT
+  ipar=. clipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle
+  (LIBGLCMDS,' Glcmds_gdi32 > + i x *x *x *c *x x')&cd HDC;xpar;ipar;(utf8 PROFONT_jgl2_);(,y);#y
+  'PEN OLDPEN BRUSH OLDBRUSH FONT OLDFONT'=: xpar
+  'clip gtkw gtkh rgb tx ty underline angle'=. ipar
+  clipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
+  0 return.
+end.
 p=. 0
 while. p<#y do.
   cnt=. p{y
@@ -1282,6 +1320,7 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. gdi32_glarc dat
+  case. 2003 do. ''     
   case. 2004 do. gdi32_glbrush dat
   case. 2005 do. gdi32_glbrushnull dat
   case. 2062 do. ''     
@@ -1297,6 +1336,8 @@ while. p<#y do.
   case. 2086 do. gdi32_glemfplay dat
   case. 2066 do. gdi32_glfile dat{a.
   case. 2012 do. gdi32_glfont dat{a.
+  case. 2312 do. gdi32_glfont2 dat
+  case. 2342 do. gdi32_glfontangle dat
   case. 2015 do. gdi32_gllines dat
   case. 2070 do. ''     
   case. 2071 do. ''     
@@ -1321,7 +1362,6 @@ while. p<#y do.
   case. 2032 do. gdi32_glrgb dat
   case. 2033 do. gdi32_glroundr dat
   case. 2035 do. ''     
-  case. 2003 do. ''     
   case. 2038 do. gdi32_gltext dat{a.
   case. 2040 do. gdi32_gltextcolor dat
   case. 2056 do. gdi32_gltextxy dat
@@ -1342,11 +1382,7 @@ gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK
 gdi32_glellipse=: 3 : 0"1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-prev=. SelectObject HDC, PEN
-prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
 Ellipse HDC, (2{.y),((2{.y)+(2 3{y))
-SelectObject HDC, prev
-SelectObject HDC, prevb
 0
 )
 gdi32_glfont=: 3 : 0 "1
@@ -1354,10 +1390,31 @@ if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 if. 0=#y=. ,y do. return. end.
 'face size style degree'=. parseFontSpec y
-'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
-gtkfontangle=: degree
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: <.degree*10
 gtkunderline=: Underline
 obj=. CreateFontW (<.size*(GetDeviceCaps HDC, LOGPIXELSY)%72); 0; (<.10*degree); (<.10*degree); (Bold{FW_NORMAL,FW_BOLD); Italic; Underline; Strikeout; DEFAULT_CHARSET; OUT_DEFAULT_PRECIS; CLIP_DEFAULT_PRECIS; PROOF_QUALITY; DEFAULT_PITCH; uucp face
+prev=. SelectObject HDC, obj
+if. FONT do.
+  if. -. IF64 *. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+    assert. prev=FONT
+  end.
+  DeleteObject FONT
+else.
+  OLDFONT=: prev
+end.
+FONT=: obj
+0
+)
+gdi32_glfont2=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+'size10 style degree10'=. 3{.y
+face=. a.{~3}.y
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: degree10
+gtkunderline=: Underline
+obj=. CreateFontW (<.size10*(GetDeviceCaps HDC, LOGPIXELSY)%720); 0; degree10; degree10; (Bold{FW_NORMAL,FW_BOLD); Italic; Underline; Strikeout; DEFAULT_CHARSET; OUT_DEFAULT_PRECIS; CLIP_DEFAULT_PRECIS; PROOF_QUALITY; DEFAULT_PITCH; uucp face
 prev=. SelectObject HDC, obj
 if. FONT do.
   assert. prev=FONT
@@ -1375,7 +1432,7 @@ gtkfontangle=: y
 )
 gdi32_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkrgb=: y
+gtkrgb=: RGB y
 0
 )
 gdi32_gllines=: 3 : 0 "1
@@ -1383,9 +1440,7 @@ if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 assert. 0~:HDC,BMP
 c=. 2>.(+ 2&|)#y
-prev=. SelectObject HDC, PEN
 Polyline HDC; (<.c{.y); (<.-:c)
-SelectObject HDC, prev
 0
 )
 gdi32_glpaint=: 3 : 0 "1
@@ -1407,10 +1462,9 @@ end.
 gdi32_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-gtkpenrgb=: gtkrgb
-gtkpenwidth=: 0>.{.y   
-gtkpenstyle=: {:y 
-obj=. CreatePen gtkpenstyle , gtkpenwidth , RGB gtkpenrgb
+gtkpenwidth=. 0>.{.y   
+gtkpenstyle=. {:y 
+obj=. CreatePen gtkpenstyle , gtkpenwidth , gtkrgb
 prev=. SelectObject HDC, obj
 if. PEN do.
   assert. prev=PEN
@@ -1424,11 +1478,7 @@ PEN=: obj
 gdi32_glpie=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-prev=. SelectObject HDC, PEN
-prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
 Pie HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
-SelectObject HDC, prev
-SelectObject HDC, prevb
 0
 )
 gdi32_glpixel=: 3 : 0 "1
@@ -1456,14 +1506,7 @@ gdi32_glpolygon=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 c=. 2>.(+ 2&|)#y
-if. -.gtkbrushnull do.
-  SetPolyFillMode HDC,ALTERNATE
-end.
-prev=. SelectObject HDC, PEN
-prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
 Polygon HDC; (<.c{.y); (<.-:c)
-SelectObject HDC, prev
-SelectObject HDC, prevb
 0
 )
 gdi32_glqpixels=: 3 : 0 "1
@@ -1504,11 +1547,7 @@ gdi32_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:HDC,BMP
-prev=. SelectObject HDC, PEN
-prevb=. SelectObject HDC, gtkbrushnull{BRUSH,GetStockObject NULL_BRUSH
 Rectangle HDC, (2{.y), (2{.y) + 2}.y
-SelectObject HDC, prev
-SelectObject HDC, prevb
 0
 )
 gdi32_glsetbrush=: gdi32_glbrush @ gdi32_glrgb
@@ -1522,8 +1561,7 @@ TextOutW HDC;(<"0 gtktextxy),text;#text
 )
 gdi32_gltextcolor=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtktextrgb=: gtkrgb
-SetTextColor HDC, RGB gtktextrgb
+SetTextColor HDC, gtkrgb
 0
 )
 gdi32_gltextxy=: 3 : 0 "1
@@ -1572,8 +1610,8 @@ assert. 0=r
 assert. 0~:TOK,BMP,GC
 PenUnit=: Pixel [ FontUnit=: Point
 PEN=: BRUSH=: FONT=: TXTCLR=: 0
-TXTPOS=: 4$1.1-1.1
-RGB=: OPAC OR 16bffffff
+gtktextxy=: 2$0
+gtkrgb=: BRGA 0 0 0
 EMPTY
 )
 gdip_free=: 3 : 0
@@ -1587,9 +1625,7 @@ if. TOK do. GdiplusShutdown TOK end.
 TOK=: BMP=: GC=: 0
 PEN=: BRUSH=: FONT=: TXTCLR=: 0
 )
-gdip_gdicolor=: 3 : 0
-RGB=: OPAC OR 256 256 256#.y
-)
+BRGA=: 3 : 'OPAC OR 256 256 256#.y'  
 gdip_glarc2=: 3 : 0 "1
 if. PEN do.
   GdipDrawArc GC;PEN;<"0 y
@@ -1629,16 +1665,16 @@ dif=. end - bgn
 gdip_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-t=. gtkbrushnull
-gtkbrushnull=: 1
+t=. BRUSH
+BRUSH=: 1
 gdip_glarcx gdip_gdiarcisi y
-gtkbrushnull=: t
+BRUSH=: t
 0
 )
 gdip_glarcx=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-if. -.gtkbrushnull do.
+if. BRUSH do.
   GdipDrawArc GC;BRUSH;<"0 y
 end.
 GdipDrawArc GC;PEN;<"0 y
@@ -1648,15 +1684,15 @@ gdip_glbrush=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. BRUSH do. GdipDeleteBrush BRUSH end.
 gdip_gdicolor gtkbrushrgb
-r=. GdipCreateSolidFill RGB;BRUSH=: ,_1
+r=. GdipCreateSolidFill gtkrgb;BRUSH=: ,_1
 assert. 0=r
 BRUSH=: {.BRUSH
-gtkbrushnull=: 0
 0
 )
 gdip_glbrushnull=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkbrushnull=: 1
+if. BRUSH do. GdipDeleteBrush BRUSH end.
+BRUSH=: 0
 0
 )
 gdip_glcapture=: 3 : 0 "1
@@ -1683,21 +1719,17 @@ if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:TOK,GC
 gdip_gdicolor 0 0 0
-GdipFillRectangle GC;RGB;<"0 y
+GdipFillRectangle GC;gtkrgb;<"0 y
 0
 )
 gdip_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gdip_glwindoworg 0 0
-gdip_glclipreset''
-gdip_glfont PROFONT_jgl2_
-gdip_glrgb 255 255 255
-gdip_glpen 1 0
-gdip_glbrush''
-gdip_glrect 0 0,gtkwh
 gdip_glrgb 0 0 0
+gdip_glfont PROFONT_jgl2_
 gdip_glpen 1 0
+gdip_glclipreset''
 gdip_glbrushnull''
+gdip_glwindoworg 0 0
 gdip_gltextxy 0 0
 gdip_gltextcolor''
 gdip_glfontangle 0
@@ -1729,6 +1761,7 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. gdip_glarc dat
+  case. 2003 do. ''     
   case. 2004 do. gdip_glbrush dat
   case. 2005 do. gdip_glbrushnull dat
   case. 2062 do. ''     
@@ -1744,6 +1777,8 @@ while. p<#y do.
   case. 2086 do. gdip_glemfplay dat
   case. 2066 do. gdip_glfile dat{a.
   case. 2012 do. gdip_glfont dat{a.
+  case. 2312 do. gdip_glfont2 dat
+  case. 2342 do. gdip_glfontangle dat
   case. 2015 do. gdip_gllines dat
   case. 2070 do. ''     
   case. 2071 do. ''     
@@ -1768,7 +1803,6 @@ while. p<#y do.
   case. 2032 do. gdip_glrgb dat
   case. 2033 do. gdip_glroundr dat
   case. 2035 do. ''     
-  case. 2003 do. ''     
   case. 2038 do. gdip_gltext dat{a.
   case. 2040 do. gdip_gltextcolor dat
   case. 2056 do. gdip_gltextxy dat
@@ -1797,13 +1831,49 @@ if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 if. 0=#y=. ,y do. 0 return. end.
 'face size style degree'=. parseFontSpec y
-'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
-gtkfontangle=: degree
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: <.degree*10
 gtkunderline=: Underline
 r=. GdipCreateFontFamilyFromName (uucp face);0;ffam=. ,_1
-if. 0~:r do. _1 return. end.
+if. 0~:r do. 
+  smoutput 'font not found ',face
+  _1 return. 
+end.
 ffam=. {.ffam
-r=. GdipCreateFont ffam;size;style;FontUnit;Font=. ,_1
+r=. GdipCreateFont ffam;(|size);style;FontUnit;Font=. ,_1
+if. 15=r do.
+  r=. GdipCreateFont ffam;(|size);0;FontUnit;Font=. ,_1
+end.
+if. 15=r do.
+  r=. GdipCreateFont ffam;(|size);1;FontUnit;Font=. ,_1
+end.
+if. 0~:r do. _1 return. end.
+if. ffam do. GdipDeleteFontFamily ffam end.
+if. FONT do. GdipDeleteFont FONT end.
+FONT=: {.Font
+0
+)
+gdip_glfont2=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:TOK,GC
+'size10 style degree10'=. 3{.y
+face=. a.{~3}.y
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: degree10
+gtkunderline=: Underline
+r=. GdipCreateFontFamilyFromName (uucp face);0;ffam=. ,_1
+if. 0~:r do. 
+  smoutput 'font not found ',face
+  _1 return. 
+end.
+ffam=. {.ffam
+r=. GdipCreateFont ffam;(|size10%10);style;FontUnit;Font=. ,_1
+if. 15=r do.
+  r=. GdipCreateFont ffam;(|size10%10);0;FontUnit;Font=. ,_1
+end.
+if. 15=r do.
+  r=. GdipCreateFont ffam;(|size10%10);1;FontUnit;Font=. ,_1
+end.
 if. 0~:r do. _1 return. end.
 if. ffam do. GdipDeleteFontFamily ffam end.
 if. FONT do. GdipDeleteFont FONT end.
@@ -1817,8 +1887,7 @@ gtkfontangle=: y
 )
 gdip_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkrgb=: y
-gdip_gdicolor y
+gtkrgb=: BRGA y
 0
 )
 gdip_gllines=: 3 : 0 "1
@@ -1848,26 +1917,23 @@ end.
 
 gdip_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkpenrgb=: gtkrgb
-gtkpenwidth=: 0>.{.y   
-gtkpenstyle=: {:y 
+gtkpenwidth=. 0>.{.y   
+gtkpenstyle=. {:y 
 if. 0=TOK do. 0 return. end.
 if. PEN do. GdipDeletePen PEN end.
-if. gtkpenwidth>0 do.
+if. 1+.gtkpenwidth>0 do.
   gdip_gdicolor gtkpenrgb
-  r=. GdipCreatePen1 RGB;1;PenUnit;PEN=: ,_1
+  r=. GdipCreatePen1 gtkrgb;1;PenUnit;PEN=: ,_1
   assert. 0=r
   PEN=: {.PEN
   GdipSetPenWidth PEN;gtkpenwidth
   GdipSetPenDashStyle PEN;<.gtkpenstyle
-else.
-  PEN=: 0
 end.
 0
 )
 gdip_glpie=: 3 : 0 "1
 xywha1a2=. gdip_gdiarcisi y
-if. -.gtkbrushnull do.
+if. BRUSH do.
   GdipFillPie GC;BRUSH;<"0 xywha1a2
 end.
 if. PEN do.
@@ -1878,8 +1944,7 @@ end.
 gdip_glpixel=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-gdip_gdicolor gtkrgb
-GdipBitmapSetPixel BMP;(<"0 y),<RGB
+GdipBitmapSetPixel BMP;(<"0 y),<gtkrgb
 0
 )
 gdip_glpixels=: 3 : 0 "1
@@ -1900,7 +1965,7 @@ gdip_glpolygon=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 c=. 2>.(+ 2&|)#y
-if. -.gtkbrushnull do.
+if. BRUSH do.
   GdipFillPolygon GC;BRUSH;(<.c{.y);(<.-:c);Alternate
 end.
 if. PEN do.
@@ -1929,6 +1994,7 @@ GdipBitmapUnLockBits ({.BMP);DATA
 z=. flip_rgb ,z AND NOTALPHA
 )
 gdip_glqtextmetrics=: 3 : 0 "1
+assert. 0~:FONT
 if. FONT do.
   r=. GdipGetFamily FONT;fam=. ,_1
   assert. 0=r
@@ -1954,7 +2020,7 @@ gdip_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:TOK,GC
-if. -.gtkbrushnull do.
+if. BRUSH do.
   GdipFillRectangle GC;BRUSH;<"0 y
 end.
 if. PEN do.
@@ -1970,11 +2036,11 @@ assert. 0~:TOK,GC
 if. FONT do.
   text=. uucp ,y
   if. 0=gtkfontangle do.
-    GdipDrawString GC;text;(#text);FONT;TXTPOS;0;TXTCLR
+    GdipDrawString GC;text;(#text);FONT;(gtktextxy,2$1.1-1.1);0;TXTCLR
   else.
     GdipSaveGraphics GC;state=. ,_1
-    GdipTranslateWorldTransform GC;(2{.<"0 TXTPOS),<MatrixOrderPrepend
-    GdipRotateWorldTransform GC;(-gtkfontangle);MatrixOrderPrepend
+    GdipTranslateWorldTransform GC;(2{.<"0 gtktextxy,2$1.1-1.1),<MatrixOrderPrepend
+    GdipRotateWorldTransform GC;(-gtkfontangle%10);MatrixOrderPrepend
     GdipDrawString GC;text;(#text);FONT;(4$1.1-1.1);0;TXTCLR
     GdipRestoreGraphics GC,state
   end.
@@ -1983,22 +2049,20 @@ end.
 )
 gdip_gltextcolor=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtktextrgb=: gtkrgb
-gdip_gdicolor gtktextrgb
 if. TXTCLR do. GdipDeleteBrush TXTCLR end.
-TXTCLR=: {.TXTCLR [ GdipCreateSolidFill RGB;TXTCLR=: ,_1
+TXTCLR=: {.TXTCLR [ GdipCreateSolidFill gtkrgb;TXTCLR=: ,_1
 0
 )
 gdip_gltextxy=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtktextxy=: y
-TXTPOS=: y, 2$1.1-1.1
 0
 )
 gdip_glqextent=: 3 : 0 "1
 z=. 1 1
 if. gloption do. z return. end.
 assert. 0~:TOK,GC
+assert. 0~:FONT
 if. FONT do.
   text=. uucp ,y
   rect=. 4$1.1-1.1
@@ -2091,16 +2155,12 @@ pixmap_gtkcolor gtkpenrgb
 )
 pixmap_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-pixmap_glwindoworg 0 0
-pixmap_glclipreset''
-pixmap_glfont PROFONT_jgl2_
-pixmap_glrgb 255 255 255
-pixmap_glpen 1 0
-pixmap_glbrush''
-pixmap_glrect 0 0,gtkwh
 pixmap_glrgb 0 0 0
+pixmap_glfont PROFONT_jgl2_
 pixmap_glpen 1 0
+pixmap_glclipreset''
 pixmap_glbrushnull''
+pixmap_glwindoworg 0 0
 pixmap_gltextxy 0 0
 pixmap_gltextcolor''
 pixmap_glfontangle 0
@@ -2132,6 +2192,7 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. pixmap_glarc dat
+  case. 2003 do. ''     
   case. 2004 do. pixmap_glbrush dat
   case. 2005 do. pixmap_glbrushnull dat
   case. 2062 do. ''     
@@ -2147,6 +2208,8 @@ while. p<#y do.
   case. 2086 do. pixmap_glemfplay dat
   case. 2066 do. pixmap_glfile dat{a.
   case. 2012 do. pixmap_glfont dat{a.
+  case. 2312 do. pixmap_glfont2 dat
+  case. 2342 do. pixmap_glfontangle dat
   case. 2015 do. pixmap_gllines dat
   case. 2070 do. ''     
   case. 2071 do. ''     
@@ -2171,7 +2234,6 @@ while. p<#y do.
   case. 2032 do. pixmap_glrgb dat
   case. 2033 do. pixmap_glroundr dat
   case. 2035 do. ''     
-  case. 2003 do. ''     
   case. 2038 do. pixmap_gltext dat{a.
   case. 2040 do. pixmap_gltextcolor dat
   case. 2056 do. pixmap_gltextxy dat
@@ -2200,10 +2262,26 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 if. 0=#y=. ,y do. return. end.
 'face size style degree'=. parseFontSpec y
-'Regular Bold Italic Underline Strikeout'=. 5{. |. #: style
-gtkfontangle=: degree
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: <.degree*10
 gtkunderline=: Underline
 if. Bold do. pango_font_description_set_weight fnt, 700 end.
+pango_font_description_set_size fnt, <.PANGO_SCALE*size
+if. 0~:gtkpl do. pango_layout_set_font_description gtkpl,fnt end.
+pango_font_description_free fnt
+0
+)
+pixmap_glfont2=: 3 : 0 "1
+if. gloption do. 0 return. end.
+assert. 0~:gtkpx,gtkpc
+'size10 style degree10'=. 3{.y
+face=. a.{~3}.y
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+gtkfontangle=: degree10
+gtkunderline=: Underline
+fnt=. pango_font_description_from_string <face
+if. Bold do. pango_font_description_set_weight fnt, 700 end.
+pango_font_description_set_size fnt, <.PANGO_SCALE*size10%10
 if. 0~:gtkpl do. pango_layout_set_font_description gtkpl,fnt end.
 pango_font_description_free fnt
 0
@@ -2336,7 +2414,7 @@ if. 0=gtkfontangle do.
   pango_layout_set_text gtkpl;(,y);#y
   gdk_draw_layout gtkpx,gtkgc,gtktextxy,gtkpl
 else.
-  pangotextangle gtkfontangle
+  pangotextangle gtkfontangle%10
   pango_layout_set_text gtkpl;(,y);#y
   gdk_draw_layout gtkpx,gtkgc,gtktextxy,gtkpl
   pangotextangle 0
@@ -2478,7 +2556,7 @@ get_type=: 3 : 0
 memr y,0 1,JINT
 )
 cairo_cairocolor=: 3 : 0
-cairo_set_source_rgba gtkcr ; <"0 rgba2cairo y
+cairo_set_source_rgba gtkcr ; <"0 rgba2cairo |. 256 256 256#:y
 )
 pixmap_gtkcolor=: 3 : 0
 gdk_gc_set_rgb_fg_color gtkgc;rgb2gtk y
@@ -2530,9 +2608,9 @@ parseFontSpec=: 3 : 0
 'face size'=. ns
 size=. 12". size
 style=. FontStyle i. tolower each styleangle
-style=. +/2^<:(style ((> 0) *. <) #FontStyle) # style
+style=. <.+/2^<:(style ((> 0) *. <) #FontStyle) # style
 if. 1 e. an=. ('angle'-:5&{.)&> styleangle do.
-  degree=. <. 10%~ 0". 5}.>(an i. 1){styleangle
+  degree=. 10%~ 0". 5}.>(an i. 1){styleangle
 else.
   degree=. 0
 end.

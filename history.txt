@@ -20,3 +20,6 @@ graphics/gl2 - change history
 
 == 1.0.6 ==
  * graphics/gl2: add gdi32 backend
+
+== 1.0.7 ==
+ * graphics/gl2: glcmds shared library
