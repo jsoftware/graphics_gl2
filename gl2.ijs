@@ -794,7 +794,7 @@ end.
 cairo_glcmds=: 3 : 0
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+if. (UNAME-:'Linux') *. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   ipar=. clipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkpenrgb,gtkbrushrgb,gtktextrgb,gtkbrushnull
   (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(,y);#y
   'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull'=. ipar
@@ -1484,8 +1484,6 @@ Pie HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
 gdi32_glpixel=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-gdi32_gdicolor gtkrgb
-GdipBitmapSetPixel BMP;(<"0 y),<RGB
 0
 )
 gdi32_glpixels=: 3 : 0 "1
