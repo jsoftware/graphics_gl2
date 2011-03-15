@@ -583,12 +583,6 @@ if. 0=gloption do.
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
     g_object_unref gtkpx
   end.
-  if. (-.IFGTK) *. (<'jwplot') e. copath coname'' do.
-    if. pdcmdprint do.
-      pdcmdprint_jwplot_=: 0       
-      print''
-    end.
-  end.
 end.
 0
 )
@@ -600,19 +594,6 @@ if. (1=gloption) *. #ogl do.
 end.
 if. 0=gloption do.
   if. GL2Backend_jgl2_ e. 0 1 do.
-    if. 0~:gtkcr do.
-      if. (<'jwplot') e. copath coname'' do.
-        if. #pdcmdsave do.
-          gtk_save pdcmdsave
-          pdcmdsave_jwplot_=: ''
-        end.
-        if. pdcmdclip do.
-          gtk_clip ''
-          pdcmdclip_jwplot_=: 0
-        end.
-      end.
-    end.
-
     if. 0~:gtkpl do. gtkpl=: 0 [ g_object_unref gtkpl end.
     if. 0~:gtkcr do. gtkcr=: 0 [ cairo_destroy gtkcr end.
   elseif. 2=GL2Backend_jgl2_ do.
