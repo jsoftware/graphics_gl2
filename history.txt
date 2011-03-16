@@ -23,3 +23,6 @@ graphics/gl2 - change history
 
 == 1.0.7/9 ==
   graphics/gl2: glcmds shared library
+
+== 1.0.10 ==
+  graphics/gl2: dquote LIBGLCMDS

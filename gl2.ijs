@@ -285,6 +285,7 @@ elseif. fexist f=. jpath '~tools/',so do.
 elseif. fexist f=. jpath '~bin/',so do.
   LIBGLCMDS=: f
 end.
+LIBGLCMDS=: dquote^:(' 'e.]) LIBGLCMDS
 EMPTY
 )
 
