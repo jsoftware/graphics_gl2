@@ -1,11 +1,12 @@
 require 'gtk'
 coclass 'jgl2'
 
+RGBSEQ=: 0 
+FIXFONT=: PROFONT=: IFUNIX{::'Tahoma 10';'Sans 10'
+
 create=: destroy=: [:  
 
 locGL2=: 0$<''         
-
-FIXFONT=: PROFONT=: IFUNIX{::'Tahoma 10';'Sans 10'
 
 3 : 0''
 if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
@@ -290,6 +291,7 @@ EMPTY
 )
 
 initialized=: 0         
+RGBSEQ=: RGBSEQ_jgl2_
 gloption=: 0   
 PForm=: PId=: PLocale=: ''
 gtkcr=: gtkpl=: 0    
@@ -572,13 +574,13 @@ if. 0=gloption do.
   elseif. 2=GL2Backend_jgl2_ do.
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx, 0 0 0 0 _1 _1
   elseif. 3=GL2Backend_jgl2_ do.
-    argb=. gdip_glqpixels 0 0,gtkwh
+    argb=. flip_rgb^:RGBSEQ gdip_glqpixels 0 0,gtkwh
     gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
     gtkpx pixbuf_setpixels 0 0,gtkwh,argb
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
     g_object_unref gtkpx
   elseif. 4=GL2Backend_jgl2_ do.
-    argb=. gdi32_glqpixels 0 0,gtkwh
+    argb=. flip_rgb^:RGBSEQ gdi32_glqpixels 0 0,gtkwh
     gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
     gtkpx pixbuf_setpixels 0 0,gtkwh,argb
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
@@ -741,15 +743,19 @@ cairo_stroke gtkcr
 )
 cairo_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-cairo_glrgb 0 0 0
-cairo_glfont PROFONT_jgl2_
-cairo_glpen 1 0
 cairo_glclipreset''
-cairo_glbrushnull''
 cairo_glwindoworg 0 0
-cairo_gltextxy 0 0
+cairo_glrgb 255 255 255
+cairo_glpen 1 0
+cairo_glbrush''
+cairo_glrect 0 0,gtkwh
+cairo_glbrushnull''
+cairo_glrgb 0 0 0
+cairo_glpen 1 0
 cairo_gltextcolor''
+cairo_glfont PROFONT_jgl2_
 cairo_glfontangle 0
+cairo_gltextxy 0 0
 0
 )
 cairo_glclip=: 3 : 0 "1
@@ -890,7 +896,7 @@ pango_font_description_free fnt
 )
 cairo_glfontangle=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkfontangle=: y
+gtkfontangle=: <.y
 0
 )
 cairo_glrgb=: 3 : 0 "1
@@ -933,10 +939,10 @@ end.
 
 cairo_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
+assert. 0~:gtkcr,gtkpl
 gtkpenrgb=: gtkrgb
-gtkpenwidth=: 0>.{.y   
+gtkpenwidth=: 0.5>.{.y   
 gtkpenstyle=: {:y 
-if. 0=gtkcr do. 0 return. end.
 cairo_set_line_width gtkcr ; (1.1-1.1)+gtkpenwidth   
 0
 )
@@ -955,9 +961,12 @@ cairo_fill gtkcr
 cairo_glpixels=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-'a b w h'=. 4{.y
+'a b w h1'=. 4{.y
+h=. |h1
 d=. 4}.y
-d=. flip_rgb d
+if. h1<0 do. d=. ,|.(h,w)$d end.
+d=. flip_rgb^:(-.RGBSEQ) d
+
 d=. 2 ic d
 surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; 4*w
 if. surface do.
@@ -977,14 +986,10 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 'a b w h1 da'=. y
 h=. |h1
-if. IF64 do.
-  d=. _2&ic memr da,0,(4*w*h),JCHAR
-  else
-  d=. memr da,0,(w*h),JINT
-end.
+d=. memr da,0,(w*h),JINT
 if. h1<0 do. d=. ,|.(h,w)$ d end.
+d=. flip_rgb^:(-.RGBSEQ) d
 
-d=. flip_rgb d
 d=. 2 ic d
 surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; 4*w
 if. surface do.
@@ -1050,7 +1055,7 @@ end.
 cairo_destroy cr
 cairo_surface_destroy surface
 
-r=. flip_rgb r
+r=. flip_rgb^:(-.RGBSEQ) r
 )
 cairo_glqwh=: 3 : 0
 gtkwh
@@ -1113,7 +1118,7 @@ gtktextrgb=: gtkrgb
 )
 cairo_gltextxy=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtktextxy=: y
+gtktextxy=: <.y
 0
 )
 cairo_glqextent=: 3 : 0 "1
@@ -1212,7 +1217,7 @@ SetBkMode HDC, y{OPAQUE,TRANSPARENT
 gdi32_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-Arc HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
+Arc HDC, (2{.y),((2{.y)+(2 3{y)),4}.y=. <.y
 0
 )
 gdi32_glbrush=: 3 : 0 "1
@@ -1263,7 +1268,7 @@ if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:HDC,BMP
 prev=. SelectObject HDC, GetStockObject BLACK_PEN
 prevb=. SelectObject HDC, GetStockObject BLACK_BRUSH
-Rectangle HDC, (2{.y), (2{.y) + 2}.y
+Rectangle HDC, (2{.y), (2{.y) + 2}.y=. <.y
 SelectObject HDC, prev
 SelectObject HDC, prevb
 0
@@ -1273,15 +1278,19 @@ if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 SetBkMode HDC, TRANSPARENT
 SetPolyFillMode HDC,ALTERNATE
-gdi32_glrgb 0 0 0
-gdi32_glfont utf8 PROFONT_jgl2_
-gdi32_glpen 1 0
 gdi32_glclipreset''
-gdi32_glbrushnull''
 gdi32_glwindoworg 0 0
-gdi32_gltextxy 0 0
+gdi32_glrgb 255 255 255
+gdi32_glpen 1 0
+gdi32_glbrush''
+gdi32_glrect 0 0,gtkwh
+gdi32_glbrushnull''
+gdi32_glrgb 0 0 0
+gdi32_glpen 1 0
 gdi32_gltextcolor''
+gdi32_glfont PROFONT_jgl2_
 gdi32_glfontangle 0
+gdi32_gltextxy 0 0
 0
 )
 gdi32_glclip=: 3 : 0 "1
@@ -1289,7 +1298,7 @@ if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 gtkclipped=: 1
 BeginPath HDC
-Rectangle HDC, (2{.y), (2{.y) + 2}.y
+Rectangle HDC, (2{.y), (2{.y) + 2}.y=. <.y
 EndPath HDC
 SelectClipPath HDC,RGN_COPY
 0
@@ -1387,7 +1396,7 @@ gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK
 gdi32_glellipse=: 3 : 0"1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-Ellipse HDC, (2{.y),((2{.y)+(2 3{y))
+Ellipse HDC, <.(2{.y),((2{.y)+(2 3{y))
 0
 )
 gdi32_glfont=: 3 : 0 "1
@@ -1432,12 +1441,12 @@ FONT=: obj
 )
 gdi32_glfontangle=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkfontangle=: y
+gtkfontangle=: <.y
 0
 )
 gdi32_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkrgb=: RGB y
+gtkrgb=: RGB`BGR@.1 y
 0
 )
 gdi32_gllines=: 3 : 0 "1
@@ -1484,13 +1493,13 @@ PEN=: obj
 gdi32_glpie=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-Pie HDC, (2{.y),((2{.y)+(2 3{y)),4}.y
+Pie HDC, <.(2{.y),((2{.y)+(2 3{y)),4}.y
 0
 )
 gdi32_glpixel=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-SetPixel HDC,(2{.y),gtkrgb
+SetPixel HDC,(<.2{.y),gtkrgb
 0
 )
 gdi32_glpixels=: 3 : 0 "1
@@ -1499,29 +1508,22 @@ assert. 0~:HDC,BMP
 'a b w h1'=. 4{.y
 h=. |h1
 d=. 4}.y
-d=. (h,w)$flip_rgb d
+d=. , |.^:(h1<0) (h,w)$flip_rgb^:RGBSEQ d
 
-ww=. {.gtkwh
+if. IF64 do. d=. 2&ic d end.
 
 bi=. 40${.a.
-bi=. (2 ic 40,ww,-h) (i.12)}bi
+bi=. (2 ic 40,w,-h) (i.12)}bi
 bi=. (1 ic 1 32) (12+i.4)}bi
 bi=. (2 ic BI_RGB) (16+i.4)}bi
-BmpSize=. (s=. 4 * ww) * h
-hDIB=. GlobalAlloc GHND,BmpSize
-p=. GlobalLock hDIB
-GetDIBits HDC; BMP; b; h; (<p); bi; DIB_RGB_COLORS
-if. IF64 do.
-  for_i. i.h1 do.
-    (2&ic i{d) memw p,((4*a)+s*i+b),(4*w),JCHAR
-  end.
-else.
-  for_i. i.h1 do.
-    (i{d) memw p,((4*a)+s*i+b),w,JINT
-  end.
-end.
-GlobalUnlock hDIB
-GlobalFree hDIB
+BmpSize=. (s=. 4 * w) * h
+hDIB=. CreateDIBitmap HDC; bi; CBM_INIT; (<15!:14 <'d'); bi; DIB_RGB_COLORS
+memdc=. CreateCompatibleDC HDC
+oldbm=. SelectObject memdc,hDIB
+BitBlt HDC,a,b,w,h,memdc,0,0,SRCCOPY
+SelectObject memdc,oldbm
+DeleteDC memdc
+DeleteObject hDIB
 0
 )
 gdi32_glpixelsx=: 3 : 0 "1
@@ -1529,34 +1531,23 @@ if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 'a b w h1 da'=. y
 h=. |h1
-if. IF64 do.
-  d=. (h,w)$ _2&ic memr da,0,(4*w*h),JCHAR
-  else
-  d=. (h,w)$ memr da,0,(w*h),JINT
-end.
-d=. (h,w)$flip_rgb d
+d=. memr da,0,(w*h),JINT
+d=. , |.^:(h1<0) (h,w)$flip_rgb^:RGBSEQ d
 
-ww=. {.gtkwh
+if. IF64 do. d=. 2&ic d end.
 
 bi=. 40${.a.
-bi=. (2 ic 40,ww,-h) (i.12)}bi
+bi=. (2 ic 40,w,-h) (i.12)}bi
 bi=. (1 ic 1 32) (12+i.4)}bi
 bi=. (2 ic BI_RGB) (16+i.4)}bi
-BmpSize=. (s=. 4 * ww) * h
-hDIB=. GlobalAlloc GHND,BmpSize
-p=. GlobalLock hDIB
-GetDIBits HDC; BMP; b; h; (<p); bi; DIB_RGB_COLORS
-if. IF64 do.
-  for_i. i.h1 do.
-    (2&ic i{d) memw p,((4*a)+s*i+b),(4*w),JCHAR
-  end.
-else.
-  for_i. i.h1 do.
-    (i{d) memw p,((4*a)+s*i+b),w,JINT
-  end.
-end.
-GlobalUnlock hDIB
-GlobalFree hDIB
+BmpSize=. (s=. 4 * w) * h
+hDIB=. CreateDIBitmap HDC; bi; CBM_INIT; (<15!:14 <'d'); bi; DIB_RGB_COLORS
+memdc=. CreateCompatibleDC HDC
+oldbm=. SelectObject memdc,hDIB
+BitBlt HDC,a,b,w,h,memdc,0,0,SRCCOPY
+SelectObject memdc,oldbm
+DeleteDC memdc
+DeleteObject hDIB
 0
 )
 gdi32_glpolygon=: 3 : 0 "1
@@ -1590,7 +1581,7 @@ GlobalUnlock hDIB
 GlobalFree hDIB
 if. 0~:a do. z=. a}."1 z end.
 if. w~:{:$z do. z=. w{."1 z end.
-z=. flip_rgb ,z
+z=. flip_rgb^:RGBSEQ ,z
 )
 gdi32_glqtextmetrics=: 3 : 0 "1
 metrics=. 64${.a.
@@ -1624,7 +1615,7 @@ SetTextColor HDC, gtktextrgb
 )
 gdi32_gltextxy=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtktextxy=: y
+gtktextxy=: <.y
 0
 )
 gdi32_glqextent=: 3 : 0 "1
@@ -1668,7 +1659,7 @@ assert. 0~:TOK,BMP,GC
 PenUnit=: Pixel [ FontUnit=: Point
 PEN=: BRUSH=: FONT=: TXTCLR=: 0
 gtktextxy=: 2$0
-gtkrgb=: BRGA 0 0 0
+gtkrgb=: BGRA 0 0 0
 EMPTY
 )
 gdip_free=: 3 : 0
@@ -1682,18 +1673,17 @@ if. TOK do. GdiplusShutdown TOK end.
 TOK=: BMP=: GC=: 0
 PEN=: BRUSH=: FONT=: TXTCLR=: 0
 )
-BRGA=: 3 : 'OPAC OR 256 256 256#.y'  
 gdip_glarc2=: 3 : 0 "1
 if. PEN do.
-  GdipDrawArc GC;PEN;<"0 y
+  GdipDrawArc GC;PEN;<"0 <.y
 end.
 )
 gdip_glpie2=: 3 : 0 "1
-if. BRUSH do.
-  GdipFillPie GC;BRUSH;<"0 y
+if. (-.gtkbrushnull) *. BRUSH do.
+  GdipFillPie GC;BRUSH;<"0 <.y
 end.
 if. PEN do.
-  GdipDrawPie GC;PEN;<"0 y
+  GdipDrawPie GC;PEN;<"0 <.y
 end.
 )
 
@@ -1706,7 +1696,7 @@ end.
 
 gdip_glclosedcurve=: 3 : 0 "1
 if. 2|#y do. 't y'=. ({. ; }.) y else. t=. 1 end.
-if. BRUSH do.
+if. (-.gtkbrushnull) *. BRUSH do.
   GdipFillClosedCurve GC;BRUSH;(<.y);(<.-:#y);(t%1);Winding
 end.
 if. PEN do.
@@ -1717,24 +1707,24 @@ gdip_gdiarcisi=: 3 : 0
 ctr=. (0 1{y) + -: (2 3{y)
 'bgn end'=. - ctr calcAngle (6 7,:4 5){y
 dif=. end - bgn
-(4{.y), dfr 2p1| bgn,dif
+<.(4{.y), dfr 2p1| bgn,dif
 )
 gdip_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-t=. BRUSH
-BRUSH=: 1
+t=. gtkbrushnull
+gtkbrushnull=: 0
 gdip_glarcx gdip_gdiarcisi y
-BRUSH=: t
+gtkbrushnull=: t
 0
 )
 gdip_glarcx=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-if. BRUSH do.
-  GdipDrawArc GC;BRUSH;<"0 y
+if. (-.gtkbrushnull) *. BRUSH do.
+  GdipDrawArc GC;BRUSH;<"0 <.y
 end.
-GdipDrawArc GC;PEN;<"0 y
+GdipDrawArc GC;PEN;<"0 <.y
 0
 )
 gdip_glbrush=: 3 : 0 "1
@@ -1744,12 +1734,12 @@ gtkbrushrgb=: gtkrgb
 r=. GdipCreateSolidFill gtkbrushrgb;BRUSH=: ,_1
 assert. 0=r
 BRUSH=: {.BRUSH
+gtkbrushnull=: 0
 0
 )
 gdip_glbrushnull=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. BRUSH do. GdipDeleteBrush BRUSH end.
-BRUSH=: 0
+gtkbrushnull=: 1
 0
 )
 gdip_glcapture=: 3 : 0 "1
@@ -1775,20 +1765,24 @@ gdip_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:TOK,GC
-GdipFillRectangle GC;(BRGA 0 0 0);<"0 y
+GdipFillRectangle GC;(BGRA 0 0 0);<"0 <.y
 0
 )
 gdip_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gdip_glrgb 0 0 0
-gdip_glfont PROFONT_jgl2_
-gdip_glpen 1 0
 gdip_glclipreset''
-gdip_glbrushnull''
 gdip_glwindoworg 0 0
-gdip_gltextxy 0 0
+gdip_glrgb 255 255 255
+gdip_glpen 1 0
+gdip_glbrush''
+gdip_glrect 0 0,gtkwh
+gdip_glbrushnull''
+gdip_glrgb 0 0 0
+gdip_glpen 1 0
 gdip_gltextcolor''
+gdip_glfont PROFONT_jgl2_
 gdip_glfontangle 0
+gdip_gltextxy 0 0
 0
 )
 gdip_glclip=: 3 : 0 "1
@@ -1879,7 +1873,7 @@ gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK
 gdip_glellipse=: 3 : 0"1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-gdip_glarcx y,"1 [ 0,360*64
+gdip_glarcx (<.y),"1 [ 0,360*64
 0
 )
 gdip_glfont=: 3 : 0 "1
@@ -1943,7 +1937,7 @@ gtkfontangle=: y
 )
 gdip_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkrgb=: BRGA y
+gtkrgb=: BGRA y
 0
 )
 gdip_gllines=: 3 : 0 "1
@@ -1951,7 +1945,7 @@ if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 assert. 0~:TOK,GC
 if. PEN do.
-  GdipDrawLines GC;PEN;y;(<.-:#y)
+  GdipDrawLines GC;PEN;(<.y);(<.-:#y)
 end.
 0
 )
@@ -1989,7 +1983,7 @@ end.
 )
 gdip_glpie=: 3 : 0 "1
 xywha1a2=. gdip_gdiarcisi y
-if. BRUSH do.
+if. (-.gtkbrushnull) *. BRUSH do.
   GdipFillPie GC;BRUSH;<"0 xywha1a2
 end.
 if. PEN do.
@@ -2000,7 +1994,7 @@ end.
 gdip_glpixel=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-GdipBitmapSetPixel BMP,(2{.y),gtkrgb
+GdipBitmapSetPixel BMP,(<.2{.y),gtkrgb
 0
 )
 gdip_glpixels=: 3 : 0 "1
@@ -2009,88 +2003,34 @@ assert. 0~:TOK,GC
 'a b w h1'=. 4{.y
 h=. |h1
 d=. 4}.y
-
-rect=. a,b,w,h
-DATA=. i.6
-'r DATA'=. 0 _1{ GdipBitmapLockBits ({.BMP);rect;ImageLockModeRead;PixelFormat32bppARGB;DATA
+if. h1<0 do. d=. ,|.(h,w)$ d end.
+d=. ALPHA OR flip_rgb^:(-.RGBSEQ) d
+GdipCreateBitmapFromScan0c w;h;(w*4);PixelFormat32bppARGB;(2&ic d);bmp=.,_1
+r=. GdipDrawImageI GC, bmp, a, b
 assert. 0=r
-if. IF64 do.
-  'wh sf p r'=. 4{.DATA
-  'w h'=. _2&ic 3&ic wh
-  's f'=. _2&ic 3&ic sf
-  if. s>0 do.
-    for_i. i.h1 do.
-      (2&ic i{d) memw p,(s*i),(4*w),JCHAR
-    end.
-  else.
-    for_i. i.h1 do.
-      (2&ic i{d) memw p,((|s*i)+s*<:h),(4*w),JCHAR
-    end.
-  end.
-else.
-  'w h s f p r'=. DATA
-  if. s>0 do.
-    for_i. i.h1 do.
-      (i{d) memw p,(s*i),w,JINT
-    end.
-  else.
-    for_i. i.h1 do.
-      (i{d) memw p,((|s*i)+s*<:h),w,JINT
-    end.
-  end.
-end.
-GdipBitmapUnLockBits ({.BMP);DATA
+GdipDisposeImage {.bmp
 0
 )
-gdip_glpixels=: 3 : 0 "1
+gdip_glpixelsx=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 'a b w h1 da'=. y
 h=. |h1
-if. IF64 do.
-  d=. (h,w)$ _2&ic memr da,0,(4*w*h),JCHAR
-  else
-  d=. (h,w)$ memr da,0,(w*h),JINT
-end.
-d=. (h,w)$flip_rgb d
-
-rect=. a,b,w,h
-DATA=. i.6
-'r DATA'=. 0 _1{ GdipBitmapLockBits ({.BMP);rect;ImageLockModeRead;PixelFormat32bppARGB;DATA
+d=. memr da,0,(w*h),JINT
+if. h1<0 do. d=. ,|.(h,w)$ d end.
+d=. ALPHA OR flip_rgb^:(-.RGBSEQ) d
+GdipCreateBitmapFromScan0c w;h;(w*4);PixelFormat32bppARGB;(2&ic d);bmp=.,_1
+r=. GdipDrawImageI GC, bmp, a, b
 assert. 0=r
-if. IF64 do.
-  'wh sf p r'=. 4{.DATA
-  'w h'=. _2&ic 3&ic wh
-  's f'=. _2&ic 3&ic sf
-  if. s>0 do.
-    for_i. i.h do.
-      (2&ic i{d) memw p,(s*i),(4*w),JCHAR
-    end.
-  else.
-    for_i. i.h do.
-      (2&ic i{d) memw p,((|s*i)+s*<:h),(4*w),JCHAR
-    end.
-  end.
-else.
-  'w h s f p r'=. DATA
-  if. s>0 do.
-    for_i. i.h do.
-      (i{d) memw p,(s*i),w,JINT
-    end.
-  else.
-    for_i. i.h do.
-      (i{d) memw p,((|s*i)+s*<:h),w,JINT
-    end.
-  end.
-end.
-GdipBitmapUnLockBits ({.BMP);DATA
+GdipDisposeImage {.bmp
+
 0
 )
 gdip_glpolygon=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 c=. 2>.(+ 2&|)#y
-if. BRUSH do.
+if. (-.gtkbrushnull) *. BRUSH do.
   GdipFillPolygon GC;BRUSH;(<.c{.y);(<.-:c);Alternate
 end.
 if. PEN do.
@@ -2116,7 +2056,7 @@ else.
   z=. |.^:(s<0) w&{."1^:(w~:|s%4) (h,|s%4)$memr p,((s<0)*s*<:h),(h*<.|s%4),JINT
 end.
 GdipBitmapUnLockBits ({.BMP);DATA
-z=. flip_rgb ,z AND NOTALPHA
+z=. flip_rgb^:(-.RGBSEQ) ,z AND NOTALPHA
 )
 gdip_glqtextmetrics=: 3 : 0 "1
 assert. 0~:FONT
@@ -2145,11 +2085,11 @@ gdip_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:TOK,GC
-if. BRUSH do.
-  GdipFillRectangle GC;BRUSH;<"0 y
+if. (-.gtkbrushnull) *. BRUSH do.
+  GdipFillRectangle GC;BRUSH;<"0 <.y
 end.
 if. PEN do.
-  GdipDrawRectangle GC;PEN;<"0 y
+  GdipDrawRectangle GC;PEN;<"0 <.y
 end.
 0
 )
@@ -2181,7 +2121,7 @@ TXTCLR=: {.TXTCLR [ GdipCreateSolidFill gtktextrgb;TXTCLR=: ,_1
 )
 gdip_gltextxy=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtktextxy=: y
+gtktextxy=: <.y
 0
 )
 gdip_glqextent=: 3 : 0 "1
@@ -2205,7 +2145,7 @@ gdip_glwindoworg=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 GdipResetWorldTransform GC
-GdipTranslateWorldTransform GC;(<"0 y),<MatrixOrderPrepend
+GdipTranslateWorldTransform GC;(<"0 <.y),<MatrixOrderPrepend
 0
 )
 gdip_glemfclose=: [:
@@ -2213,7 +2153,6 @@ gdip_glemfopen=: [:
 gdip_glemfplay=: [:
 gdip_glfile=: [:
 gdip_glnodblbuf=: [:
-gdip_glpixelsx=: [:
 gdip_glprint=: [:
 gdip_glprintmore=: [:
 gdip_glqhandles=: [:
@@ -2275,28 +2214,32 @@ if. gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end. 
 assert. 0~:gtkpx,gtkpc
 pixmap_gtkcolor RGB 0 0 0
-gdk_draw_rectangle gtkpx,gtkgc,1,y
+gdk_draw_rectangle gtkpx,gtkgc,1,<.y
 pixmap_gtkcolor gtkpenrgb
 0
 )
 pixmap_glclear=: 3 : 0 "1
 if. gloption do. 0 return. end.
-pixmap_glrgb 0 0 0
-pixmap_glfont PROFONT_jgl2_
-pixmap_glpen 1 0
 pixmap_glclipreset''
-pixmap_glbrushnull''
 pixmap_glwindoworg 0 0
-pixmap_gltextxy 0 0
+pixmap_glrgb 255 255 255
+pixmap_glpen 1 0
+pixmap_glbrush''
+pixmap_glrect 0 0,gtkwh
+pixmap_glbrushnull''
+pixmap_glrgb 0 0 0
+pixmap_glpen 1 0
 pixmap_gltextcolor''
+pixmap_glfont PROFONT_jgl2_
 pixmap_glfontangle 0
+pixmap_gltextxy 0 0
 0
 )
 pixmap_glclip=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 gtkclipped=: 1
-gdk_gc_set_clip_rectangle gtkgc;2(3!:4)y
+gdk_gc_set_clip_rectangle gtkgc;2(3!:4)<.y
 0
 )
 pixmap_glclipreset=: 3 : 0 "1
@@ -2417,7 +2360,7 @@ pango_font_description_free fnt
 )
 pixmap_glfontangle=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkfontangle=: y
+gtkfontangle=: <.y
 0
 )
 pixmap_glrgb=: 3 : 0 "1
@@ -2475,7 +2418,7 @@ h=. |h1
 d=. 4}.y
 if. h1<0 do. d=. ,|.(h,w)$ d end.
 
-d=. d OR ALPHA
+d=. ALPHA OR flip_rgb^:RGBSEQ d
 if. IF64 do. d=. 2 ic d end.
 buf=. gdk_pixbuf_new_from_data (15!:14<'d'),GDK_COLORSPACE_RGB,1,8,w,h,(4*w),0,0
 if. buf do.
@@ -2489,15 +2432,10 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 'a b w h1 da'=. y
 h=. |h1
-if. IF64 do.
-  d=. _2&ic memr da,0,(4*w*h),JCHAR
-  else
-  d=. memr da,0,(w*h),JINT
-end.
-
+d=. memr da,0,(w*h),JINT
 if. h1<0 do. d=. ,|.(h,w)$ d end.
 
-d=. d OR ALPHA
+d=. ALPHA OR flip_rgb^:RGBSEQ d
 if. IF64 do. d=. 2 ic d end.
 buf=. gdk_pixbuf_new_from_data (15!:14<'d'),GDK_COLORSPACE_RGB,1,8,w,h,(4*w),0,0
 if. buf do.
@@ -2533,7 +2471,7 @@ else.
   r=. memr ad,0,(w*h),JINT
 end.
 g_object_unref pixbuf
-r AND NOTALPHA
+NOTALPHA AND flip_rgb^:RGBSEQ r
 )
 pixmap_glqwh=: 3 : 0
 gtkwh
@@ -2589,7 +2527,7 @@ gtktextrgb=: gtkrgb
 )
 pixmap_gltextxy=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtktextxy=: y
+gtktextxy=: <.y
 0
 )
 pixmap_glqextent=: 3 : 0 "1
@@ -2689,6 +2627,7 @@ end.
 ''
 )
 NOTALPHA=: 0{_2 ic 255 255 255 0{a.
+ALPHARGB=: IF64{::_1;16bffffffff
 
 flip_rgb=: 3 : 0
 d=. ((#y),4)$2 (3!:4) y
@@ -2709,7 +2648,9 @@ get_type=: 3 : 0
 memr y,0 1,JINT
 )
 RGB=: 256 256 256&#.@|.         
-IRGB=: 3&{.@|.@(256 256 256 256&#:)  
+BGR=: 256 256 256&#.            
+IRGB=: _4&{.@|.@(256 256 256 256&#:)  
+BGRA=: 3 : 'ALPHA OR 256 256 256#.y'  
 cairo_cairocolor=: 3 : 0
 cairo_set_source_rgba gtkcr ; <"0 rgba2cairo IRGB y
 )
@@ -2741,7 +2682,7 @@ a=. 1-a
 (r,g,b), a  
 )
 rgb2gtk=: 3 : 0
-(0 0 0 0{a.), 1 (3!:4) (256 * y) + 255 * 127 < y
+(0 0 0 0{a.), 1 (3!:4) (256 * y) + 255 * 127 < y=. 3{.y
 )
 parseFontname=: 3 : 0
 font=. ' ',y
