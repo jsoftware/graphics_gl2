@@ -299,7 +299,7 @@ gtkwin=: gtkdagc=: gtkgc=: gtkpx=: gtkpc=: gtkpl=: gtkplc=: 0
 gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: 0
 gtktextxy=: 0 0
 gtkpenrgb=: gtkbrushrgb=: gtktextrgb=: gtkbrushnull=: 0
-TOK=: BMP=: GC=:PEN=: BRUSH=: FONT=: TXTCLR=: 0
+TOK=: BMP=: GC=: PEN=: BRUSH=: FONT=: TXTCLR=: 0
 HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
 ogl=: 0$<''
 newctx=: 1     
@@ -317,8 +317,12 @@ gtk_widget_set_can_focus ::0: canvas,1
 events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POINTER_MOTION_MASK,GDK_KEY_PRESS_MASK,GDK_KEY_RELEASE_MASK,GDK_FOCUS_CHANGE_MASK
 gtk_widget_add_events canvas, OR events
 
-consig3 canvas;'configure_event';'configure_event'
-consig3 canvas;'expose-event';'expose_event'
+consig3 canvas;'configure-event';'configure_event'
+if. 3=GTKVER_j_ do.
+  consig3 canvas;'draw';'draw'
+else.
+  consig3 canvas;'expose-event';'expose_event'
+end.
 consig3 canvas;'button-press-event';'button_press_event'
 consig3 canvas;'button-release-event';'button_release_event'
 consig3 canvas;'motion-notify-event';'motion_notify_event'
@@ -541,7 +545,7 @@ end.
 
 0
 )
-expose_event=: 3 : 0
+draw=: expose_event=: 3 : 0
 'widget event data'=. y
 
 if. #PForm do.
@@ -563,14 +567,21 @@ end.
 
 if. 0=gloption do.
   if. GL2Backend_jgl2_ e. 0 1 do.
-    cairo_surface_flush cairo_get_target gtkcr
-    cr=. gdk_cairo_create getGtkWidgetWindow widget
-    cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-    cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
-    cairo_rectangle cr; 0 ;0; <"0 gtkwh
-    cairo_clip cr
-    cairo_paint cr
-    cairo_destroy cr
+    if. 3=GTKVER_j_ do.
+      cr=. event
+      cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
+      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
+      cairo_paint cr
+    else.
+      cairo_surface_flush cairo_get_target gtkcr
+      cr=. gdk_cairo_create getGtkWidgetWindow widget
+      cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
+      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
+      cairo_rectangle cr; 0 ;0; <"0 gtkwh
+      cairo_clip cr
+      cairo_paint cr
+      cairo_destroy cr
+    end.
   elseif. 2=GL2Backend_jgl2_ do.
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx, 0 0 0 0 _1 _1
   elseif. 3=GL2Backend_jgl2_ do.
