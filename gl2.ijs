@@ -527,12 +527,10 @@ if. 0=gloption do.
     gtkplc=: pango_layout_get_context gtkpl
   elseif. 3=GL2Backend_jgl2_ do.
     if. 0~:TOK do. gdip_free '' end.
-    gtkdagc=: getdagc widget
     gdip_init gtkwh
     assert. 0~:TOK,GC
   elseif. 4=GL2Backend_jgl2_ do.
     if. 0~:HDC do. gdi32_free '' end.
-    gtkdagc=: getdagc widget
     gdi32_init gtkwh
     assert. 0~:HDC,BMP
   end.
@@ -586,16 +584,10 @@ if. 0=gloption do.
     gdk_draw_drawable gtkwin,gtkdagc,gtkpx, 0 0 0 0 _1 _1
   elseif. 3=GL2Backend_jgl2_ do.
     argb=. flip_rgb^:RGBSEQ gdip_glqpixels 0 0,gtkwh
-    gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-    gtkpx pixbuf_setpixels 0 0,gtkwh,argb
-    gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
-    g_object_unref gtkpx
+    gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
   elseif. 4=GL2Backend_jgl2_ do.
     argb=. flip_rgb^:RGBSEQ gdi32_glqpixels 0 0,gtkwh
-    gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-    gtkpx pixbuf_setpixels 0 0,gtkwh,argb
-    gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
-    g_object_unref gtkpx
+    gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
   end.
 end.
 0
@@ -1476,10 +1468,7 @@ gdi32_glpaintx=: 3 : 0 "1
 assert. 0~:HDC,BMP
 if. 0=gloption do.
   argb=. gdi32_glqpixels 0 0,gtkwh
-  gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-  gtkpx pixbuf_setpixels 0 0,gtkwh,argb
-  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
-  g_object_unref gtkpx
+  gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
 end.
 0
 )
@@ -1968,10 +1957,7 @@ gdip_glpaintx=: 3 : 0 "1
 assert. 0~:TOK,GC
 if. 0=gloption do.
   argb=. gdip_glqpixels 0 0,gtkwh
-  gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-  gtkpx pixbuf_setpixels 0 0,gtkwh,argb
-  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
-  g_object_unref gtkpx
+  gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
 end.
 0
 )
