@@ -1,7 +1,7 @@
 require 'gtk'
 coclass 'jgl2'
 
-RGBSEQ=: 0 
+RGBSEQ=: IFJ6    
 FIXFONT=: PROFONT=: IFUNIX{::'Tahoma 10';'Sans 10'
 
 create=: destroy=: [:  
@@ -1449,7 +1449,7 @@ gtkfontangle=: <.y
 )
 gdi32_glrgb=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkrgb=: RGB`BGR@.1 y
+gtkrgb=: BGR y
 0
 )
 gdi32_gllines=: 3 : 0 "1
@@ -2644,10 +2644,10 @@ get_button=: 3 : 0
 get_type=: 3 : 0
 memr y,0 1,JINT
 )
-RGB=: 256 256 256&#.@|.         
-BGR=: 256 256 256&#.            
-IRGB=: _4&{.@|.@(256 256 256 256&#:)  
-BGRA=: 3 : 'ALPHA OR 256 256 256#.y'  
+RGB=: 256&#.@endian                   
+BGR=: 256&#.@Endian                   
+IRGB=: _4&{.@endian@(256 256 256 256&#:)  
+BGRA=: 3 : 'ALPHA OR 256 256 256#.@Endian y'  
 cairo_cairocolor=: 3 : 0
 cairo_set_source_rgba gtkcr ; <"0 rgba2cairo IRGB y
 )
@@ -2679,7 +2679,7 @@ a=. 1-a
 (r,g,b), a  
 )
 rgb2gtk=: 3 : 0
-(0 0 0 0{a.), 1 (3!:4) (256 * y) + 255 * 127 < y=. 3{.y
+(0 0 0 0{a.), 1 (3!:4) (256 * y) + 255 * 127 < y=. Endian 3{.y
 )
 parseFontname=: 3 : 0
 font=. ' ',y
