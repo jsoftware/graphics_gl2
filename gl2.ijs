@@ -922,11 +922,13 @@ cairo_stroke gtkcr
 0
 )
 cairo_glpaint=: 3 : 0 "1
+newsize=: 1
 gtk_widget_queue_draw canvas
 0
 )
 cairo_glpaintx=: 3 : 0 "1
 assert. 0~:gtkcr,gtkpl
+newsize=: 1
 if. 0=gloption do.
   cairo_surface_flush cairo_get_target gtkcr
   cr=. gdk_cairo_create getGtkWidgetWindow widget
@@ -1461,11 +1463,13 @@ Polyline HDC; (<.c{.y); (<.-:c)
 0
 )
 gdi32_glpaint=: 3 : 0 "1
+newsize=: 1
 gtk_widget_queue_draw canvas
 0
 )
 gdi32_glpaintx=: 3 : 0 "1
 assert. 0~:HDC,BMP
+newsize=: 1
 if. 0=gloption do.
   argb=. gdi32_glqpixels 0 0,gtkwh
   gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
@@ -1950,11 +1954,13 @@ end.
 0
 )
 gdip_glpaint=: 3 : 0 "1
+newsize=: 1
 gtk_widget_queue_draw canvas
 0
 )
 gdip_glpaintx=: 3 : 0 "1
 assert. 0~:TOK,GC
+newsize=: 1
 if. 0=gloption do.
   argb=. gdip_glqpixels 0 0,gtkwh
   gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
@@ -2376,11 +2382,13 @@ gdk_draw_lines gtkpx;gtkgc;y;c
 0
 )
 pixmap_glpaint=: 3 : 0 "1
+newsize=: 1
 gtk_widget_queue_draw canvas
 0
 )
 pixmap_glpaintx=: 3 : 0 "1
 assert. 0~:gtkpx,gtkpc
+newsize=: 1
 if. 0=gloption do.
   gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
 end.
