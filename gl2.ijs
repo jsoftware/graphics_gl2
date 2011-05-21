@@ -931,7 +931,7 @@ assert. 0~:gtkcr,gtkpl
 newsize=: 1
 if. 0=gloption do.
   cairo_surface_flush cairo_get_target gtkcr
-  cr=. gdk_cairo_create getGtkWidgetWindow widget
+  cr=. gdk_cairo_create getGtkWidgetWindow canvas
   cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
   cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
   cairo_rectangle cr; 0 ;0; <"0 gtkwh
