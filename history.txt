@@ -32,3 +32,9 @@ graphics/gl2 - change history
 
 == 1.0.12/13 ==
   graphics/gl2: gtk+3 compatible
+
+== 1.0.14 ==
+ * gl2: fix cairo glpaintx
+ * gl2 plot: bug fix
+ * opengl color RGB byte order with R in the lowest byte
+ * fix gtk clipread/write
