@@ -398,13 +398,14 @@ button_release_event=: 3 : 0
 )
 scroll_event=: 3 : 0
 'widget event data'=. y
+dir=. 256#.endian a.i.memr event,GdkEventScroll_direction,4
 mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
 state=. 2{;gdk_event_get_state event;,0
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
   if. 3= nc <f=. PForm,'_',PId,'_mwheel_',(>PLocale),'_' do.
     locGL2_jgl2_=: coname''
-    sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,1
+    sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,1-2*dir
     if. (1=gloption) *. #ogl do.
       current__ogl widget [ ogl__PLocale=: ogl
     end.
