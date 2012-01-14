@@ -1,12 +1,12 @@
 require 'gtk'
 coclass 'jgl2'
 
-RGBSEQ=: IFJ6    
+RGBSEQ=: IFJ6
 FIXFONT=: PROFONT=: IFUNIX{::'Tahoma 10';'Sans 10'
 
-create=: destroy=: [:  
+create=: destroy=: [:
 
-locGL2=: 0$<''         
+locGL2=: 0$<''
 
 3 : 0''
 if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
@@ -290,20 +290,20 @@ LIBGLCMDS=: dquote^:(' 'e.]) LIBGLCMDS
 EMPTY
 )
 
-initialized=: 0         
+initialized=: 0
 RGBSEQ=: RGBSEQ_jgl2_
-gloption=: 0   
+gloption=: 0
 PForm=: PId=: PLocale=: ''
-gtkcr=: gtkpl=: 0    
-gtkwin=: gtkdagc=: gtkgc=: gtkpx=: gtkpc=: gtkpl=: gtkplc=: 0    
+gtkcr=: gtkpl=: 0
+gtkwin=: gtkdagc=: gtkgc=: gtkpx=: gtkpc=: gtkpl=: gtkplc=: 0
 gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: 0
 gtktextxy=: 0 0
 gtkpenrgb=: gtkbrushrgb=: gtktextrgb=: gtkbrushnull=: 0
 TOK=: BMP=: GC=: PEN=: BRUSH=: FONT=: TXTCLR=: 0
 HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
 ogl=: 0$<''
-newctx=: 1     
-newsize=: 1    
+newctx=: 1
+newsize=: 1
 create=: 3 : 0
 'w h option'=. 3{.y
 canvas=: gtk_drawing_area_new''
@@ -497,14 +497,14 @@ configure_event=: 3 : 0
 'widget event data'=. y
 gtkwh=: _2{. getGtkWidgetAllocation widget
 gtkwin=: getGtkWidgetWindow widget
-newsize=: 1         
+newsize=: 1
 if. (1=gloption) *. #ogl do.
   wh__ogl=: gtkwh
   if. #PForm do. openglut_newsize__PLocale=: 1 end.
   if. OsMesa_jzopengl_ do. free__ogl widget end.
   if. 0= ctx=. getglctx__ogl widget do.
     ctx=. alloc__ogl widget
-    newctx=: 1          
+    newctx=: 1
   end.
   if. 0= ctx do. smoutput 'cannot alloc opengl context' end.
 end.
@@ -513,7 +513,7 @@ if. 0=gloption do.
     if. 0~:gtkpl do. gtkpl=: 0 [ g_object_unref gtkpl end.
     if. 0~:gtkcr do. gtkcr=: 0 [ cairo_destroy gtkcr end.
     gtkcr=: cairo_create surface=. cairo_image_surface_create CAIRO_FORMAT_RGB24,gtkwh
-    cairo_surface_destroy surface  
+    cairo_surface_destroy surface
     gtkpl=: pango_cairo_create_layout gtkcr
   elseif. 2=GL2Backend_jgl2_ do.
     if. gtkpx do. g_object_unref gtkpx end.
@@ -535,9 +535,9 @@ if. 0=gloption do.
     gdi32_init gtkwh
     assert. 0~:HDC,BMP
   end.
-  glclear''             
+  glclear''
 end.
-initialized=: 1         
+initialized=: 1
 if. #PForm do.
   locGL2_jgl2_=: coname''
 end.
@@ -569,13 +569,13 @@ if. 0=gloption do.
     if. 3=GTKVER_j_ do.
       cr=. event
       cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
+      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
       cairo_paint cr
     else.
       cairo_surface_flush cairo_get_target gtkcr
       cr=. gdk_cairo_create getGtkWidgetWindow widget
       cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
+      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
       cairo_rectangle cr; 0 ;0; <"0 gtkwh
       cairo_clip cr
       cairo_paint cr
@@ -615,7 +615,7 @@ if. 0=gloption do.
   end.
 end.
 
-destroy ''       
+destroy ''
 0
 )
 draw_page=: 3 : 0
@@ -630,7 +630,7 @@ gtkclipped=: 0
 glclear''
 paint__PLocale ''
 gtkpl=: 0 [ g_object_unref gtkpl
-gtkcr=: 0                                  
+gtkcr=: 0
 0
 )
 
@@ -720,15 +720,15 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 smoutput 'stub: glcapture ',":y
 select. cap=. {.y
-case. 0 do.  
+case. 0 do.
   capture=: cap
-case. 1 do.  
+case. 1 do.
   capture=: cap
-case. 5 do.  
+case. 5 do.
   capture=: cap
-case. 6 do.  
+case. 6 do.
   capture=: cap
-case. 7 do.  
+case. 7 do.
   capture=: cap
   rect=. }.cap
 end.
@@ -736,7 +736,7 @@ end.
 )
 cairo_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 cairo_cairocolor 0
 cairo_rectangle gtkcr ; <"0 y
@@ -798,16 +798,16 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. cairo_glarc dat
-  case. 2003 do. ''     
+  case. 2003 do. ''
   case. 2004 do. cairo_glbrush dat
   case. 2005 do. cairo_glbrushnull dat
-  case. 2062 do. ''     
+  case. 2062 do. ''
   case. 2065 do. cairo_glcaret dat
   case. 2007 do. cairo_glclear dat
   case. 2078 do. cairo_glclip dat
   case. 2079 do. cairo_glclipreset dat
-  case. 2999 do. ''     
-  case. 2069 do. ''     
+  case. 2999 do. ''
+  case. 2069 do. ''
   case. 2008 do. cairo_glellipse dat
   case. 2085 do. cairo_glemfclose dat
   case. 2084 do. cairo_glemfopen dat
@@ -817,29 +817,29 @@ while. p<#y do.
   case. 2312 do. cairo_glfont2 dat
   case. 2342 do. cairo_glfontangle dat
   case. 2015 do. cairo_gllines dat
-  case. 2070 do. ''     
-  case. 2071 do. ''     
-  case. 2020 do. ''     
+  case. 2070 do. ''
+  case. 2071 do. ''
+  case. 2020 do. ''
   case. 2022 do. cairo_glpen dat
   case. 2023 do. cairo_glpie dat
   case. 2024 do. cairo_glpixel dat
   case. 2076 do. cairo_glpixels dat
   case. 2075 do. cairo_glpixelsx dat
   case. 2029 do. cairo_glpolygon dat
-  case. 2089 do. ''     
-  case. 2091 do. ''     
-  case. 2057 do. ''     
-  case. 2083 do. ''     
-  case. 2060 do. ''     
-  case. 2077 do. ''     
-  case. 2092 do. ''     
-  case. 2088 do. ''     
-  case. 2058 do. ''     
-  case. 2059 do. ''     
+  case. 2089 do. ''
+  case. 2091 do. ''
+  case. 2057 do. ''
+  case. 2083 do. ''
+  case. 2060 do. ''
+  case. 2077 do. ''
+  case. 2092 do. ''
+  case. 2088 do. ''
+  case. 2058 do. ''
+  case. 2059 do. ''
   case. 2031 do. cairo_glrect dat
   case. 2032 do. cairo_glrgb dat
   case. 2033 do. cairo_glroundr dat
-  case. 2035 do. ''     
+  case. 2035 do. ''
   case. 2038 do. cairo_gltext dat{a.
   case. 2040 do. cairo_gltextcolor dat
   case. 2056 do. cairo_gltextxy dat
@@ -934,7 +934,7 @@ if. 0=gloption do.
   cairo_surface_flush cairo_get_target gtkcr
   cr=. gdk_cairo_create getGtkWidgetWindow canvas
   cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-  cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0  
+  cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
   cairo_rectangle cr; 0 ;0; <"0 gtkwh
   cairo_clip cr
   cairo_paint cr
@@ -947,9 +947,9 @@ cairo_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 gtkpenrgb=: gtkrgb
-gtkpenwidth=: 0.5>.{.y   
-gtkpenstyle=: {:y 
-cairo_set_line_width gtkcr ; (1.1-1.1)+gtkpenwidth   
+gtkpenwidth=: 0.5>.{.y
+gtkpenstyle=: {:y
+cairo_set_line_width gtkcr ; (1.1-1.1)+gtkpenwidth
 0
 )
 cairo_glpie=: 3 : 0 "1
@@ -1068,7 +1068,7 @@ gtkwh
 )
 cairo_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. -.gtkbrushnull do.
   cairo_cairocolor gtkbrushrgb
@@ -1092,10 +1092,10 @@ cairo_cairocolor gtktextrgb
 pango_layout_set_text gtkpl;(,y);#y
 if. gtkunderline do.
   atl=. pango_attr_list_new ''
-  ul=. pango_attr_underline_new 1        
+  ul=. pango_attr_underline_new 1
   pango_attr_list_insert atl,ul
   pango_layout_set_attributes gtkpl,atl
-  pango_attr_list_unref atl              
+  pango_attr_list_unref atl
 end.
 if. 0=gtkfontangle do.
   cairo_move_to gtkcr ; <"0 gtktextxy
@@ -1103,17 +1103,17 @@ if. 0=gtkfontangle do.
 else.
   cairo_save gtkcr
   cairo_move_to gtkcr ; <"0 gtktextxy
-  cairo_rotate gtkcr ; - rfd gtkfontangle%10  
+  cairo_rotate gtkcr ; - rfd gtkfontangle%10
   pango_cairo_update_layout gtkcr, gtkpl
   pango_cairo_show_layout gtkcr, gtkpl
   cairo_restore gtkcr
 end.
 if. gtkunderline do.
   atl=. pango_attr_list_new ''
-  ul=. pango_attr_underline_new 0        
+  ul=. pango_attr_underline_new 0
   pango_attr_list_insert atl,ul
   pango_layout_set_attributes gtkpl,atl
-  pango_attr_list_unref atl              
+  pango_attr_list_unref atl
 end.
 0
 )
@@ -1218,7 +1218,7 @@ EMPTY
 gdi32_setbkmode=: 3 : 0
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-SetBkMode HDC, y{OPAQUE,TRANSPARENT     
+SetBkMode HDC, y{OPAQUE,TRANSPARENT
 )
 gdi32_glarc=: 3 : 0 "1
 if. gloption do. 0 return. end.
@@ -1254,15 +1254,15 @@ if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 smoutput 'stub: glcapture ',":y
 select. cap=. {.y
-case. 0 do.  
+case. 0 do.
   capture=: cap
-case. 1 do.  
+case. 1 do.
   capture=: cap
-case. 5 do.  
+case. 5 do.
   capture=: cap
-case. 6 do.  
+case. 6 do.
   capture=: cap
-case. 7 do.  
+case. 7 do.
   capture=: cap
   rect=. }.cap
 end.
@@ -1270,7 +1270,7 @@ end.
 )
 gdi32_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:HDC,BMP
 prev=. SelectObject HDC, GetStockObject BLACK_PEN
 prevb=. SelectObject HDC, GetStockObject BLACK_BRUSH
@@ -1340,16 +1340,16 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. gdi32_glarc dat
-  case. 2003 do. ''     
+  case. 2003 do. ''
   case. 2004 do. gdi32_glbrush dat
   case. 2005 do. gdi32_glbrushnull dat
-  case. 2062 do. ''     
+  case. 2062 do. ''
   case. 2065 do. gdi32_glcaret dat
   case. 2007 do. gdi32_glclear dat
   case. 2078 do. gdi32_glclip dat
   case. 2079 do. gdi32_glclipreset dat
-  case. 2999 do. ''     
-  case. 2069 do. ''     
+  case. 2999 do. ''
+  case. 2069 do. ''
   case. 2008 do. gdi32_glellipse dat
   case. 2085 do. gdi32_glemfclose dat
   case. 2084 do. gdi32_glemfopen dat
@@ -1359,29 +1359,29 @@ while. p<#y do.
   case. 2312 do. gdi32_glfont2 dat
   case. 2342 do. gdi32_glfontangle dat
   case. 2015 do. gdi32_gllines dat
-  case. 2070 do. ''     
-  case. 2071 do. ''     
-  case. 2020 do. ''     
+  case. 2070 do. ''
+  case. 2071 do. ''
+  case. 2020 do. ''
   case. 2022 do. gdi32_glpen dat
   case. 2023 do. gdi32_glpie dat
   case. 2024 do. gdi32_glpixel dat
   case. 2076 do. gdi32_glpixels dat
   case. 2075 do. gdi32_glpixelsx dat
   case. 2029 do. gdi32_glpolygon dat
-  case. 2089 do. ''     
-  case. 2091 do. ''     
-  case. 2057 do. ''     
-  case. 2083 do. ''     
-  case. 2060 do. ''     
-  case. 2077 do. ''     
-  case. 2092 do. ''     
-  case. 2088 do. ''     
-  case. 2058 do. ''     
-  case. 2059 do. ''     
+  case. 2089 do. ''
+  case. 2091 do. ''
+  case. 2057 do. ''
+  case. 2083 do. ''
+  case. 2060 do. ''
+  case. 2077 do. ''
+  case. 2092 do. ''
+  case. 2088 do. ''
+  case. 2058 do. ''
+  case. 2059 do. ''
   case. 2031 do. gdi32_glrect dat
   case. 2032 do. gdi32_glrgb dat
   case. 2033 do. gdi32_glroundr dat
-  case. 2035 do. ''     
+  case. 2035 do. ''
   case. 2038 do. gdi32_gltext dat{a.
   case. 2040 do. gdi32_gltextcolor dat
   case. 2056 do. gdi32_gltextxy dat
@@ -1481,8 +1481,8 @@ end.
 gdi32_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-gtkpenwidth=. 0>.{.y   
-gtkpenstyle=. {:y 
+gtkpenwidth=. 0>.{.y
+gtkpenstyle=. {:y
 gtkpenrgb=: gtkrgb
 obj=. CreatePen gtkpenstyle , gtkpenwidth , gtkpenrgb
 prev=. SelectObject HDC, obj
@@ -1598,7 +1598,7 @@ gtkwh
 )
 gdi32_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:HDC,BMP
 Rectangle HDC, (2{.y), (2{.y) + 2}.y
 0
@@ -1752,15 +1752,15 @@ if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 smoutput 'stub: glcapture ',":y
 select. cap=. {.y
-case. 0 do.  
+case. 0 do.
   capture=: cap
-case. 1 do.  
+case. 1 do.
   capture=: cap
-case. 5 do.  
+case. 5 do.
   capture=: cap
-case. 6 do.  
+case. 6 do.
   capture=: cap
-case. 7 do.  
+case. 7 do.
   capture=: cap
   rect=. }.cap
 end.
@@ -1768,7 +1768,7 @@ end.
 )
 gdip_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:TOK,GC
 GdipFillRectangle GC;(BGRA 0 0 0);<"0 <.y
 0
@@ -1794,7 +1794,7 @@ gdip_glclip=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
 gtkclipped=: 1
-GdipSetClipRect GC;<"0 (<.y),0     
+GdipSetClipRect GC;<"0 (<.y),0
 0
 )
 gdip_glclipreset=: 3 : 0 "1
@@ -1816,16 +1816,16 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. gdip_glarc dat
-  case. 2003 do. ''     
+  case. 2003 do. ''
   case. 2004 do. gdip_glbrush dat
   case. 2005 do. gdip_glbrushnull dat
-  case. 2062 do. ''     
+  case. 2062 do. ''
   case. 2065 do. gdip_glcaret dat
   case. 2007 do. gdip_glclear dat
   case. 2078 do. gdip_glclip dat
   case. 2079 do. gdip_glclipreset dat
-  case. 2999 do. ''     
-  case. 2069 do. ''     
+  case. 2999 do. ''
+  case. 2069 do. ''
   case. 2008 do. gdip_glellipse dat
   case. 2085 do. gdip_glemfclose dat
   case. 2084 do. gdip_glemfopen dat
@@ -1835,29 +1835,29 @@ while. p<#y do.
   case. 2312 do. gdip_glfont2 dat
   case. 2342 do. gdip_glfontangle dat
   case. 2015 do. gdip_gllines dat
-  case. 2070 do. ''     
-  case. 2071 do. ''     
-  case. 2020 do. ''     
+  case. 2070 do. ''
+  case. 2071 do. ''
+  case. 2020 do. ''
   case. 2022 do. gdip_glpen dat
   case. 2023 do. gdip_glpie dat
   case. 2024 do. gdip_glpixel dat
   case. 2076 do. gdip_glpixels dat
   case. 2075 do. gdip_glpixelsx dat
   case. 2029 do. gdip_glpolygon dat
-  case. 2089 do. ''     
-  case. 2091 do. ''     
-  case. 2057 do. ''     
-  case. 2083 do. ''     
-  case. 2060 do. ''     
-  case. 2077 do. ''     
-  case. 2092 do. ''     
-  case. 2088 do. ''     
-  case. 2058 do. ''     
-  case. 2059 do. ''     
+  case. 2089 do. ''
+  case. 2091 do. ''
+  case. 2057 do. ''
+  case. 2083 do. ''
+  case. 2060 do. ''
+  case. 2077 do. ''
+  case. 2092 do. ''
+  case. 2088 do. ''
+  case. 2058 do. ''
+  case. 2059 do. ''
   case. 2031 do. gdip_glrect dat
   case. 2032 do. gdip_glrgb dat
   case. 2033 do. gdip_glroundr dat
-  case. 2035 do. ''     
+  case. 2035 do. ''
   case. 2038 do. gdip_gltext dat{a.
   case. 2040 do. gdip_gltextcolor dat
   case. 2056 do. gdip_gltextxy dat
@@ -1971,8 +1971,8 @@ end.
 
 gdip_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
-gtkpenwidth=. 0>.{.y   
-gtkpenstyle=. {:y 
+gtkpenwidth=. 0>.{.y
+gtkpenstyle=. {:y
 if. 0=TOK do. 0 return. end.
 if. PEN do. GdipDeletePen PEN end.
 gtkpenrgb=: gtkrgb
@@ -2087,7 +2087,7 @@ gtkwh
 )
 gdip_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:TOK,GC
 if. (-.gtkbrushnull) *. BRUSH do.
   GdipFillRectangle GC;BRUSH;<"0 <.y
@@ -2199,15 +2199,15 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 smoutput 'stub: glcapture ',":y
 select. cap=. {.y
-case. 0 do.  
+case. 0 do.
   capture=: cap
-case. 1 do.  
+case. 1 do.
   capture=: cap
-case. 5 do.  
+case. 5 do.
   capture=: cap
-case. 6 do.  
+case. 6 do.
   capture=: cap
-case. 7 do.  
+case. 7 do.
   capture=: cap
   rect=. }.cap
 end.
@@ -2215,7 +2215,7 @@ end.
 )
 pixmap_glcaret=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 pixmap_gtkcolor RGB 0 0 0
 gdk_draw_rectangle gtkpx,gtkgc,1,<.y
@@ -2265,16 +2265,16 @@ while. p<#y do.
   dat=. (2+p+i.cnt-2){y
   select. cmd
   case. 2001 do. pixmap_glarc dat
-  case. 2003 do. ''     
+  case. 2003 do. ''
   case. 2004 do. pixmap_glbrush dat
   case. 2005 do. pixmap_glbrushnull dat
-  case. 2062 do. ''     
+  case. 2062 do. ''
   case. 2065 do. pixmap_glcaret dat
   case. 2007 do. pixmap_glclear dat
   case. 2078 do. pixmap_glclip dat
   case. 2079 do. pixmap_glclipreset dat
-  case. 2999 do. ''     
-  case. 2069 do. ''     
+  case. 2999 do. ''
+  case. 2069 do. ''
   case. 2008 do. pixmap_glellipse dat
   case. 2085 do. pixmap_glemfclose dat
   case. 2084 do. pixmap_glemfopen dat
@@ -2284,29 +2284,29 @@ while. p<#y do.
   case. 2312 do. pixmap_glfont2 dat
   case. 2342 do. pixmap_glfontangle dat
   case. 2015 do. pixmap_gllines dat
-  case. 2070 do. ''     
-  case. 2071 do. ''     
-  case. 2020 do. ''     
+  case. 2070 do. ''
+  case. 2071 do. ''
+  case. 2020 do. ''
   case. 2022 do. pixmap_glpen dat
   case. 2023 do. pixmap_glpie dat
   case. 2024 do. pixmap_glpixel dat
   case. 2076 do. pixmap_glpixels dat
   case. 2075 do. pixmap_glpixelsx dat
   case. 2029 do. pixmap_glpolygon dat
-  case. 2089 do. ''     
-  case. 2091 do. ''     
-  case. 2057 do. ''     
-  case. 2083 do. ''     
-  case. 2060 do. ''     
-  case. 2077 do. ''     
-  case. 2092 do. ''     
-  case. 2088 do. ''     
-  case. 2058 do. ''     
-  case. 2059 do. ''     
+  case. 2089 do. ''
+  case. 2091 do. ''
+  case. 2057 do. ''
+  case. 2083 do. ''
+  case. 2060 do. ''
+  case. 2077 do. ''
+  case. 2092 do. ''
+  case. 2088 do. ''
+  case. 2058 do. ''
+  case. 2059 do. ''
   case. 2031 do. pixmap_glrect dat
   case. 2032 do. pixmap_glrgb dat
   case. 2033 do. pixmap_glroundr dat
-  case. 2035 do. ''     
+  case. 2035 do. ''
   case. 2038 do. pixmap_gltext dat{a.
   case. 2040 do. pixmap_gltextcolor dat
   case. 2056 do. pixmap_gltextxy dat
@@ -2378,7 +2378,7 @@ if. *./ 0=y do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 pixmap_gtkcolor gtkpenrgb
 c=. <.-:#y=. <.y
-if. IF64 do. y=. _3 ic 2 ic y end. 
+if. IF64 do. y=. _3 ic 2 ic y end.
 gdk_draw_lines gtkpx;gtkgc;y;c
 0
 )
@@ -2399,8 +2399,8 @@ end.
 pixmap_glpen=: 3 : 0 "1
 if. gloption do. 0 return. end.
 gtkpenrgb=: gtkrgb
-gtkpenwidth=: 0>.{.y   
-gtkpenstyle=: {:y 
+gtkpenwidth=: 0>.{.y
+gtkpenstyle=: {:y
 if. 0=gtkgc do. 0 return. end.
 gdk_gc_set_line_attributes gtkgc;gtkpenwidth;0;1;0
 0
@@ -2454,7 +2454,7 @@ pixmap_glpolygon=: 3 : 0 "1
 if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 c=. <.-:#y=. <.y
-if. IF64 do. y=. _3 ic 2 ic y end. 
+if. IF64 do. y=. _3 ic 2 ic y end.
 if. -.gtkbrushnull do.
   pixmap_gtkcolor gtkbrushrgb
   gdk_draw_polygon gtkpx;gtkgc;1;y;c
@@ -2484,7 +2484,7 @@ gtkwh
 )
 pixmap_glrect=: 3 : 0 "1
 if. gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end. 
+if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 if. -.gtkbrushnull do.
   pixmap_gtkcolor gtkbrushrgb
@@ -2503,10 +2503,10 @@ assert. 0~:gtkpl
 pixmap_gtkcolor gtktextrgb
 if. gtkunderline do.
   atl=. pango_attr_list_new ''
-  ul=. pango_attr_underline_new 1        
+  ul=. pango_attr_underline_new 1
   pango_attr_list_insert atl,ul
   pango_layout_set_attributes gtkpl,atl
-  pango_attr_list_unref atl              
+  pango_attr_list_unref atl
 end.
 if. 0=gtkfontangle do.
   pango_layout_set_text gtkpl;(,y);#y
@@ -2519,10 +2519,10 @@ else.
 end.
 if. gtkunderline do.
   atl=. pango_attr_list_new ''
-  ul=. pango_attr_underline_new 0        
+  ul=. pango_attr_underline_new 0
   pango_attr_list_insert atl,ul
   pango_layout_set_attributes gtkpl,atl
-  pango_attr_list_unref atl              
+  pango_attr_list_unref atl
 end.
 0
 )
@@ -2551,7 +2551,7 @@ pixmap_glqextentw=: 3 : 0 "1
 pixmap_glwindoworg=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
-'' 
+''
 0
 )
 pixmap_glemfclose=: [:
@@ -2577,7 +2577,7 @@ if. #PForm do. openglut_newsize__PLocale=: 1 end.
 free__ogl widget
 if. 0= ctx=. getglctx__ogl widget do.
   ctx=. alloc__ogl widget
-  newctx=: 1          
+  newctx=: 1
 end.
 if. 0= ctx do. smoutput 'cannot alloc opengl context' end.
 EMPTY
@@ -2653,10 +2653,10 @@ get_button=: 3 : 0
 get_type=: 3 : 0
 memr y,0 1,JINT
 )
-RGB=: 256&#.@endian                   
-BGR=: 256&#.@Endian                   
-IRGB=: _4&{.@endian@(256 256 256 256&#:)  
-BGRA=: 3 : 'ALPHA OR 256 256 256#.@Endian y'  
+RGB=: 256&#.@endian
+BGR=: 256&#.@Endian
+IRGB=: _4&{.@endian@(256 256 256 256&#:)
+BGRA=: 3 : 'ALPHA OR 256 256 256#.@Endian y'
 cairo_cairocolor=: 3 : 0
 cairo_set_source_rgba gtkcr ; <"0 rgba2cairo IRGB y
 )
@@ -2674,7 +2674,7 @@ ctr=. (0 1{y) + -: (2 3{y)
 rds=. -: 2{y
 bgn=. pafc ctr -~ 4 5{y
 end=. pafc ctr -~ 6 7{y
-(2 3{y),ctr,rds,end,bgn   
+(2 3{y),ctr,rds,end,bgn
 )
 pixmap_gtkarcisi=: 3 : 0
 ctr=. (0 1{y) + -: (2 3{y)
@@ -2685,7 +2685,7 @@ dif=. 2p1 | end - bgn
 rgba2cairo=: 3 : 0
 'r g b a'=. 255%~ 4{.y,0
 a=. 1-a
-(r,g,b), a  
+(r,g,b), a
 )
 rgb2gtk=: 3 : 0
 (0 0 0 0{a.), 1 (3!:4) (256 * y) + 255 * 127 < y=. Endian 3{.y
