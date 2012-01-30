@@ -252,6 +252,11 @@ b=. locGL2_jgl2_
 PLocale__b=: y
 )
 glsel=: 3 : 0
+if. 2 131072 e.~ 3!:0 y do.
+  if. 3 = 4!:0 <'getlocgl2_gtkwd_' do.
+    y=. getlocgl2_gtkwd_ ,y
+  end.
+end.
 l=. locGL2_jgl2_=: boxxopen y
 try.
   if. 1=gloption__l do.
@@ -387,6 +392,17 @@ if. #PForm do.
       current__ogl 0 [ show__ogl widget
     end.
   end.
+elseif. 'gtkwd'-:PId do.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ name; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
 end.
 0
 )
@@ -414,6 +430,17 @@ if. #PForm do.
       current__ogl 0 [ show__ogl widget
     end.
   end.
+elseif. 'gtkwd'-:PId do.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ 'mwheel'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
 end.
 0
 )
@@ -430,6 +457,17 @@ if. #PForm do.
       current__ogl widget [ ogl__PLocale=: ogl
     end.
     f~ ''
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
+elseif. 'gtkwd'-:PId do.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ 'mmove'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
     if. (1=gloption) *. #ogl do.
       current__ogl 0 [ show__ogl widget
     end.
@@ -454,6 +492,17 @@ if. #PForm do.
       current__ogl 0 [ show__ogl widget
     end.
   end.
+elseif. 'gtkwd'-:PId do.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ 'char'; (u: key) ; ,":shift+2*ctrl
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
 end.
 0
 )
@@ -472,6 +521,19 @@ if. #PForm do.
       current__ogl 0 [ show__ogl widget
     end.
   end.
+elseif. 'gtkwd'-:PId do.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    sysfocus__PLocale=: PId
+    syslastfocus__PLocale=: PId
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ ,<'focus'
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
 end.
 1
 )
@@ -486,6 +548,19 @@ if. #PForm do.
       current__ogl widget [ ogl__PLocale=: ogl
     end.
     f~ ''
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
+elseif. 'gtkwd'-:PId do.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    sysfocus__PLocale=: PId
+    syslastfocus__PLocale=: PId
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ ,<'focuslost'
     if. (1=gloption) *. #ogl do.
       current__ogl 0 [ show__ogl widget
     end.
@@ -540,13 +615,14 @@ end.
 initialized=: 1
 if. #PForm do.
   locGL2_jgl2_=: coname''
+elseif. 'gtkwd'-:PId do.
+  locGL2_jgl2_=: coname''
 end.
 
 0
 )
 draw=: expose_event=: 3 : 0
 'widget event data'=. y
-
 if. #PForm do.
   locGL2_jgl2_=: coname''
   if. (1=gloption) *. #ogl do.
@@ -558,6 +634,21 @@ if. #PForm do.
       current__ogl widget [ ogl__PLocale=: ogl
     end.
     f~ ''
+    if. (1=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
+    end.
+  end.
+elseif. 'gtkwd'-:PId do.
+  locGL2_jgl2_=: coname''
+  if. (1=gloption) *. #ogl do.
+    current__ogl widget
+  end.
+  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (1=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
+    end.
+    (coname'') (f~)~ ,<'paint'
     if. (1=gloption) *. #ogl do.
       current__ogl 0 [ show__ogl widget
     end.
@@ -718,7 +809,6 @@ gtkbrushnull=: 1
 cairo_glcapture=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-smoutput 'stub: glcapture ',":y
 select. cap=. {.y
 case. 0 do.
   capture=: cap
@@ -1252,7 +1342,6 @@ BRUSH=: OLDBRUSH=: 0
 gdi32_glcapture=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-smoutput 'stub: glcapture ',":y
 select. cap=. {.y
 case. 0 do.
   capture=: cap
@@ -1750,7 +1839,6 @@ gtkbrushnull=: 1
 gdip_glcapture=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:TOK,GC
-smoutput 'stub: glcapture ',":y
 select. cap=. {.y
 case. 0 do.
   capture=: cap
@@ -2197,7 +2285,6 @@ gtkbrushnull=: 1
 pixmap_glcapture=: 3 : 0 "1
 if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
-smoutput 'stub: glcapture ',":y
 select. cap=. {.y
 case. 0 do.
   capture=: cap
