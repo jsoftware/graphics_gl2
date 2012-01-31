@@ -381,26 +381,30 @@ mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
 state=. 2{;gdk_event_get_state event;,0
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
-  if. 3= nc <f=. PForm,'_',PId,'_',name,'_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_',name,'_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ name; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ name; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
@@ -419,26 +423,30 @@ mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
 state=. 2{;gdk_event_get_state event;,0
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
-  if. 3= nc <f=. PForm,'_',PId,'_mwheel_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,1-2*dir
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_mwheel_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,1-2*dir
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ 'mwheel'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ 'mwheel'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
@@ -450,26 +458,30 @@ mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
 state=. 2{;gdk_event_get_state event;,0
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
-  if. 3= nc <f=. PForm,'_',PId,'_mmove_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_mmove_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ 'mmove'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ 'mmove'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
@@ -480,27 +492,31 @@ key_press_event=: 3 : 0
 'state key'=. gtkeventkey event
 'ctrl j shift'=. 2 2 2 #: state
 if. #PForm do.
-  if. 3= nc <f=. PForm,'_',PId,'_char_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysmodifiers__PLocale=: ,":shift+2*ctrl
-    sysdata__PLocale=: u: key
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_char_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysmodifiers__PLocale=: ,":shift+2*ctrl
+      sysdata__PLocale=: u: key
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ 'char'; (u: key) ; ,":shift+2*ctrl
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ 'char'; (u: key) ; ,":shift+2*ctrl
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
@@ -509,29 +525,33 @@ end.
 focus_in_event=: 3 : 0
 'widget event data'=. y
 if. #PForm do.
-  if. 3= nc <f=. PForm,'_',PId,'_focus_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysfocus__PLocale=: PId
-    syslastfocus__PLocale=: PId
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_focus_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysfocus__PLocale=: PId
+      syslastfocus__PLocale=: PId
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysfocus__PLocale=: PId
-    syslastfocus__PLocale=: PId
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ ,<'focus'
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysfocus__PLocale=: PId
+      syslastfocus__PLocale=: PId
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ ,<'focus'
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
@@ -540,29 +560,33 @@ end.
 focus_out_event=: 3 : 0
 'widget event data'=. y
 if. #PForm do.
-  if. 3= nc <f=. PForm,'_',PId,'_focuslost_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysfocus__PLocale=: PId
-    syslastfocus__PLocale=: PId
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_focuslost_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysfocus__PLocale=: PId
+      syslastfocus__PLocale=: PId
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    sysfocus__PLocale=: PId
-    syslastfocus__PLocale=: PId
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ ,<'focuslost'
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysfocus__PLocale=: PId
+      syslastfocus__PLocale=: PId
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ ,<'focuslost'
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
@@ -628,14 +652,16 @@ if. #PForm do.
   if. (1=gloption) *. #ogl do.
     current__ogl widget
   end.
-  if. 3= nc <f=. PForm,'_',PId,'_paint_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    f~ ''
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_paint_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      f~ ''
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
@@ -643,14 +669,16 @@ elseif. 'gtkwd'-:PId do.
   if. (1=gloption) *. #ogl do.
     current__ogl widget
   end.
-  if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-    locGL2_jgl2_=: coname''
-    if. (1=gloption) *. #ogl do.
-      current__ogl widget [ ogl__PLocale=: ogl
-    end.
-    (coname'') (f~)~ ,<'paint'
-    if. (1=gloption) *. #ogl do.
-      current__ogl 0 [ show__ogl widget
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      if. (1=gloption) *. #ogl do.
+        current__ogl widget [ ogl__PLocale=: ogl
+      end.
+      (coname'') (f~)~ ,<'paint'
+      if. (1=gloption) *. #ogl do.
+        current__ogl 0 [ show__ogl widget
+      end.
     end.
   end.
 end.
