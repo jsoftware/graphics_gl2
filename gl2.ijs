@@ -323,6 +323,7 @@ events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POI
 gtk_widget_add_events canvas, OR events
 
 consig3 canvas;'configure-event';'configure_event'
+consig canvas;'realize';'realize_event'
 if. 3=GTKVER_j_ do.
   consig3 canvas;'draw';'draw'
 else.
@@ -591,6 +592,11 @@ elseif. 'gtkwd'-:PId do.
   end.
 end.
 1
+)
+realize_event=: 3 : 0
+'widget data'=. y
+gtkwh=: _2{. getGtkWidgetAllocation widget
+0
 )
 configure_event=: 3 : 0
 'widget event data'=. y
