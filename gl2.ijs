@@ -985,7 +985,7 @@ cairo_glellipse=: 3 : 0"1
 if. gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 t=. gtkbrushnull
-gtkbrushnull=: 1
+gtkbrushnull=: 0
 cairo_glarcx (0, 2p1),~ _2}.cairo_gtkarcisi y,4#0
 gtkbrushnull=: t
 0
@@ -2299,10 +2299,10 @@ if. gloption do. 0 return. end.
 assert. 0~:gtkpx,gtkpc
 if. -.gtkbrushnull do.
   pixmap_gtkcolor gtkbrushrgb
-  gdk_draw_arc gtkpx,gtkgc,1,y
+  gdk_draw_arc gtkpx,gtkgc,1,<.y
 end.
 pixmap_gtkcolor gtkpenrgb
-gdk_draw_arc gtkpx,gtkgc,0,y
+gdk_draw_arc gtkpx,gtkgc,0,<.y
 0
 )
 pixmap_glbrush=: 3 : 0 "1
@@ -2774,8 +2774,8 @@ get_button=: 3 : 0
 get_type=: 3 : 0
 memr y,0 1,JINT
 )
-RGB=: 256&#.@endian
-BGR=: 256&#.@Endian
+RGB=: <.@(256&#.)@endian
+BGR=: <.@(256&#.)@Endian
 IRGB=: _4&{.@endian@(256 256 256 256&#:)
 BGRA=: 3 : 'ALPHA OR 256 256 256#.@Endian y'
 cairo_cairocolor=: 3 : 0
@@ -2809,6 +2809,7 @@ a=. 1-a
 (r,g,b), a
 )
 rgb2gtk=: 3 : 0
+y=. <.y
 (0 0 0 0{a.), 1 (3!:4) (256 * y) + 255 * 127 < y=. Endian 3{.y
 )
 parseFontname=: 3 : 0

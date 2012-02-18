@@ -39,5 +39,5 @@ graphics/gl2 - change history
  * opengl color RGB byte order with R in the lowest byte
  * fix gtk clipread/write
 
-== 1.0.15 ==
+== 1.0.15/16 ==
  * gl2: work with gtkwd
