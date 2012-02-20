@@ -385,6 +385,7 @@ if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
     if. 3= nc <f=. PForm,'_',PId,'_',name,'_',(>PLocale),'_' do.
       locGL2_jgl2_=: coname''
+      sysmodifiers__PLocale=: ,":shift+2*control
       sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -402,7 +403,7 @@ elseif. 'gtkwd'-:PId do.
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
       end.
-      (coname'') (f~)~ name; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      (coname'') (f~)~ name; (0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0) ; ,":shift+2*control
       if. (1=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
@@ -427,6 +428,7 @@ if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
     if. 3= nc <f=. PForm,'_',PId,'_mwheel_',(>PLocale),'_' do.
       locGL2_jgl2_=: coname''
+      sysmodifiers__PLocale=: ,":shift+2*control
       sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,1-2*dir
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -444,7 +446,7 @@ elseif. 'gtkwd'-:PId do.
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
       end.
-      (coname'') (f~)~ 'mwheel'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      (coname'') (f~)~ 'mwheel'; (0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0) ; ,":shift+2*control
       if. (1=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
@@ -462,6 +464,7 @@ if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
     if. 3= nc <f=. PForm,'_',PId,'_mmove_',(>PLocale),'_' do.
       locGL2_jgl2_=: coname''
+      sysmodifiers__PLocale=: ,":shift+2*control
       sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -479,7 +482,7 @@ elseif. 'gtkwd'-:PId do.
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
       end.
-      (coname'') (f~)~ 'mmove'; 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
+      (coname'') (f~)~ 'mmove'; (0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0) ; ,":shift+2*control
       if. (1=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
@@ -491,12 +494,12 @@ end.
 key_press_event=: 3 : 0
 'widget event data'=. y
 'state key'=. gtkeventkey event
-'ctrl j shift'=. 2 2 2 #: state
+'control j shift'=. 2 2 2 #: state
 if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
     if. 3= nc <f=. PForm,'_',PId,'_char_',(>PLocale),'_' do.
       locGL2_jgl2_=: coname''
-      sysmodifiers__PLocale=: ,":shift+2*ctrl
+      sysmodifiers__PLocale=: ,":shift+2*control
       sysdata__PLocale=: u: key
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -514,7 +517,7 @@ elseif. 'gtkwd'-:PId do.
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
       end.
-      (coname'') (f~)~ 'char'; (u: key) ; ,":shift+2*ctrl
+      (coname'') (f~)~ 'char'; (u: key) ; ,":shift+2*control
       if. (1=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
@@ -977,6 +980,7 @@ end.
 )
 cairo_glcursor=: 3 : 0 "1
 gtkwin=. getGtkWidgetWindow canvas
+if. y -.@e. IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP do. 0 return. end.
 n=. y i.~ IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP
 gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK_CROSS,GDK_CENTER_PTR,GDK_BOTTOM_RIGHT_CORNER,GDK_BOTTOM_LEFT_CORNER,GDK_SB_H_DOUBLE_ARROW,GDK_SB_V_DOUBLE_ARROW,GDK_FLEUR,GDK_BLANK_CURSOR,GDK_ICON,GDK_QUESTION_ARROW
 0
@@ -1518,6 +1522,7 @@ end.
 )
 gdi32_glcursor=: 3 : 0 "1
 gtkwin=. getGtkWidgetWindow canvas
+if. y -.@e. IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP do. 0 return. end.
 n=. y i.~ IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP
 gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK_CROSS,GDK_CENTER_PTR,GDK_BOTTOM_RIGHT_CORNER,GDK_BOTTOM_LEFT_CORNER,GDK_SB_H_DOUBLE_ARROW,GDK_SB_V_DOUBLE_ARROW,GDK_FLEUR,GDK_BLANK_CURSOR,GDK_ICON,GDK_QUESTION_ARROW
 0
@@ -1993,6 +1998,7 @@ end.
 )
 gdip_glcursor=: 3 : 0 "1
 gtkwin=. getGtkWidgetWindow canvas
+if. y -.@e. IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP do. 0 return. end.
 n=. y i.~ IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP
 gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK_CROSS,GDK_CENTER_PTR,GDK_BOTTOM_RIGHT_CORNER,GDK_BOTTOM_LEFT_CORNER,GDK_SB_H_DOUBLE_ARROW,GDK_SB_V_DOUBLE_ARROW,GDK_FLEUR,GDK_BLANK_CURSOR,GDK_ICON,GDK_QUESTION_ARROW
 0
@@ -2441,6 +2447,7 @@ end.
 )
 pixmap_glcursor=: 3 : 0 "1
 gtkwin=. getGtkWidgetWindow canvas
+if. y -.@e. IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP do. 0 return. end.
 n=. y i.~ IDC_ARROW,IDC_IBEAM,IDC_WAIT,IDC_CROSS,IDC_UPARROW,IDC_SIZENWSE,IDC_SIZENESW,IDC_SIZEWE,IDC_SIZENS,IDC_SIZEALL,IDC_NO,IDC_APPSTARTING,IDC_HELP
 gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK_CROSS,GDK_CENTER_PTR,GDK_BOTTOM_RIGHT_CORNER,GDK_BOTTOM_LEFT_CORNER,GDK_SB_H_DOUBLE_ARROW,GDK_SB_V_DOUBLE_ARROW,GDK_FLEUR,GDK_BLANK_CURSOR,GDK_ICON,GDK_QUESTION_ARROW
 0
