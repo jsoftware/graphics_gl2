@@ -500,7 +500,7 @@ if. #PForm do.
     if. 3= nc <f=. PForm,'_',PId,'_char_',(>PLocale),'_' do.
       locGL2_jgl2_=: coname''
       sysmodifiers__PLocale=: ,":shift+2*control
-      sysdata__PLocale=: u: key
+      sysdata__PLocale=: utf8 u: key
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
       end.
@@ -517,7 +517,7 @@ elseif. 'gtkwd'-:PId do.
       if. (1=gloption) *. #ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
       end.
-      (coname'') (f~)~ 'char'; (u: key) ; ,":shift+2*control
+      (coname'') (f~)~ 'char'; (utf8 u: key) ; ,":shift+2*control
       if. (1=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
@@ -1830,7 +1830,7 @@ end.
 gdip_glclosedcurve=: 3 : 0 "1
 if. 2|#y do. 't y'=. ({. ; }.) y else. t=. 1 end.
 if. (-.gtkbrushnull) *. BRUSH do.
-  GdipFillClosedCurve GC;BRUSH;(<.y);(<.-:#y);(t%1);Winding
+  GdipFillClosedCurve GC;BRUSH;(<.y);(<.-:#y);(t%1);FillModeWinding
 end.
 if. PEN do.
   GdipDrawClosedCurve GC;PEN;(<.y);(<.-:#y);t%1
@@ -2163,7 +2163,7 @@ if. gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 c=. 2>.(+ 2&|)#y
 if. (-.gtkbrushnull) *. BRUSH do.
-  GdipFillPolygon GC;BRUSH;(<.c{.y);(<.-:c);Alternate
+  GdipFillPolygon GC;BRUSH;(<.c{.y);(<.-:c);FillModeAlternate
 end.
 if. PEN do.
   GdipDrawPolygon GC;PEN;(<.c{.y);<.-:c
