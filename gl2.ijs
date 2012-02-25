@@ -295,11 +295,11 @@ LIBGLCMDS=: dquote^:(' 'e.]) LIBGLCMDS
 EMPTY
 )
 
-'i2D iPRINT iOPENGL'=: i.3
+'iGL2 iOPENGL'=: i.2
 
 initialized=: 0
 RGBSEQ=: RGBSEQ_jgl2_
-gloption=: i2D
+gloption=: iGL2
 PForm=: PId=: PLocale=: ''
 gtkcr=: gtkpl=: 0
 gtkwin=: gtkdagc=: gtkgc=: gtkpx=: gtkpc=: gtkpl=: gtkplc=: 0
@@ -308,9 +308,11 @@ gtktextxy=: 0 0
 gtkpenrgb=: gtkbrushrgb=: gtktextrgb=: gtkbrushnull=: 0
 TOK=: BMP=: GC=: PEN=: BRUSH=: FONT=: TXTCLR=: 0
 HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
+printoperation=: printcontext=: 0
 twipscaled=: 2$1%1
-printnpage=: 0
-printmore=: 0
+printnpage=: 1
+async_print=: 0
+printsettings=: 0
 ogl=: 0$<''
 newctx=: 1
 newsize=: 1
@@ -319,9 +321,6 @@ create=: 3 : 0
 canvas=: gtk_drawing_area_new''
 gtkwh=: w,h
 gloption=: option
-twipscaled=: 2$1%1
-printnpage=: 0
-printmore=: 0
 
 if. *./ 0<w,h do.
   gtk_widget_set_size_request canvas,w,h
@@ -773,7 +772,107 @@ gtkcr=: 0
 begin_print=: 3 : 0
 'operation context data'=. y
 assert. iOPENGL~:gloption
-gtk_print_operation_set_n_pages operation, 10000
+gtk_print_operation_set_n_pages operation, 1
+0
+)
+print_begin=: 3 : 0
+'operation context data'=. y
+assert. iOPENGL~:gloption
+assert. operation=printoperation
+printcontext=: context
+w=. <. gtk_print_context_get_width context
+h=. <. gtk_print_context_get_height context
+gtkwh=: w,h
+dpix=: <. gtk_print_context_get_dpi_x context
+dpiy=: <. gtk_print_context_get_dpi_y context
+twipscaled=: 1440 %~ dpix,dpiy
+gtkpl=: 0 [ g_object_unref gtkpl
+gtkcr=: 0
+if. #PForm do.
+  locGL2_jgl2_=: coname''
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_print_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysdata__PLocale=: ":0 0
+      f~ ''
+    end.
+  end.
+elseif. 'gtkwd'-:PId do.
+  locGL2_jgl2_=: coname''
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      (coname'') (f~)~ 'print'; ":0 0
+    end.
+  end.
+end.
+printcontext=: 0
+if. 0< printnpage do.
+  gtk_print_operation_set_n_pages operation, printnpage
+else.
+  gtk_print_operation_cancel operation
+end.
+0
+)
+print_draw=: 3 : 0
+'operation context page_nr data'=. y
+assert. iOPENGL~:gloption
+assert. operation=printoperation
+printcontext=: context
+gtkcr=: gtk_print_context_get_cairo_context context
+gtkpl=: gtk_print_context_create_pango_layout context
+w=. <. gtk_print_context_get_width context
+h=. <. gtk_print_context_get_height context
+gtkwh=: w,h
+gtkclipped=: 0
+glclear''
+if. #PForm do.
+  locGL2_jgl2_=: coname''
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_print_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysdata__PLocale=: ":page_nr, 1
+      f~ ''
+    end.
+  end.
+elseif. 'gtkwd'-:PId do.
+  locGL2_jgl2_=: coname''
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      (coname'') (f~)~ 'print'; ":page_nr, 1
+    end.
+  end.
+end.
+printcontext=: 0
+gtkpl=: 0 [ g_object_unref gtkpl
+gtkcr=: 0
+0
+)
+print_done=: 3 : 0
+'operation result data'=. y
+assert. iOPENGL~:gloption
+assert. operation=printoperation
+if. #PForm do.
+  locGL2_jgl2_=: coname''
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. PForm,'_',PId,'_print_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      sysdata__PLocale=: ":0 _1
+      f~ ''
+    end.
+  end.
+elseif. 'gtkwd'-:PId do.
+  locGL2_jgl2_=: coname''
+  if. (0: <: 18!:0) PLocale do.
+    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
+      locGL2_jgl2_=: coname''
+      (coname'') (f~)~ 'print'; ":0 _1
+    end.
+  end.
+end.
+printoperation=: 0
+g_object_unref operation
 0
 )
 gtkextents=: 4 : 0
@@ -821,7 +920,7 @@ gtkbrushnull=: t
 cairo_glarcx=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 cairo_new_sub_path gtkcr
 if. -.gtkbrushnull do.
   cairo_move_to gtkcr ; <"0] 0 1{2}.y
@@ -839,7 +938,7 @@ cairo_scale gtkcr ; 1 ; ra=. %~/ 2{.y
 cairo_arc gtkcr ; <"0] (1,ra,1 1 1)%~ 2}.y
 cairo_restore gtkcr
 cairo_stroke gtkcr
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glbrush=: 3 : 0 "1
@@ -902,23 +1001,23 @@ cairo_gltextxy 0 0
 cairo_glclip=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 gtkclipped=: 1
 cairo_save gtkcr
 cairo_rectangle gtkcr ; <"0 y
 cairo_clip gtkcr
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glclipreset=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 if. gtkclipped do.
   cairo_restore gtkcr
   gtkclipped=: 0
 end.
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glcmds=: 3 : 0
@@ -929,7 +1028,7 @@ if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(,y);#y
   'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull'=. ipar
   gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
-  gtkpenrgb=: penrgb [ gtkbrushrgb=:  brushrgb [ gtktextrgb=: textrgb [ gtkbrushnull=: brushnull
+  gtkpenrgb=: penrgb [ gtkbrushrgb=: brushrgb [ gtktextrgb=: textrgb [ gtkbrushnull=: brushnull
   0 return.
 end.
 p=. 0
@@ -1002,12 +1101,12 @@ gdk_window_set_cursor gtkwin, gdk_cursor_new n{GDK_ARROW,GDK_XTERM,GDK_WATCH,GDK
 cairo_glellipse=: 3 : 0"1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 t=. gtkbrushnull
 gtkbrushnull=: 0
 cairo_glarcx (0, 2p1),~ _2}.cairo_gtkarcisi y,4#0
 gtkbrushnull=: t
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glfont=: 3 : 0 "1
@@ -1056,7 +1155,7 @@ cairo_gllines=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 if. *./ 0=y do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 cairo_cairocolor gtkpenrgb
 c=. <.-:#y
 if. 0=c do. 0 return. end.
@@ -1065,7 +1164,7 @@ for_i. +:>:i.<:c do.
   cairo_line_to gtkcr ; <"0 (0 1+i){y
 end.
 cairo_stroke gtkcr
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glpaint=: 3 : 0 "1
@@ -1092,12 +1191,12 @@ end.
 cairo_glpen=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 gtkpenrgb=: gtkrgb
 gtkpenwidth=: 0.5>.{.y
 gtkpenstyle=: {:y
 cairo_set_line_width gtkcr ; (1.1-1.1)+gtkpenwidth
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glpie=: 3 : 0 "1
@@ -1167,7 +1266,7 @@ if. *./ 0=y do. 0 return. end.
 c=. <.-:#y
 if. 0=c do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 if. -.gtkbrushnull do.
   cairo_cairocolor gtkbrushrgb
   cairo_move_to gtkcr ; <"0 (0 1){y
@@ -1187,7 +1286,7 @@ else.
   cairo_line_to gtkcr ; <"0 (0 1){y
   cairo_stroke gtkcr
 end.
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glqpixels=: 3 : 0 "1
@@ -1224,7 +1323,7 @@ cairo_glrect=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
+if. 0~:printoperation do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 if. -.gtkbrushnull do.
   cairo_cairocolor gtkbrushrgb
   cairo_rectangle gtkcr ; <"0 y
@@ -1236,7 +1335,7 @@ else.
   cairo_rectangle gtkcr ; <"0 y
   cairo_stroke gtkcr
 end.
-if. iPRINT=gloption do. cairo_restore gtkcr end.
+if. 0~:printoperation do. cairo_restore gtkcr end.
 0
 )
 cairo_glsetbrush=: cairo_glbrush @ cairo_glrgb
@@ -1244,7 +1343,6 @@ cairo_glsetpen=: cairo_glpen @ ((1 0 [ cairo_glrgb) :((2 {. [) cairo_glrgb))
 cairo_gltext=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
-if. iPRINT=gloption do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 cairo_cairocolor gtktextrgb
 pango_layout_set_text gtkpl;(,y);#y
 if. gtkunderline do.
@@ -1255,11 +1353,11 @@ if. gtkunderline do.
   pango_attr_list_unref atl
 end.
 if. 0=gtkfontangle do.
-  cairo_move_to gtkcr ; <"0 gtktextxy
+  cairo_move_to gtkcr ; <"0 gtktextxy * twipscaled
   pango_cairo_show_layout gtkcr, gtkpl
 else.
   cairo_save gtkcr
-  cairo_move_to gtkcr ; <"0 gtktextxy
+  cairo_move_to gtkcr ; <"0 gtktextxy * twipscaled
   cairo_rotate gtkcr ; - rfd gtkfontangle%10
   pango_cairo_update_layout gtkcr, gtkpl
   pango_cairo_show_layout gtkcr, gtkpl
@@ -1272,7 +1370,6 @@ if. gtkunderline do.
   pango_layout_set_attributes gtkpl,atl
   pango_attr_list_unref atl
 end.
-if. iPRINT=gloption do. cairo_restore gtkcr end.
 0
 )
 cairo_gltextcolor=: 3 : 0 "1
@@ -1302,18 +1399,126 @@ assert. 0~:gtkcr,gtkpl
 cairo_translate gtkcr ; <"0 twipscaled * y
 0
 )
-cairo_glprint=: [:
-cairo_glprintmore=: [:
 cairo_glqhandles=: 3 : 0 "1
+if. 0< #y do. (13!:8) 3 end.
 z=. 0 0 0
-if. iOPENGL=gloption do. z return. end.
 assert. 0~:gtkcr,gtkpl
 z=. canvas,gtkcr,gtkpl
 )
+cairo_glprint=: 3 : 0 "1
+job=. 'J Print' [ printer=. file=. '' [ devmod=. 0$<''
+PrinterDevmode=. ;:'orientation copies papersize paperlength paperwidth scale defaultsource printquality color duplex'
+if. 0< #args=. wdglshiftargs y do. job=. >@{.args
+elseif. 1< #args do. printer=. 1{::args
+elseif. 2< #args do. file=. 2{::args
+elseif. 3< #args do.
+  for_mv. _2[\ 3}.args do.
+    'mod val'=. mv
+    if. (<mod) -.@e. PrinterDevmode do. (13!:8) 3 end.
+    devmod=. devmod, mv
+  end.
+end.
+assert. iOPENGL~:gloption
+assert. 0=gtkcr,gtkpl
+assert. 0=printoperation
+assert. 0=printcontext
+if. 0= printsettings do. printsettings_jglcanvas_=: gtk_print_settings_new '' end.
+printoperation=: operation=. gtk_print_operation_new ''
+gtk_print_operation_set_job_name operation ; job
+gtk_print_operation_set_print_settings operation, printsettings
+if. #devmod do.
+  settings=. gtk_print_operation_get_print_settings operation
+  for_mv. _2[\ devmode do.
+    'mod val'=. mv
+    select. mod
+    case. 'copies' do. gtk_print_settings_set_n_copies setting, {.@(0&".) val
+    case. 'orientation' do. gtk_print_settings_set_orientation setting, <: {.@(0&".) val
+    end.
+  end.
+end.
+if. async_print do. gtk_print_operation_set_allow_async operation,1 end.
+consig3 operation;'begin_print';'print_begin'
+consig4 operation;'draw_page';'print_draw'
+if. async_print do. consig3 operation;'done';'print_done' end.
+res=. gtk_print_operation_run operation, GTK_PRINT_OPERATION_ACTION_PRINT, 0, 0
+if. 0=async_print do. print_done operation,res,0 end.
+0
+)
+cairo_printer_dialog=: 3 : 0
+z=. 0
+if. 0= printsettings do. printsettings_jglcanvas_=: gtk_print_settings_new '' end.
+operation=. gtk_print_operation_new ''
+gtk_print_operation_set_print_settings operation, printsettings
+res=. gtk_print_operation_run operation, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, 0, 0
+if. res= GTK_PRINT_OPERATION_RESULT_APPLY do.
+  g_object_unref printsettings
+  printsettings_jglcanvas_=: g_object_ref gtk_print_operation_get_print_settings operation
+  z=. 1
+end.
+z [ g_object_unref operation
+)
 
+cairo_settings_printer=: 3 : 0
+z=. ''
+if. 0~: printsettings do.
+  if. p=. gtk_print_settings_get_printer printsettings do. z=. memr p, _1 0 end.
+end.
+z
+)
 
-cairo_glqprintpaper=: [:
-cairo_glqprintwh=: [:
+cairo_glprintmore=: 3 : 0 "1
+if. 1 4 -.@e.~ 3!:0 y do. (13!:8) 3 end.
+if. 1~: #y do. (13!:8) 3 end.
+if. 0=printoperation do. (13!:8) 3 end.
+if. 0=printcontext do. (13!:8) 3 end.
+printnpage=: 0 >. <. {.y
+''
+)
+cairo_glqprintpaper=: 3 : 0 "1
+if. 0< #y do. (13!:8) 3 end.
+if. 0=printoperation do. (13!:8) 3 end.
+if. 0=printcontext do. (13!:8) 3 end.
+assert. iOPENGL~:gloption
+marx=. mary=. 0
+context=. printcontext
+w=. <. gtk_print_context_get_width context
+h=. <. gtk_print_context_get_height context
+gtkwh=: w,h
+dpix=: <. gtk_print_context_get_dpi_x context
+dpiy=: <. gtk_print_context_get_dpi_y context
+twipscaled=: 1440 %~ dpix,dpiy
+'w h'=. (w,h) % twipscaled
+if. gtk_print_context_get_hard_margins context; (top=. ,1.1); (bottom=. ,1.1); (left=. ,1.1); (right=. ,1.1) do.
+  'marx mary'=. (left,top) % twipscaled
+end.
+setting=. gtk_print_operation_get_print_settings printoperation
+assert. 0~:setting
+copies=. gtk_print_settings_get_n_copies setting
+ori=. 1+ gtk_print_settings_get_orientation setting
+papersize=. gtk_print_settings_get_paper_size setting
+if. 0~:papersize do.
+  papername=. memr (gtk_paper_size_get_name papersize), 0 _1
+  w=. <. 1440* gtk_paper_size_get_width papersize, GTK_UNIT_INCH
+  h=. <. 1440* gtk_paper_size_get_height papersize, GTK_UNIT_INCH
+  marx=. <. 1440* gtk_paper_size_get_default_left_margin papersize, GTK_UNIT_INCH
+  mary=. <. 1440* gtk_paper_size_get_default_top_margin papersize, GTK_UNIT_INCH
+end.
+<. w,h,marx,mary,ori,copies,0
+)
+cairo_glqprintwh=: 3 : 0 "1
+if. 0< #y do. (13!:8) 3 end.
+if. 0=printoperation do. (13!:8) 3 end.
+if. 0=printcontext do. (13!:8) 3 end.
+assert. iOPENGL~:gloption
+context=. printcontext
+w=. <. gtk_print_context_get_width context
+h=. <. gtk_print_context_get_height context
+gtkwh=: w,h
+dpix=: <. gtk_print_context_get_dpi_x context
+dpiy=: <. gtk_print_context_get_dpi_y context
+twipscaled=: 1440 %~ dpix,dpiy
+<. gtkwh % twipscaled
+)
 cairo_glemfclose=: [:
 cairo_glemfopen=: [:
 cairo_glemfplay=: [:
@@ -1321,6 +1526,9 @@ cairo_glfile=: [:
 cairo_glnodblbuf=: [:
 cairo_glqtextmetrics=: [:
 cairo_glroundr=: [:
+cairo_cleanup=: 3 : 0
+if. printsettings do. printsettings_jglcanvas_=: 0 [ g_object_unref printsettings end.
+)
 GetDC=: 'user32 GetDC > x x'&(15!:0)
 ReleaseDC=: 'user32 ReleaseDC > i x x'&(15!:0)
 
@@ -2760,46 +2968,6 @@ consig4 operation;'draw_page';'draw_page'
 gtk_print_operation_run operation, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, 0, 0
 g_object_unref operation
 0
-)
-PrinterDevmode=: :;'orientation copies papersize paperlength paperwidth scale defaultsource printquality color duplex'
-glprint=: 3 : 0
-job=. printer=. file=. '' [ devmod=. 0$<''
-if. 0< #args=. wdglshiftargs y do. job=. >@{.args
-elseif. 1< #args do. printer=. 1{::args
-elseif. 2< #args do. file=. 2{::args
-elseif. 3< #args do.
-  for_mv. _2[\ 3}.args do.
-    'mod val'=. mv
-    if. (<mod) -.@e. PrinterDevmode do. 'invalid devmode' (13!:8) 3 end.
-    devmod=. devmod, mv
-  end.
-end.
-assert. iOPENGL~:gloption
-assert. 0~:gtkcr,gtkpl
-prtoperation=. gtk_print_operation_new ''
-consig3 prtoperation;'begin_print';'wdbegin_print'
-consig4 prtoperation;'draw_page';'wddraw_page'
-gtk_print_operation_run prtoperation, GTK_PRINT_OPERATION_ACTION_PRINT, 0, 0
-0
-)
-glqprintwh=: 3 : 0
-if. 0< #args=. wdglshiftargs y do. 'extra parameter' (13!:8) 3 end.
-assert. iOPENGL~:gloption
-assert. 0~:gtkcr,gtkpl
-gtkprintwh
-)
-glqprintpaper=: 3 : 0
-if. 0< #args=. wdglshiftargs y do. 'extra parameter' (13!:8) 3 end.
-assert. iOPENGL~:gloption
-assert. 0~:gtkcr,gtkpl
-gtkprintpaper
-)
-
-glqhandles=: 3 : 0
-if. 0< #args=. wdglshiftargs y do. 'extra parameter' (13!:8) 3 end.
-assert. iOPENGL~:gloption
-assert. 0~:gtkcr,gtkpl
-canvas,gtkcr,prtoperation
 )
 pafc=: 2p1&|@{:@:(*.@(j./))
 
