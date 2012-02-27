@@ -42,5 +42,5 @@ graphics/gl2 - change history
 == 1.0.15/18 ==
  * gl2: work with gtkwd
 
-== 1.0.19 ==
+== 1.0.19/20 ==
  * gl2: gtkwd printing
