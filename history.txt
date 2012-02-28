@@ -44,3 +44,6 @@ graphics/gl2 - change history
 
 == 1.0.19/20 ==
  * gl2: gtkwd printing
+
+== 1.0.21 ==
+ * gl2: decommit gtk pixmap ,gdiplus backends
