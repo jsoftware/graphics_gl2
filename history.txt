@@ -47,3 +47,6 @@ graphics/gl2 - change history
 
 == 1.0.21 ==
  * gl2: decommit gtk pixmap ,gdiplus backends
+
+== 1.0.22 ==
+ * gl2: glqhandles

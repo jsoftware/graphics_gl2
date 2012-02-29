@@ -299,7 +299,7 @@ EMPTY
 initialized=: 0
 RGBSEQ=: RGBSEQ_jgl2_
 gloption=: iGL2
-PForm=: PId=: PLocale=: ''
+PForm=: PId=: PLocale=: PLocalec=: ''
 gtkcr=: gtkpl=: gtkplc=: 0
 
 gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: 0
@@ -513,6 +513,7 @@ if. #PForm do.
       if. (iOPENGL=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
+      1 return.
     end.
   end.
 elseif. 'gtkwd'-:PId do.
@@ -526,6 +527,7 @@ elseif. 'gtkwd'-:PId do.
       if. (iOPENGL=gloption) *. #ogl do.
         current__ogl 0 [ show__ogl widget
       end.
+      1 return.
     end.
   end.
 end.
@@ -1373,7 +1375,7 @@ if. iOPENGL=gloption do. z return. end.
 assert. 0~:gtkcr,gtkpl
 pango_layout_set_text gtkpl;(,y);#y
 z=. _2 {. ;pango_layout_get_pixel_size gtkpl;(,2);,3
-z
+<. z % twipscaled
 )
 cairo_glqextentw=: 3 : 0 "1
 {."1>cairo_glqextent each<;._2 y,LF#~LF~:{:y
@@ -1386,7 +1388,7 @@ cairo_translate gtkcr ; <"0 twipscaled * y
 )
 cairo_glqhandles=: 3 : 0 "1
 if. 0< #y do. (13!:8) 3 end.
-canvas,gtkcr,gtkpl
+canvas,gtkcr,printcontext
 )
 cairo_glprint=: 3 : 0 "1
 job=. 'J Print' [ printer=. file=. '' [ devmod=. 0$<''
