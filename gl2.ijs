@@ -1047,6 +1047,7 @@ while. p<#y do.
   case. 2070 do. ''
   case. 2071 do. ''
   case. 2020 do. ''
+  case. 2021 do. ''
   case. 2022 do. cairo_glpen dat
   case. 2023 do. cairo_glpie dat
   case. 2024 do. cairo_glpixel dat
@@ -1155,11 +1156,6 @@ if. 0~:printcontext do. cairo_restore gtkcr end.
 0
 )
 cairo_glpaint=: 3 : 0 "1
-newsize=: 1
-gtk_widget_queue_draw canvas
-0
-)
-cairo_glpaintx=: 3 : 0 "1
 assert. 0~:gtkcr,gtkpl
 newsize=: 1
 if. iOPENGL~:gloption do.
@@ -1174,7 +1170,11 @@ if. iOPENGL~:gloption do.
 end.
 0
 )
-
+cairo_glpaintx=: 3 : 0 "1
+newsize=: 1
+gtk_widget_queue_draw canvas
+0
+)
 cairo_glpen=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
@@ -1740,6 +1740,7 @@ while. p<#y do.
   case. 2070 do. ''
   case. 2071 do. ''
   case. 2020 do. ''
+  case. 2021 do. ''
   case. 2022 do. gdi32_glpen dat
   case. 2023 do. gdi32_glpie dat
   case. 2024 do. gdi32_glpixel dat
@@ -1843,11 +1844,6 @@ Polyline HDC; (<.c{.y); (<.-:c)
 0
 )
 gdi32_glpaint=: 3 : 0 "1
-newsize=: 1
-gtk_widget_queue_draw canvas
-0
-)
-gdi32_glpaintx=: 3 : 0 "1
 assert. 0~:HDC,BMP
 newsize=: 1
 if. iOEPNGL~:gloption do.
@@ -1857,7 +1853,11 @@ if. iOEPNGL~:gloption do.
 end.
 0
 )
-
+gdi32_glpaintx=: 3 : 0 "1
+newsize=: 1
+gtk_widget_queue_draw canvas
+0
+)
 gdi32_glpen=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:HDC,BMP
