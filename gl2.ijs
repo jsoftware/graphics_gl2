@@ -1008,6 +1008,7 @@ if. 0~:printcontext do. cairo_restore gtkcr end.
 0
 )
 cairo_glcmds=: 3 : 0
+if. 0=#y do. 0 return. end.
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
@@ -1700,6 +1701,7 @@ end.
 0
 )
 gdi32_glcmds=: 3 : 0
+if. 0=#y do. 0 return. end.
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
