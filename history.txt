@@ -51,6 +51,6 @@ graphics/gl2 - change history
 == 1.0.22 ==
  * gl2: glqhandles
 
-== 1.0.23/24 ==
+== 1.0.23/25 ==
  * gl2: swap glpaint and glpaintx to agree with J504
- * gl2: glcmds
+ * gl2: glcmds binary

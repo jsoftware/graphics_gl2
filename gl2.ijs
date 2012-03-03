@@ -1013,7 +1013,8 @@ if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   ipar=. gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkpenrgb,gtkbrushrgb,gtktextrgb,gtkbrushnull
-  (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(,y);#y
+  glcmdsrc=. (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(<.,y);(#y);RGBSEQ
+  assert. 0= glcmdsrc
   'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull'=. ipar
   gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
   gtkpenrgb=: penrgb [ gtkbrushrgb=: brushrgb [ gtktextrgb=: textrgb [ gtkbrushnull=: brushnull
@@ -1137,7 +1138,7 @@ gtkfontangle=: <.y
 )
 cairo_glrgb=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
-gtkrgb=: RGB y
+gtkrgb=: RGB`BGR@.RGBSEQ y
 0
 )
 cairo_gllines=: 3 : 0 "1
@@ -1210,7 +1211,7 @@ if. h1<0 do. d=. ,|.(h,w)$d end.
 d=. flip_rgb^:(-.RGBSEQ) d
 
 d=. 2 ic d
-surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; 4*w
+surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; cairo_format_stride_for_width CAIRO_FORMAT_RGB24, w
 if. surface do.
   cairo_save gtkcr
   cairo_set_operator gtkcr ; CAIRO_OPERATOR_OVER
@@ -1219,8 +1220,8 @@ if. surface do.
   cairo_clip gtkcr
   cairo_paint gtkcr
   cairo_restore gtkcr
+  cairo_surface_destroy surface
 end.
-cairo_surface_destroy surface
 0
 )
 cairo_glpixelsx=: 3 : 0 "1
@@ -1235,7 +1236,7 @@ if. h1<0 do. d=. ,|.(h,w)$ d end.
 d=. flip_rgb^:(-.RGBSEQ) d
 
 d=. 2 ic d
-surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; 4*w
+surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; cairo_format_stride_for_width CAIRO_FORMAT_RGB24, w
 if. surface do.
   cairo_save gtkcr
   cairo_set_operator gtkcr ; CAIRO_OPERATOR_OVER
@@ -1244,8 +1245,8 @@ if. surface do.
   cairo_clip gtkcr
   cairo_paint gtkcr
   cairo_restore gtkcr
+  cairo_surface_destroy surface
 end.
-cairo_surface_destroy surface
 0
 )
 cairo_glpolygon=: 3 : 0 "1
@@ -1379,7 +1380,16 @@ z=. _2 {. ;pango_layout_get_pixel_size gtkpl;(,2);,3
 <. z % twipscaled
 )
 cairo_glqextentw=: 3 : 0 "1
-{."1>cairo_glqextent each<;._2 y,LF#~LF~:{:y
+assert. 0~:gtkcr,gtkpl
+if. iOPENGL=gloption do. 0$0 return. end.
+if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+  len=. #;._2 txt=. y,LF#~LF~:{:y
+  (LIBGLCMDS,' Glcmds_cairo_qextentwv > + i x x *c *x x *x')&cd gtkcr;gtkpl;txt;len;(#len);(w=. _1#~#len)
+  <. w % {.twipscaled
+else.
+  w=. {. glqextent '8'
+  w * #;._2 txt=. y,LF#~LF~:{:y
+end.
 )
 cairo_glwindoworg=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
@@ -1612,7 +1622,9 @@ gtkbrushrgb=: gtkrgb
 obj=. CreateSolidBrush gtkbrushrgb
 prev=. SelectObject HDC, obj
 if. BRUSH do.
-  assert. prev=BRUSH
+  if. -. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+    assert. prev=BRUSH
+  end.
   DeleteObject BRUSH
 else.
   OLDBRUSH=: prev
@@ -1707,7 +1719,8 @@ assert. 0~:HDC,BMP
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   xpar=. <.PEN,OLDPEN,BRUSH,OLDBRUSH,FONT,OLDFONT
   ipar=. <.gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle
-  (LIBGLCMDS,' Glcmds_gdi32 > + i x *x *x *c *x x')&cd HDC;xpar;ipar;(utf8 ,PROFONT_jgl2_);(,y);#y
+  glcmdsrc=. (LIBGLCMDS,' Glcmds_gdi32 > + i x *x *x *c *x x x')&cd HDC;xpar;ipar;(utf8 ,PROFONT_jgl2_);(<.,y);(#y);RGBSEQ
+  assert. 0= glcmdsrc
   'PEN OLDPEN BRUSH OLDBRUSH FONT OLDFONT'=: xpar
   'clip gtkw gtkh rgb tx ty underline angle'=. ipar
   gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
@@ -1798,7 +1811,7 @@ gtkunderline=: Underline
 obj=. CreateFontW (<.size*(GetDeviceCaps HDC, LOGPIXELSY)%72); 0; (<.10*degree); (<.10*degree); (Bold{FW_NORMAL,FW_BOLD); Italic; Underline; Strikeout; DEFAULT_CHARSET; OUT_DEFAULT_PRECIS; CLIP_DEFAULT_PRECIS; PROOF_QUALITY; DEFAULT_PITCH; uucp face
 prev=. SelectObject HDC, obj
 if. FONT do.
-  if. -. IF64 *. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+  if. -. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
     assert. prev=FONT
   end.
   DeleteObject FONT
@@ -1834,7 +1847,7 @@ gtkfontangle=: <.y
 )
 gdi32_glrgb=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
-gtkrgb=: BGR y
+gtkrgb=: BGR`RGB@.RGBSEQ y
 0
 )
 gdi32_gllines=: 3 : 0 "1
@@ -1848,7 +1861,7 @@ Polyline HDC; (<.c{.y); (<.-:c)
 gdi32_glpaint=: 3 : 0 "1
 assert. 0~:HDC,BMP
 newsize=: 1
-if. iOEPNGL~:gloption do.
+if. iOPENGL~:gloption do.
   gtkwin=. getGtkWidgetWindow canvas
   argb=. gdi32_glqpixels 0 0,gtkwh
   gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
@@ -2014,7 +2027,15 @@ r=. GetTextExtentPointW HDC;text;(#text);z
 z
 )
 gdi32_glqextentw=: 3 : 0 "1
-{."1>gdi32_glqextent each<;._2 y,LF#~LF~:{:y
+if. iOPENGL=gloption do. 0$0 return. end.
+if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
+  len=. #;._2 txt=. uucp y,LF#~LF~:{:y
+  (LIBGLCMDS,' Glcmds_gdi32_qextentwv > + i x *w *x x *x')&cd HDC;txt;len;(#len);(w=. _1#~#len)
+  <. w % {.twipscaled
+else.
+  w=. {. glqextent '8'
+  w * #;._2 txt=. y,LF#~LF~:{:y
+end.
 )
 gdi32_glwindoworg=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
