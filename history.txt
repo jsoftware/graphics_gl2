@@ -54,4 +54,6 @@ graphics/gl2 - change history
 == 1.0.23/26 ==
  * gl2: swap glpaint and glpaintx to agree with J504
  * gl2: glcmds binary
+
+== 1.0.27 ==
  * gl2: gl2 cmds buffer
