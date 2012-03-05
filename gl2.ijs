@@ -35,199 +35,108 @@ IDC_SIZEALL=: 32646
 IDC_NO=: 32648
 IDC_APPSTARTING=: 32650
 IDC_HELP=: 32651
-glarc=: 3 : 0
-glarc__l y [[ l=. locGL2_jgl2_
-)
+glarc_n=: 2001
+glbrush_n=: 2004
+glbrushnull_n=: 2005
+glcapture_n=: 2062
+glcaret_n=: 2065
+glclear_n=: 2007
+glclip_n=: 2078
+glclipreset_n=: 2079
+glcmds_n=: 2999
+glcursor_n=: 2069
+glellipse_n=: 2008
+glemfopen_n=: 2084
+glemfclose_n=: 2085
+glemfplay_n=: 2086
+glfile_n=: 2066
+glfont_n=: 2012
+gllines_n=: 2015
+glnodblbuf_n=: 2070
+glpaint_n=: 2020
+glpaintx_n=: 2021
+glpen_n=: 2022
+glpie_n=: 2023
+glpixel_n=: 2024
+glpixelsx_n=: 2075
+glpixels_n=: 2076
+glprint_n=: 2089
+glprintmore_n=: 2091
+glpolygon_n=: 2029
+glqextent_n=: 2057
+glqextentw_n=: 2083
+glqpixels_n=: 2077
+glqprintpaper_n=: 2092
+glqprintwh_n=: 2088
+glqtextmetrics_n=: 2058
+glqwh_n=: 2059
+glqhandles_n=: 2060
+glrect_n=: 2031
+glrgb_n=: 2032
+glroundr_n=: 2033
+glsel_n=: 2035
+gltext_n=: 2038
+gltextcolor_n=: 2040
+gltextxy_n=: 2056
+glwindoworg_n=: 2045
 
-glarcx=: 3 : 0
-glarcx__l y [[ l=. locGL2_jgl2_
-)
+glbkmode_n=: 2003
+glnoerasebkgnd_n=: 2071
 
-glbrush=: 3 : 0
-glbrush__l y [[ l=. locGL2_jgl2_
-)
-
-glbrushnull=: 3 : 0
-glbrushnull__l y [[ l=. locGL2_jgl2_
-)
-
-glclear=: 3 : 0
-glclear__l y [[ l=. locGL2_jgl2_
-)
-
-glclip=: 3 : 0
-glclip__l y [[ l=. locGL2_jgl2_
-)
-
-glclipreset=: 3 : 0
-glclipreset__l y [[ l=. locGL2_jgl2_
-)
-
-glcmds=: 3 : 0
-glcmds__l y [[ l=. locGL2_jgl2_
-)
-
-glellipse=: 3 : 0
-glellipse__l y [[ l=. locGL2_jgl2_
-)
-
-glfont=: 3 : 0
-glfont__l y [[ l=. locGL2_jgl2_
-)
-
-glfontangle=: 3 : 0
-glfontangle__l y [[ l=. locGL2_jgl2_
-)
-
-glrgb=: 3 : 0
-glrgb__l y [[ l=. locGL2_jgl2_
-)
-
-gllines=: 3 : 0
-gllines__l y [[ l=. locGL2_jgl2_
-)
-
-glpaint=: 3 : 0
-glpaint__l y [[ l=. locGL2_jgl2_
-)
-
-glpaintx=: 3 : 0
-glpaintx__l y [[ l=. locGL2_jgl2_
-)
-
-glpen=: 3 : 0
-glpen__l y [[ l=. locGL2_jgl2_
-)
-
-glpie=: 3 : 0
-glpie__l y [[ l=. locGL2_jgl2_
-)
-
-glpixel=: 3 : 0
-glpixel__l y [[ l=. locGL2_jgl2_
-)
-
-glpixels=: 3 : 0
-glpixels__l y [[ l=. locGL2_jgl2_
-)
-
-glpolygon=: 3 : 0
-glpolygon__l y [[ l=. locGL2_jgl2_
-)
-
-glqpixels=: 3 : 0
-glqpixels__l y [[ l=. locGL2_jgl2_
-)
-
-glqwh=: 3 : 0
-glqwh__l y [[ l=. locGL2_jgl2_
-)
-
-glrect=: 3 : 0
-glrect__l y [[ l=. locGL2_jgl2_
-)
-
-glsetbrush=: 3 : 0
-glsetbrush__l y [[ l=. locGL2_jgl2_
-)
-
-glsetpen=: 3 : 0
-glsetpen__l y [[ l=. locGL2_jgl2_
-:
-x glsetpen__l y [[ l=. locGL2_jgl2_
-)
-
-gltext=: 3 : 0
-gltext__l y [[ l=. locGL2_jgl2_
-)
-
-gltextcolor=: 3 : 0
-gltextcolor__l y [[ l=. locGL2_jgl2_
-)
-
-gltextxy=: 3 : 0
-gltextxy__l y [[ l=. locGL2_jgl2_
-)
-
-glqextent=: 3 : 0
-glqextent__l y [[ l=. locGL2_jgl2_
-)
-
-glqextentw=: 3 : 0
-glqextentw__l y [[ l=. locGL2_jgl2_
-)
-
-glwindoworg=: 3 : 0
-glwindoworg__l y [[ l=. locGL2_jgl2_
-)
-
-glcapture=: 3 : 0
-glcapture__l y [[ l=. locGL2_jgl2_
-)
-
-glcaret=: 3 : 0
-glcaret__l y [[ l=. locGL2_jgl2_
-)
-
-glcmds=: 3 : 0
-glcmds__l y [[ l=. locGL2_jgl2_
-)
-
-glcursor=: 3 : 0
-glcursor__l y [[ l=. locGL2_jgl2_
-)
-
-glemfclose=: 3 : 0
-glemfclose__l y [[ l=. locGL2_jgl2_
-)
-
-glemfopen=: 3 : 0
-glemfopen__l y [[ l=. locGL2_jgl2_
-)
-
-glemfplay=: 3 : 0
-glemfplay__l y [[ l=. locGL2_jgl2_
-)
-
-glfile=: 3 : 0
-glfile__l y [[ l=. locGL2_jgl2_
-)
-
-glnodblbuf=: 3 : 0
-glnodblbuf__l y [[ l=. locGL2_jgl2_
-)
-
-glpixelsx=: 3 : 0
-glpixelsx__l y [[ l=. locGL2_jgl2_
-)
-
-glprint=: 3 : 0
-glprint__l y [[ l=. locGL2_jgl2_
-)
-
-glprintmore=: 3 : 0
-glprintmore__l y [[ l=. locGL2_jgl2_
-)
-
-glqhandles=: 3 : 0
-glqhandles__l y [[ l=. locGL2_jgl2_
-)
-
-glqprintpaper=: 3 : 0
-glqprintpaper__l y [[ l=. locGL2_jgl2_
-)
-
-glqprintwh=: 3 : 0
-glqprintwh__l y [[ l=. locGL2_jgl2_
-)
-
-glqtextmetrics=: 3 : 0
-glqtextmetrics__l y [[ l=. locGL2_jgl2_
-)
-
-glroundr=: 3 : 0
-glroundr__l y [[ l=. locGL2_jgl2_
-)
+glfont2_n=: 2312
+glfontangle_n=: 2342
+glarc=: 3 : 'glarc__l y [[ l=. locGL2_jgl2_'
+glarcx=: 3 : 'glarcx__l y [[ l=. locGL2_jgl2_'
+glbrush=: 3 : 'glbrush__l y [[ l=. locGL2_jgl2_'
+glbrushnull=: 3 : 'glbrushnull__l y [[ l=. locGL2_jgl2_'
+glcapture=: 3 : 'glcapture__l y [[ l=. locGL2_jgl2_'
+glcaret=: 3 : 'glcaret__l y [[ l=. locGL2_jgl2_'
+glclear=: 3 : 'glclear__l y [[ l=. locGL2_jgl2_'
+glclip=: 3 : 'glclip__l y [[ l=. locGL2_jgl2_'
+glclipreset=: 3 : 'glclipreset__l y [[ l=. locGL2_jgl2_'
+glcmds=: 3 : 'glcmds__l y [[ l=. locGL2_jgl2_'
+glcmds=: 3 : 'glcmds__l y [[ l=. locGL2_jgl2_'
+glcursor=: 3 : 'glcursor__l y [[ l=. locGL2_jgl2_'
+glellipse=: 3 : 'glellipse__l y [[ l=. locGL2_jgl2_'
+glemfclose=: 3 : 'glemfclose__l y [[ l=. locGL2_jgl2_'
+glemfopen=: 3 : 'glemfopen__l y [[ l=. locGL2_jgl2_'
+glemfplay=: 3 : 'glemfplay__l y [[ l=. locGL2_jgl2_'
+glfile=: 3 : 'glfile__l y [[ l=. locGL2_jgl2_'
+glfont=: 3 : 'glfont__l y [[ l=. locGL2_jgl2_'
+glfontangle=: 3 : 'glfontangle__l y [[ l=. locGL2_jgl2_'
+gllines=: 3 : 'gllines__l y [[ l=. locGL2_jgl2_'
+glnodblbuf=: 3 : 'glnodblbuf__l y [[ l=. locGL2_jgl2_'
+glpaint=: 3 : 'glpaint__l y [[ l=. locGL2_jgl2_'
+glpaintx=: 3 : 'glpaintx__l y [[ l=. locGL2_jgl2_'
+glpen=: 3 : 'glpen__l y [[ l=. locGL2_jgl2_'
+glpie=: 3 : 'glpie__l y [[ l=. locGL2_jgl2_'
+glpixel=: 3 : 'glpixel__l y [[ l=. locGL2_jgl2_'
+glpixels=: 3 : 'glpixels__l y [[ l=. locGL2_jgl2_'
+glpixelsx=: 3 : 'glpixelsx__l y [[ l=. locGL2_jgl2_'
+glpolygon=: 3 : 'glpolygon__l y [[ l=. locGL2_jgl2_'
+glprint=: 3 : 'glprint__l y [[ l=. locGL2_jgl2_'
+glprintmore=: 3 : 'glprintmore__l y [[ l=. locGL2_jgl2_'
+glqextent=: 3 : 'glqextent__l y [[ l=. locGL2_jgl2_'
+glqextentw=: 3 : 'glqextentw__l y [[ l=. locGL2_jgl2_'
+glqhandles=: 3 : 'glqhandles__l y [[ l=. locGL2_jgl2_'
+glqpixels=: 3 : 'glqpixels__l y [[ l=. locGL2_jgl2_'
+glqprintpaper=: 3 : 'glqprintpaper__l y [[ l=. locGL2_jgl2_'
+glqprintwh=: 3 : 'glqprintwh__l y [[ l=. locGL2_jgl2_'
+glqtextmetrics=: 3 : 'glqtextmetrics__l y [[ l=. locGL2_jgl2_'
+glqwh=: 3 : 'glqwh__l y [[ l=. locGL2_jgl2_'
+glrect=: 3 : 'glrect__l y [[ l=. locGL2_jgl2_'
+glrgb=: 3 : 'glrgb__l y [[ l=. locGL2_jgl2_'
+glroundr=: 3 : 'glroundr__l y [[ l=. locGL2_jgl2_'
+glsetbrush=: 3 : 'glsetbrush__l y [[ l=. locGL2_jgl2_'
+glsetpen=: 3 : 'glsetpen__l y [[ l=. locGL2_jgl2_'
+gltext=: 3 : 'gltext__l y [[ l=. locGL2_jgl2_'
+gltextcolor=: 3 : 'gltextcolor__l y [[ l=. locGL2_jgl2_'
+gltextxy=: 3 : 'gltextxy__l y [[ l=. locGL2_jgl2_'
+glwindoworg=: 3 : 'glwindoworg__l y [[ l=. locGL2_jgl2_'
+glbuf=: 3 : 'glbuf__l y [[ l=. locGL2_jgl2_'
+glmark=: 3 : 'glmark__l y [[ l=. locGL2_jgl2_'
+glqmark=: 3 : 'glqmark__l y [[ l=. locGL2_jgl2_'
+gltrash=: 3 : 'gltrash__l y [[ l=. locGL2_jgl2_'
 glcanvas=: 0&$: : (4 : 0)
 'p c wh l'=. 4{.y
 if. 0=#>l do.
@@ -312,6 +221,8 @@ printsettings=: 0
 ogl=: 0$<''
 newctx=: 1
 newsize=: 1
+stash_state=: 0
+stash_buf=: 0$0
 create=: 3 : 0
 'w h option'=. 3{.y
 canvas=: gtk_drawing_area_new''
@@ -649,6 +560,7 @@ end.
 draw=: expose_event=: 3 : 0
 'widget event data'=. y
 gtkwh=: _2{. getGtkWidgetAllocation widget
+gltrash''
 if. #PForm do.
   locGL2_jgl2_=: coname''
   if. (iOPENGL=gloption) *. #ogl do.
@@ -687,6 +599,7 @@ end.
 
 if. iOPENGL~:gloption do.
   if. 0=GL2Backend_jgl2_ do.
+    gltrash @: cairo_glpaint''
     if. 3=GTKVER_j_ do.
       cr=. event
       cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
@@ -703,6 +616,7 @@ if. iOPENGL~:gloption do.
       cairo_destroy cr
     end.
   elseif. 1=GL2Backend_jgl2_ do.
+    gltrash @: gdi32_glpaint''
     arbg=. gdi32_glqpixels 0 0,gtkwh
     gtkwin pixbufwin_setpixels 0 0,gtkwh,argb
   end.
@@ -1025,54 +939,54 @@ while. p<#y do.
   cmd=. (1+p){y
   dat=. (2+p+i.cnt-2){y
   select. cmd
-  case. 2001 do. cairo_glarc dat
-  case. 2003 do. ''
-  case. 2004 do. cairo_glbrush dat
-  case. 2005 do. cairo_glbrushnull dat
-  case. 2062 do. ''
-  case. 2065 do. cairo_glcaret dat
-  case. 2007 do. cairo_glclear dat
-  case. 2078 do. cairo_glclip dat
-  case. 2079 do. cairo_glclipreset dat
-  case. 2999 do. ''
-  case. 2069 do. ''
-  case. 2008 do. cairo_glellipse dat
-  case. 2085 do. cairo_glemfclose dat
-  case. 2084 do. cairo_glemfopen dat
-  case. 2086 do. cairo_glemfplay dat
-  case. 2066 do. cairo_glfile dat{a.
-  case. 2012 do. cairo_glfont dat{a.
-  case. 2312 do. cairo_glfont2 dat
-  case. 2342 do. cairo_glfontangle dat
-  case. 2015 do. cairo_gllines dat
-  case. 2070 do. ''
-  case. 2071 do. ''
-  case. 2020 do. ''
-  case. 2021 do. ''
-  case. 2022 do. cairo_glpen dat
-  case. 2023 do. cairo_glpie dat
-  case. 2024 do. cairo_glpixel dat
-  case. 2076 do. cairo_glpixels dat
-  case. 2075 do. cairo_glpixelsx dat
-  case. 2029 do. cairo_glpolygon dat
-  case. 2089 do. ''
-  case. 2091 do. ''
-  case. 2057 do. ''
-  case. 2083 do. ''
-  case. 2060 do. ''
-  case. 2077 do. ''
-  case. 2092 do. ''
-  case. 2088 do. ''
-  case. 2058 do. ''
-  case. 2059 do. ''
-  case. 2031 do. cairo_glrect dat
-  case. 2032 do. cairo_glrgb dat
-  case. 2033 do. cairo_glroundr dat
-  case. 2035 do. ''
-  case. 2038 do. cairo_gltext dat{a.
-  case. 2040 do. cairo_gltextcolor dat
-  case. 2056 do. cairo_gltextxy dat
-  case. 2045 do. cairo_glwindoworg dat
+  case. glarc_n_jgl2_ do. cairo_glarc dat
+  case. glbkmode_n_jgl2_ do. ''
+  case. glbrush_n_jgl2_ do. cairo_glbrush dat
+  case. glbrushnull_n_jgl2_ do. cairo_glbrushnull dat
+  case. glcapture_n_jgl2_ do. ''
+  case. glcaret_n_jgl2_ do. cairo_glcaret dat
+  case. glclear_n_jgl2_ do. cairo_glclear dat
+  case. glclip_n_jgl2_ do. cairo_glclip dat
+  case. glclipreset_n_jgl2_ do. cairo_glclipreset dat
+  case. glcmds_n_jgl2_ do. ''
+  case. glcursor_n_jgl2_ do. ''
+  case. glellipse_n_jgl2_ do. cairo_glellipse dat
+  case. glemfclose_n_jgl2_ do. cairo_glemfclose dat
+  case. glemfopen_n_jgl2_ do. cairo_glemfopen dat
+  case. glemfplay_n_jgl2_ do. cairo_glemfplay dat
+  case. glfile_n_jgl2_ do. cairo_glfile dat{a.
+  case. glfont_n_jgl2_ do. cairo_glfont dat{a.
+  case. glfont2_n_jgl2_ do. cairo_glfont2 dat
+  case. glfontangle_n_jgl2_ do. cairo_glfontangle dat
+  case. gllines_n_jgl2_ do. cairo_gllines dat
+  case. glnodblbuf_n_jgl2_ do. ''
+  case. glnoerasebkgnd_n_jgl2_ do. ''
+  case. glpaint_n_jgl2_ do. ''
+  case. glpaintx_n_jgl2_ do. ''
+  case. glpen_n_jgl2_ do. cairo_glpen dat
+  case. glpie_n_jgl2_ do. cairo_glpie dat
+  case. glpixel_n_jgl2_ do. cairo_glpixel dat
+  case. glpixels_n_jgl2_ do. cairo_glpixels dat
+  case. glpixelsx_n_jgl2_ do. cairo_glpixelsx dat
+  case. glpolygon_n_jgl2_ do. cairo_glpolygon dat
+  case. glprint_n_jgl2_ do. ''
+  case. glprintmore_n_jgl2_ do. ''
+  case. glqextent_n_jgl2_ do. ''
+  case. glqextentw_n_jgl2_ do. ''
+  case. glqhandles_n_jgl2_ do. ''
+  case. glqpixels_n_jgl2_ do. ''
+  case. glqprintpaper_n_jgl2_ do. ''
+  case. glqprintwh_n_jgl2_ do. ''
+  case. glqtextmetrics_n_jgl2_ do. ''
+  case. glqwh_n_jgl2_ do. ''
+  case. glrect_n_jgl2_ do. cairo_glrect dat
+  case. glrgb_n_jgl2_ do. cairo_glrgb dat
+  case. glroundr_n_jgl2_ do. cairo_glroundr dat
+  case. glsel_n_jgl2_ do. ''
+  case. gltext_n_jgl2_ do. cairo_gltext dat{a.
+  case. gltextcolor_n_jgl2_ do. cairo_gltextcolor dat
+  case. gltextxy_n_jgl2_ do. cairo_gltextxy dat
+  case. glwindoworg_n_jgl2_ do. cairo_glwindoworg dat
   case. do.
     ('un-implemented glcmds ', ":cmd) 13!:8[3
   end.
@@ -1158,6 +1072,7 @@ if. 0~:printcontext do. cairo_restore gtkcr end.
 )
 cairo_glpaint=: 3 : 0 "1
 assert. 0~:gtkcr,gtkpl
+if. #stash_buf do. stash_buf=: 0$0 [ cairo_glcmds stash_buf end.
 newsize=: 1
 if. iOPENGL~:gloption do.
   cairo_surface_flush cairo_get_target gtkcr
@@ -1731,54 +1646,54 @@ while. p<#y do.
   cmd=. (1+p){y
   dat=. (2+p+i.cnt-2){y
   select. cmd
-  case. 2001 do. gdi32_glarc dat
-  case. 2003 do. ''
-  case. 2004 do. gdi32_glbrush dat
-  case. 2005 do. gdi32_glbrushnull dat
-  case. 2062 do. ''
-  case. 2065 do. gdi32_glcaret dat
-  case. 2007 do. gdi32_glclear dat
-  case. 2078 do. gdi32_glclip dat
-  case. 2079 do. gdi32_glclipreset dat
-  case. 2999 do. ''
-  case. 2069 do. ''
-  case. 2008 do. gdi32_glellipse dat
-  case. 2085 do. gdi32_glemfclose dat
-  case. 2084 do. gdi32_glemfopen dat
-  case. 2086 do. gdi32_glemfplay dat
-  case. 2066 do. gdi32_glfile dat{a.
-  case. 2012 do. gdi32_glfont dat{a.
-  case. 2312 do. gdi32_glfont2 dat
-  case. 2342 do. gdi32_glfontangle dat
-  case. 2015 do. gdi32_gllines dat
-  case. 2070 do. ''
-  case. 2071 do. ''
-  case. 2020 do. ''
-  case. 2021 do. ''
-  case. 2022 do. gdi32_glpen dat
-  case. 2023 do. gdi32_glpie dat
-  case. 2024 do. gdi32_glpixel dat
-  case. 2076 do. gdi32_glpixels dat
-  case. 2075 do. gdi32_glpixelsx dat
-  case. 2029 do. gdi32_glpolygon dat
-  case. 2089 do. ''
-  case. 2091 do. ''
-  case. 2057 do. ''
-  case. 2083 do. ''
-  case. 2060 do. ''
-  case. 2077 do. ''
-  case. 2092 do. ''
-  case. 2088 do. ''
-  case. 2058 do. ''
-  case. 2059 do. ''
-  case. 2031 do. gdi32_glrect dat
-  case. 2032 do. gdi32_glrgb dat
-  case. 2033 do. gdi32_glroundr dat
-  case. 2035 do. ''
-  case. 2038 do. gdi32_gltext dat{a.
-  case. 2040 do. gdi32_gltextcolor dat
-  case. 2056 do. gdi32_gltextxy dat
-  case. 2045 do. gdi32_glwindoworg dat
+  case. glarc_n_jgl2_ do. gdi32_glarc dat
+  case. glbkmode_n_jgl2_ do. ''
+  case. glbrush_n_jgl2_ do. gdi32_glbrush dat
+  case. glbrushnull_n_jgl2_ do. gdi32_glbrushnull dat
+  case. glcapture_n_jgl2_ do. ''
+  case. glcaret_n_jgl2_ do. gdi32_glcaret dat
+  case. glclear_n_jgl2_ do. gdi32_glclear dat
+  case. glclip_n_jgl2_ do. gdi32_glclip dat
+  case. glclipreset_n_jgl2_ do. gdi32_glclipreset dat
+  case. glcmds_n_jgl2_ do. ''
+  case. glcursor_n_jgl2_ do. ''
+  case. glellipse_n_jgl2_ do. gdi32_glellipse dat
+  case. glemfclose_n_jgl2_ do. gdi32_glemfclose dat
+  case. glemfopen_n_jgl2_ do. gdi32_glemfopen dat
+  case. glemfplay_n_jgl2_ do. gdi32_glemfplay dat
+  case. glfile_n_jgl2_ do. gdi32_glfile dat{a.
+  case. glfont_n_jgl2_ do. gdi32_glfont dat{a.
+  case. glfont2_n_jgl2_ do. gdi32_glfont2 dat
+  case. glfontangle_n_jgl2_ do. gdi32_glfontangle dat
+  case. gllines_n_jgl2_ do. gdi32_gllines dat
+  case. glnodblbuf_n_jgl2_ do. ''
+  case. glnoerasebkgnd_n_jgl2_ do. ''
+  case. glpaint_n_jgl2_ do. ''
+  case. glpaintx_n_jgl2_ do. ''
+  case. glpen_n_jgl2_ do. gdi32_glpen dat
+  case. glpie_n_jgl2_ do. gdi32_glpie dat
+  case. glpixel_n_jgl2_ do. gdi32_glpixel dat
+  case. glpixels_n_jgl2_ do. gdi32_glpixels dat
+  case. glpixelsx_n_jgl2_ do. gdi32_glpixelsx dat
+  case. glpolygon_n_jgl2_ do. gdi32_glpolygon dat
+  case. glprint_n_jgl2_ do. ''
+  case. glprintmore_n_jgl2_ do. ''
+  case. glqextent_n_jgl2_ do. ''
+  case. glqextentw_n_jgl2_ do. ''
+  case. glqhandles_n_jgl2_ do. ''
+  case. glqpixels_n_jgl2_ do. ''
+  case. glqprintpaper_n_jgl2_ do. ''
+  case. glqprintwh_n_jgl2_ do. ''
+  case. glqtextmetrics_n_jgl2_ do. ''
+  case. glqwh_n_jgl2_ do. ''
+  case. glrect_n_jgl2_ do. gdi32_glrect dat
+  case. glrgb_n_jgl2_ do. gdi32_glrgb dat
+  case. glroundr_n_jgl2_ do. gdi32_glroundr dat
+  case. glsel_n_jgl2_ do. ''
+  case. gltext_n_jgl2_ do. gdi32_gltext dat{a.
+  case. gltextcolor_n_jgl2_ do. gdi32_gltextcolor dat
+  case. gltextxy_n_jgl2_ do. gdi32_gltextxy dat
+  case. glwindoworg_n_jgl2_ do. gdi32_glwindoworg dat
   case. do.
     ('un-implemented glcmds ', ":cmd) 13!:8[3
   end.
@@ -1859,6 +1774,7 @@ Polyline HDC; (<.c{.y); (<.-:c)
 )
 gdi32_glpaint=: 3 : 0 "1
 assert. 0~:HDC,BMP
+if. #stash_buf do. stash_buf=: 0$0 [ gdi32_glcmds stash_buf end.
 newsize=: 1
 if. iOPENGL~:gloption do.
   gtkwin=. getGtkWidgetWindow canvas
@@ -2083,6 +1999,28 @@ gtk_print_operation_run operation, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, 0, 0
 g_object_unref operation
 0
 )
+glqmark=: 3 : 0
+stash_state
+)
+glmark=: 3 : 0
+stash_state=: 1
+EMPTY
+)
+gltrash=: 3 : 0
+stash_state=: 0 [ stash_buf=: 0$0
+EMPTY
+)
+glbuf=: 4 : 0
+assert. 1=stash_state
+y=. ,y
+if. (*#y) *. 2 = 3!:0 y do. y=. a. i. y end.
+if. glcmds_n_jgl2_ = x do.
+  stash_buf=: stash_buf, y
+else.
+  stash_buf=: stash_buf, (2+#y),x,<.y
+end.
+EMPTY
+)
 pafc=: 2p1&|@{:@:(*.@(j./))
 
 rfd=: *&(1p1%180)
@@ -2229,42 +2167,42 @@ z=. 0$<''
 while. wdglptr < #wdglstr do. z=. z, wdglshiftarg'' end.
 z
 )
-glarc=: cairo_glarc`gdi32_glarc@.GL2Backend_jgl2_
-glarcx=: cairo_glarcx`gdi32_glarcx@.GL2Backend_jgl2_
-glbrush=: cairo_glbrush`gdi32_glbrush@.GL2Backend_jgl2_
-glbrushnull=: cairo_glbrushnull`gdi32_glbrushnull@.GL2Backend_jgl2_
-glcapture=: cairo_glcapture`gdi32_glcapture@.GL2Backend_jgl2_
-glcaret=: cairo_glcaret`gdi32_glcaret@.GL2Backend_jgl2_
-glclear=: cairo_glclear`gdi32_glclear@.GL2Backend_jgl2_
-glclip=: cairo_glclip`gdi32_glclip@.GL2Backend_jgl2_
-glclipreset=: cairo_glclipreset`gdi32_glclipreset@.GL2Backend_jgl2_
-glcmds=: cairo_glcmds`gdi32_glcmds@.GL2Backend_jgl2_
-glcmds=: cairo_glcmds`gdi32_glcmds@.GL2Backend_jgl2_
-glcursor=: cairo_glcursor`gdi32_glcursor@.GL2Backend_jgl2_
-glellipse=: cairo_glellipse`gdi32_glellipse@.GL2Backend_jgl2_
-glfont=: cairo_glfont`gdi32_glfont@.GL2Backend_jgl2_
-glfontangle=: cairo_glfontangle`gdi32_glfontangle@.GL2Backend_jgl2_
-gllines=: cairo_gllines`gdi32_gllines@.GL2Backend_jgl2_
-glpaint=: cairo_glpaint`gdi32_glpaint@.GL2Backend_jgl2_
-glpaintx=: cairo_glpaintx`gdi32_glpaintx@.GL2Backend_jgl2_
-glpen=: cairo_glpen`gdi32_glpen@.GL2Backend_jgl2_
-glpie=: cairo_glpie`gdi32_glpie@.GL2Backend_jgl2_
-glpixel=: cairo_glpixel`gdi32_glpixel@.GL2Backend_jgl2_
-glpixels=: cairo_glpixels`gdi32_glpixels@.GL2Backend_jgl2_
-glpixelsx=: cairo_glpixelsx`gdi32_glpixelsx@.GL2Backend_jgl2_
-glpolygon=: cairo_glpolygon`gdi32_glpolygon@.GL2Backend_jgl2_
-glqextent=: cairo_glqextent`gdi32_glqextent@.GL2Backend_jgl2_
-glqextentw=: cairo_glqextentw`gdi32_glqextentw@.GL2Backend_jgl2_
-glqpixels=: cairo_glqpixels`gdi32_glqpixels@.GL2Backend_jgl2_
-glqwh=: cairo_glqwh`gdi32_glqwh@.GL2Backend_jgl2_
-glrect=: cairo_glrect`gdi32_glrect@.GL2Backend_jgl2_
-glrgb=: cairo_glrgb`gdi32_glrgb@.GL2Backend_jgl2_
-glsetbrush=: cairo_glsetbrush`gdi32_glsetbrush@.GL2Backend_jgl2_
-glsetpen=: cairo_glsetpen`gdi32_glsetpen@.GL2Backend_jgl2_
-gltext=: cairo_gltext`gdi32_gltext@.GL2Backend_jgl2_
-gltextcolor=: cairo_gltextcolor`gdi32_gltextcolor@.GL2Backend_jgl2_
-gltextxy=: cairo_gltextxy`gdi32_gltextxy@.GL2Backend_jgl2_
-glwindoworg=: cairo_glwindoworg`gdi32_glwindoworg@.GL2Backend_jgl2_
+glarc=: (cairo_glarc`gdi32_glarc@.GL2Backend_jgl2_)`(glarc_n_jgl2_&glbuf)@.glqmark
+glarcx=: (cairo_glarcx`gdi32_glarcx@.GL2Backend_jgl2_)`(glarcx_n_jgl2_&glbuf)@.glqmark
+glbrush=: (cairo_glbrush`gdi32_glbrush@.GL2Backend_jgl2_)`(glbrush_n_jgl2_&glbuf)@.glqmark
+glbrushnull=: (cairo_glbrushnull`gdi32_glbrushnull@.GL2Backend_jgl2_)`(glbrushnull_n_jgl2_&glbuf)@.glqmark
+glcapture=: (cairo_glcapture`gdi32_glcapture@.GL2Backend_jgl2_)`(glcapture_n_jgl2_&glbuf)@.0:
+glcaret=: (cairo_glcaret`gdi32_glcaret@.GL2Backend_jgl2_)`(glcaret_n_jgl2_&glbuf)@.0:
+glclear=: (cairo_glclear`gdi32_glclear@.GL2Backend_jgl2_)`(glclear_n_jgl2_&glbuf)@.glqmark
+glclip=: (cairo_glclip`gdi32_glclip@.GL2Backend_jgl2_)`(glclip_n_jgl2_&glbuf)@.glqmark
+glclipreset=: (cairo_glclipreset`gdi32_glclipreset@.GL2Backend_jgl2_)`(glclipreset_n_jgl2_&glbuf)@.glqmark
+glcmds=: (cairo_glcmds`gdi32_glcmds@.GL2Backend_jgl2_)`(glcmds_n_jgl2_&glbuf)@.glqmark
+glcursor=: (cairo_glcursor`gdi32_glcursor@.GL2Backend_jgl2_)`(glcursor_n_jgl2_&glbuf)@.0:
+glellipse=: (cairo_glellipse`gdi32_glellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl2_&glbuf)@.glqmark
+glfont=: (cairo_glfont`gdi32_glfont@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
+glfontangle=: (cairo_glfontangle`gdi32_glfontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
+gllines=: (cairo_gllines`gdi32_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
+glpaint=: (cairo_glpaint`gdi32_glpaint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
+glpaintx=: (cairo_glpaintx`gdi32_glpaintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
+glpen=: (cairo_glpen`gdi32_glpen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
+glpie=: (cairo_glpie`gdi32_glpie@.GL2Backend_jgl2_)`(glpie_n_jgl2_&glbuf)@.glqmark
+glpixel=: (cairo_glpixel`gdi32_glpixel@.GL2Backend_jgl2_)`(glpixel_n_jgl2_&glbuf)@.glqmark
+glpixels=: (cairo_glpixels`gdi32_glpixels@.GL2Backend_jgl2_)`(glpixels_n_jgl2_&glbuf)@.glqmark
+glpixelsx=: (cairo_glpixelsx`gdi32_glpixelsx@.GL2Backend_jgl2_)`(glpixelsx_n_jgl2_&glbuf)@.glqmark
+glpolygon=: (cairo_glpolygon`gdi32_glpolygon@.GL2Backend_jgl2_)`(glpolygon_n_jgl2_&glbuf)@.glqmark
+glqextent=: (cairo_glqextent`gdi32_glqextent@.GL2Backend_jgl2_)`(glqextent_n_jgl2_&glbuf)@.0:
+glqextentw=: (cairo_glqextentw`gdi32_glqextentw@.GL2Backend_jgl2_)`(glqextentw_n_jgl2_&glbuf)@.0:
+glqpixels=: (cairo_glqpixels`gdi32_glqpixels@.GL2Backend_jgl2_)`(glqpixels_n_jgl2_&glbuf)@.0:
+glqtextmetrics=: (cairo_glqtextmetrics`gdi32_glqtextmetrics@.GL2Backend_jgl2_)`(glqtextmetrics_n_jgl2_&glbuf)@.0:
+glqwh=: (cairo_glqwh`gdi32_glqwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
+glrect=: (cairo_glrect`gdi32_glrect@.GL2Backend_jgl2_)`(glrect_n_jgl2_&glbuf)@.glqmark
+glrgb=: (cairo_glrgb`gdi32_glrgb@.GL2Backend_jgl2_)`(glrgb_n_jgl2_&glbuf)@.glqmark
+glsetbrush=: (cairo_glsetbrush`gdi32_glsetbrush@.GL2Backend_jgl2_)`(glsetbrush_n_jgl2_&glbuf)@.glqmark
+glsetpen=: (cairo_glsetpen`gdi32_glsetpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@.0:
+gltext=: (cairo_gltext`gdi32_gltext@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
+gltextcolor=: (cairo_gltextcolor`gdi32_gltextcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
+gltextxy=: (cairo_gltextxy`gdi32_gltextxy@.GL2Backend_jgl2_)`(gltextxy_n_jgl2_&glbuf)@.glqmark
+glwindoworg=: (cairo_glwindoworg`gdi32_glwindoworg@.GL2Backend_jgl2_)`(glwindoworg_n_jgl2_&glbuf)@.glqmark
 glprint=: cairo_glprint`gdi32_glprint@.GL2Backend_jgl2_
 glprintmore=: cairo_glprintmore`gdi32_glprintmore@.GL2Backend_jgl2_
 glqhandles=: cairo_glqhandles`gdi32_glqhandles@.GL2Backend_jgl2_
@@ -2275,5 +2213,4 @@ glemfopen=: cairo_glemfopen`gdi32_glemfopen@.GL2Backend_jgl2_
 glemfplay=: cairo_glemfplay`gdi32_glemfplay@.GL2Backend_jgl2_
 glfile=: cairo_glfile`gdi32_glfile@.GL2Backend_jgl2_
 glnodblbuf=: cairo_glnodblbuf`gdi32_glnodblbuf@.GL2Backend_jgl2_
-glqtextmetrics=: cairo_glqtextmetrics`gdi32_glqtextmetrics@.GL2Backend_jgl2_
 glroundr=: cairo_glroundr`gdi32_glroundr@.GL2Backend_jgl2_
