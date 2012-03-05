@@ -209,7 +209,7 @@ gloption=: iGL2
 PForm=: PId=: PLocale=: PLocalec=: ''
 gtkcr=: gtkpl=: gtkplc=: 0
 
-gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: 0
+gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: gtkorgx=: gtkorgy=: 0
 gtktextxy=: 0 0
 gtkpenrgb=: gtkbrushrgb=: gtktextrgb=: gtkbrushnull=: 0
 HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
@@ -884,7 +884,8 @@ cairo_stroke gtkcr
 cairo_glclear=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 cairo_glclipreset''
-cairo_glwindoworg 0 0
+cairo_glwindoworg - gtkorgx, gtkorgy
+gtkorgx=: gtkorgy=: 0
 cairo_glrgb 255 255 255
 cairo_glpen 1 0
 cairo_glbrush''
@@ -925,12 +926,12 @@ if. 0=#y do. 0 return. end.
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
-  ipar=. gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkpenrgb,gtkbrushrgb,gtktextrgb,gtkbrushnull
+  ipar=. gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkpenrgb,gtkbrushrgb,gtktextrgb,gtkbrushnull,gtkorgx,gtkorgy
   glcmdsrc=. (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(<.,y);(#y);RGBSEQ_jgtk_
   assert. 0= glcmdsrc
-  'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull'=. ipar
+  'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull orgx orgy'=. ipar
   gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
-  gtkpenrgb=: penrgb [ gtkbrushrgb=: brushrgb [ gtktextrgb=: textrgb [ gtkbrushnull=: brushnull
+  gtkpenrgb=: penrgb [ gtkbrushrgb=: brushrgb [ gtktextrgb=: textrgb [ gtkbrushnull=: brushnull [ gtkorgx=: orgx ] gtkorgy=: orgy
   0 return.
 end.
 p=. 0
@@ -1308,6 +1309,8 @@ end.
 cairo_glwindoworg=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
+gtkorgx=: gtkorgx + <.{.y
+gtkorgy=: gtkorgy + <.{:y
 cairo_translate gtkcr ; <"0 twipscaled * y
 0
 )
@@ -1590,7 +1593,8 @@ assert. 0~:HDC,BMP
 SetBkMode HDC, TRANSPARENT
 SetPolyFillMode HDC,ALTERNATE
 gdi32_glclipreset''
-gdi32_glwindoworg 0 0
+cairo_glwindoworg - gtkorgx, gtkorgy
+gtkorgx=: gtkorgy=: 0
 gdi32_glrgb 255 255 255
 gdi32_glpen 1 0
 gdi32_glbrush''
@@ -1632,12 +1636,12 @@ if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:HDC,BMP
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   xpar=. <.PEN,OLDPEN,BRUSH,OLDBRUSH,FONT,OLDFONT
-  ipar=. <.gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle
+  ipar=. <.gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkorgx,gtkorgy
   glcmdsrc=. (LIBGLCMDS,' Glcmds_gdi32 > + i x *x *x *c *x x x')&cd HDC;xpar;ipar;(utf8 ,PROFONT_jgl2_);(<.,y);(#y);RGBSEQ_jgtk_
   assert. 0= glcmdsrc
   'PEN OLDPEN BRUSH OLDBRUSH FONT OLDFONT'=: xpar
-  'clip gtkw gtkh rgb tx ty underline angle'=. ipar
-  gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
+  'clip gtkw gtkh rgb tx ty underline angle orgx orgy'=. ipar
+  gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle [ gtkorgx=: orgx ] gtkorgy=: orgy
   0 return.
 end.
 p=. 0
@@ -1955,6 +1959,8 @@ end.
 gdi32_glwindoworg=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:HDC,BMP
+gtkorgx=: gtkorgx + <.{.y
+gtkorgy=: gtkorgy + <.{:y
 SetViewportOrgEx HDC;(<"0 y),<<0
 0
 )
@@ -2059,12 +2065,6 @@ end.
 )
 NOTALPHA=: 0{_2 ic 255 255 255 0{a.
 ALPHARGB=: IF64{::_1;16bffffffff
-
-flip_rgb=: 3 : 0
-d=. ((#y),4)$2 (3!:4) y
-d=. 2 1 0 3{"1 d
-_2(3!:4),d
-)
 get_button=: 3 : 0
 if. IF64 do.
   a.i.memr y,52 1
