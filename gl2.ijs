@@ -1607,7 +1607,7 @@ assert. 0~:HDC,BMP
 SetBkMode HDC, TRANSPARENT
 SetPolyFillMode HDC,ALTERNATE
 gdi32_glclipreset''
-cairo_glwindoworg - gtkorgx, gtkorgy
+gdi32_glwindoworg - gtkorgx, gtkorgy
 gtkorgx=: gtkorgy=: 0
 gdi32_glrgb 255 255 255
 gdi32_glpen 1 0

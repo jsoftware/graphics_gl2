@@ -58,6 +58,6 @@ graphics/gl2 - change history
 == 1.0.27 ==
  * gl2: gl2 cmds buffer
 
-== 1.0.28/29 ==
+== 1.0.28/30 ==
  * gl2: glcmds binary
  * gl2: RGBSEQ
