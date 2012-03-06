@@ -941,7 +941,7 @@ if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   ipar=. gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkpenrgb,gtkbrushrgb,gtktextrgb,gtkbrushnull,gtkorgx,gtkorgy
-  glcmdsrc=. (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(<.,y);(#y);RGBSEQ_jgtk_
+  glcmdsrc=. (LIBGLCMDS,' Glcmds_cairo > + i x x *x *c *x x x')&cd gtkcr;gtkpl;ipar;(utf8 PROFONT_jgl2_);(<.,y);(#y);RGBSEQ_j_
   assert. 0= glcmdsrc
   'clip gtkw gtkh rgb tx ty underline angle penrgb brushrgb textrgb brushnull orgx orgy'=. ipar
   gtkclipped=: clip [ gtkrgb=: rgb [ gtktextxy=: tx,ty [ gtkunderline=: underline [ gtkfontangle=: angle
@@ -1066,7 +1066,7 @@ gtkfontangle=: <.y
 )
 cairo_glrgb=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
-gtkrgb=: BGR`RGB@.RGBSEQ_jgtk_ y
+gtkrgb=: BGR`RGB@.RGBSEQ_j_ y
 0
 )
 cairo_gllines=: 3 : 0 "1
@@ -1137,7 +1137,7 @@ assert. 0~:gtkcr,gtkpl
 h=. |h1
 d=. <. 4}.y
 if. h1<0 do. d=. ,|.(h,w)$d end.
-d=. flip_rgb^:(-.RGBSEQ_jgtk_) d
+d=. fliprgb^:(-.RGBSEQ_j_) d
 
 d=. 2 ic d
 surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; cairo_format_stride_for_width CAIRO_FORMAT_RGB24, w
@@ -1162,7 +1162,7 @@ da=. <. {:y
 h=. |h1
 d=. memr da,0,(w*h),JINT
 if. h1<0 do. d=. ,|.(h,w)$ d end.
-d=. flip_rgb^:(-.RGBSEQ_jgtk_) d
+d=. fliprgb^:(-.RGBSEQ_j_) d
 
 d=. 2 ic d
 surface=. cairo_image_surface_create_for_data d ; CAIRO_FORMAT_RGB24 ; w ; h ; cairo_format_stride_for_width CAIRO_FORMAT_RGB24, w
@@ -1232,7 +1232,7 @@ end.
 cairo_destroy cr
 cairo_surface_destroy surface
 
-r=. flip_rgb^:(-.RGBSEQ_jgtk_) r
+r=. fliprgb^:(-.RGBSEQ_j_) r
 )
 cairo_glqwh=: 3 : 0
 gtkwh
@@ -1651,7 +1651,7 @@ assert. 0~:HDC,BMP
 if. GL2ExtGlcmds_jgl2_ *. 0~:#LIBGLCMDS_jglcanvas_ do.
   xpar=. <.PEN,OLDPEN,BRUSH,OLDBRUSH,FONT,OLDFONT
   ipar=. <.gtkclipped,gtkwh,gtkrgb,gtktextxy,gtkunderline,gtkfontangle,gtkorgx,gtkorgy
-  glcmdsrc=. (LIBGLCMDS,' Glcmds_gdi32 > + i x *x *x *c *x x x')&cd HDC;xpar;ipar;(utf8 ,PROFONT_jgl2_);(<.,y);(#y);RGBSEQ_jgtk_
+  glcmdsrc=. (LIBGLCMDS,' Glcmds_gdi32 > + i x *x *x *c *x x x')&cd HDC;xpar;ipar;(utf8 ,PROFONT_jgl2_);(<.,y);(#y);RGBSEQ_j_
   assert. 0= glcmdsrc
   'PEN OLDPEN BRUSH OLDBRUSH FONT OLDFONT'=: xpar
   'clip gtkw gtkh rgb tx ty underline angle orgx orgy'=. ipar
@@ -1779,7 +1779,7 @@ gtkfontangle=: <.y
 )
 gdi32_glrgb=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
-gtkrgb=: BGR`RGB@.(1[RGBSEQ_jgtk_) y
+gtkrgb=: BGR`RGB@.(1[RGBSEQ_j_) y
 0
 )
 gdi32_gllines=: 3 : 0 "1
@@ -1841,7 +1841,7 @@ assert. 0~:HDC,BMP
 'a b w h1'=. 4{.y
 h=. |h1
 d=. 4}.y
-d=. , |.^:(h1<0) (h,w)$flip_rgb^:(-.RGBSEQ_jgtk_) d
+d=. , |.^:(h1<0) (h,w)$fliprgb^:(-.RGBSEQ_j_) d
 
 if. IF64 do. d=. 2&ic d end.
 
@@ -1865,7 +1865,7 @@ assert. 0~:HDC,BMP
 'a b w h1 da'=. y
 h=. |h1
 d=. memr da,0,(w*h),JINT
-d=. , |.^:(h1<0) (h,w)$flip_rgb^:(-.RGBSEQ_jgtk_) d
+d=. , |.^:(h1<0) (h,w)$fliprgb^:(-.RGBSEQ_j_) d
 
 if. IF64 do. d=. 2&ic d end.
 
@@ -1914,7 +1914,7 @@ GlobalUnlock hDIB
 GlobalFree hDIB
 if. 0~:a do. z=. a}."1 z end.
 if. w~:{:$z do. z=. w{."1 z end.
-z=. flip_rgb^:(-.RGBSEQ_jgtk_) ,z
+z=. fliprgb^:(-.RGBSEQ_j_) ,z
 )
 gdi32_glqtextmetrics=: 3 : 0 "1
 metrics=. 64${.a.
@@ -2093,7 +2093,7 @@ get_type=: 3 : 0
 memr y,0 1,JINT
 )
 cairo_cairocolor=: 3 : 0
-cairo_set_source_rgba gtkcr ; <"0 rgba2cairo 1 BGR`RGB@.RGBSEQ_jgtk_ y
+cairo_set_source_rgba gtkcr ; <"0 rgba2cairo 1 BGR`RGB@.RGBSEQ_j_ y
 )
 pangotextangle=: 3 : 0
 mat=. 1 0 0 1 0 0 + 1.1 - 1.1
