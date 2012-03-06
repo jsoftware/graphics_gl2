@@ -85,6 +85,20 @@ glnoerasebkgnd_n=: 2071
 
 glfont2_n=: 2312
 glfontangle_n=: 2342
+kbBS=: GDK_BackSpace_jgtk_
+kbLF=: GDK_Linefeed_jgtk_
+kbENTER=: GDK_Return_jgtk_
+kbPUP=: GDK_Page_Up_jgtk_
+kbPDOWN=: GDK_Page_Down_jgtk_
+kbEND=: GDK_End_jgtk_
+kbHOME=: GDK_Home_jgtk_
+kbLEFT=: GDK_Left_jgtk_
+kbUP=: GDK_Up_jgtk_
+kbRIGHT=: GDK_Right_jgtk_
+kbDOWN=: GDK_Down_jgtk_
+kbESC=: GDK_Escape_jgtk_
+kbINS=: GDK_Insert_jgtk_
+kbDEL=: GDK_Delete_jgtk_
 glarc=: 3 : 'glarc__l y [[ l=. locGL2_jgl2_'
 glarcx=: 3 : 'glarcx__l y [[ l=. locGL2_jgl2_'
 glbrush=: 3 : 'glbrush__l y [[ l=. locGL2_jgl2_'
