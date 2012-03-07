@@ -58,6 +58,7 @@ graphics/gl2 - change history
 == 1.0.27 ==
  * gl2: gl2 cmds buffer
 
-== 1.0.28/30 ==
+== 1.0.28/31 ==
  * gl2: glcmds binary
  * gl2: RGBSEQ
+ * gl2: FIXFONT,PROFONT
