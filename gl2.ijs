@@ -7,8 +7,8 @@ create=: destroy=: [:
 locGL2=: 0$<''
 
 3 : 0''
-if. 0~: 4!:0 <'PROFONT_z_' do. PROFONT=: IFUNIX{::'Tahoma 11';'Sans 11' else. PROFONT=: PROFONT_z_ end.
-if. 0~: 4!:0 <'FIXFONT_z_' do. FIXFONT=: IFUNIX{::'"Lucida Console" 11' ; 'mono 11' else. FIXFONT=: FIXFONT_z_ end.
+if. 0~: 4!:0 <'PROFONT_z_' do. PROFONT=: IFUNIX{::'Tahoma 10';'Sans 10' else. PROFONT=: PROFONT_z_ end.
+if. 0~: 4!:0 <'FIXFONT_z_' do. FIXFONT=: IFUNIX{::'"Lucida Console" 10' ; 'mono 10' else. FIXFONT=: FIXFONT_z_ end.
 if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
 if. 0~: 4!:0 <'GL2ExtGlcmds_j_' do. GL2ExtGlcmds_j_=: 1 end.
 )
@@ -143,6 +143,7 @@ glrect=: 3 : 'glrect__l y [[ l=. locGL2_jgl2_'
 glrgb=: 3 : 'glrgb__l y [[ l=. locGL2_jgl2_'
 glroundr=: 3 : 'glroundr__l y [[ l=. locGL2_jgl2_'
 glsetbrush=: 3 : 'glsetbrush__l y [[ l=. locGL2_jgl2_'
+glsetlocale=: 3 : 'glsetlocale__l y [[ l=. locGL2_jgl2_'
 glsetpen=: 3 : 'glsetpen__l y [[ l=. locGL2_jgl2_'
 gltext=: 3 : 'gltext__l y [[ l=. locGL2_jgl2_'
 gltextcolor=: 3 : 'gltextcolor__l y [[ l=. locGL2_jgl2_'
@@ -153,7 +154,7 @@ glmark=: 3 : 'glmark__l y [[ l=. locGL2_jgl2_'
 glqmark=: 3 : 'glqmark__l y [[ l=. locGL2_jgl2_'
 gltrash=: 3 : 'gltrash__l y [[ l=. locGL2_jgl2_'
 glcanvas=: 0&$: : (4 : 0)
-'p c wh l'=. 4{.y
+'wh l'=. 2{.y
 if. 0=#>l do.
   l=. coname''
   if. l-:<'jgl2' do.
@@ -162,16 +163,10 @@ if. 0=#>l do.
 else.
   l=. boxxopen l
 end.
+assert. -. ''-:l
 locGL2_jgl2_=: b=. (wh,x) conew 'jglcanvas'
-PForm__b=: ,p
-PId__b=: ,c
 PLocale__b=: l
 b
-)
-
-glsetlocale=: 3 : 0
-b=. locGL2_jgl2_
-PLocale__b=: y
 )
 glsel=: 3 : 0
 if. 2 131072 e.~ 3!:0 y do.
@@ -179,9 +174,10 @@ if. 2 131072 e.~ 3!:0 y do.
     y=. getlocgl2_gtkwd_ ,y
   end.
 end.
+assert 0~: #>y
 l=. locGL2_jgl2_=: boxxopen y
 try.
-  if. iOPENGL=gloption__l do.
+  if. iOPENGL_jglcanvas_=gloption__l do.
     ogl=. ogl__l
     current__ogl canvas__l
   end.
@@ -220,8 +216,9 @@ EMPTY
 'iGL2 iOPENGL'=: i.2
 
 initialized=: 0
+nodoublebuf=: 0
 gloption=: iGL2
-PForm=: PId=: PLocale=: PLocalec=: ''
+PLocale=: PLocalec=: ''
 gtkcr=: gtkpl=: gtkplc=: 0
 
 gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: gtkorgx=: gtkorgy=: 0
@@ -244,6 +241,7 @@ canvas=: gtk_drawing_area_new''
 gtkwh=: w,h
 gloption=: option
 
+gtk_widget_set_double_buffered canvas, -.nodoublebuf
 if. *./ 0<w,h do.
   gtk_widget_set_size_request canvas,w,h
 end.
@@ -252,7 +250,6 @@ events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POI
 gtk_widget_add_events canvas, OR events
 
 consig3 canvas;'configure-event';'configure_event'
-consig canvas;'realize';'realize_event'
 if. 3=GTKVER_j_ do.
   consig3 canvas;'draw';'draw'
 else.
@@ -302,87 +299,46 @@ IDC_SIZEALL=: 32646
 IDC_NO=: 32648
 IDC_APPSTARTING=: 32650
 IDC_HELP=: 32651
-button_event=: 4 : 0
+button_event=: 3 : 0
 'widget event data'=. y
-n=. ,(get_button event){' lmr'
-x=. ,>(5=get_type event){x;'dbl'
+'lmr evt mousex mousey dir state'=. gtkeventmouse event
+assert. lmr e. 1 2 3
+n=. ,lmr{' lmr'
+assert. evt e. 4 5 7
+x=. ,>(4 5 7 i. evt){'down';'dbl';'up'
 name=. 'mb',n,x
-gdk_event_get_coords event;(x1=. ,1.5-1.5);(y1=. ,1.5-1.5)
-mousepos=. <.x1,y1
-gdk_event_get_state event;state=. ,0
-state=. {.state
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
-if. #PForm do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_',name,'_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysmodifiers__PLocale=: ,":shift+2*control
-      sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ name; (0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0) ; ,":shift+2*control
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+    (coname'') (f~)~ name; (mousex,mousey,gtkwh,button1,button2,control,shift,button3,0,0,0) ; shift+2*control
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
   end.
 end.
 0
 )
-button_press_event=: 3 : 0
-'down' button_event y
-)
-button_release_event=: 3 : 0
-'up' button_event y
-)
+button_press_event=: button_event
+button_release_event=: button_event
 scroll_event=: 3 : 0
 'widget event data'=. y
-dir=. 256#.endian a.i.memr event,GdkEventScroll_direction,4
-gdk_event_get_coords event;(x1=. ,1.5-1.5);(y1=. ,1.5-1.5)
-mousepos=. <.x1,y1
-gdk_event_get_state event;state=. ,0
-state=. {.state
+'lmr evt mousex mousey dir state'=. gtkeventmouse event
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
-if. #PForm do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_mwheel_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysmodifiers__PLocale=: ,":shift+2*control
-      sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,1-2*dir
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ 'mwheel'; (0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0) ; ,":shift+2*control
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+    (coname'') (f~)~ 'mwheel'; (mousex,mousey,gtkwh,button1,button2,control,shift,button3,0,0,1-2*dir) ; shift+2*control
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
   end.
 end.
@@ -390,37 +346,18 @@ end.
 )
 motion_notify_event=: 3 : 0
 'widget event gpointer'=. y
-gdk_event_get_coords event;(x1=. ,1.5-1.5);(y1=. ,1.5-1.5)
-mousepos=. <.x1,y1
-gdk_event_get_state event;state=. ,0
-state=. {.state
+'lmr evt mousex mousey dir state'=. gtkeventmouse event
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
-if. #PForm do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_mmove_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysmodifiers__PLocale=: ,":shift+2*control
-      sysdata__PLocale=: 0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ 'mmove'; (0":mousepos,gtkwh,button1,button2,control,shift,button3,0,0,0) ; ,":shift+2*control
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+    (coname'') (f~)~ 'mmove'; (mousex,mousey,gtkwh,button1,button2,control,shift,button3,0,0,0) ; shift+2*control
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
   end.
 end.
@@ -430,69 +367,34 @@ key_press_event=: 3 : 0
 'widget event data'=. y
 'state key'=. gtkeventkey event
 'control j shift'=. 2 2 2 #: state
-if. #PForm do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_char_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysmodifiers__PLocale=: ,":shift+2*control
-      sysdata__PLocale=: utf8 u: key
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
-      1 return.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ 'char'; (utf8 u: key) ; ,":shift+2*control
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
-      1 return.
+    (coname'') (f~)~ 'char'; (utf8 u: key) ; shift+2*control
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
+    1 return.
   end.
 end.
 0
 )
 focus_in_event=: 3 : 0
 'widget event data'=. y
-if. #PForm do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_focus_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysfocus__PLocale=: PId
-      syslastfocus__PLocale=: PId
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysfocus__PLocale=: PId
-      syslastfocus__PLocale=: PId
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ ,<'focus'
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+    (coname'') (f~)~ ,<'focus'
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
   end.
 end.
@@ -500,43 +402,20 @@ end.
 )
 focus_out_event=: 3 : 0
 'widget event data'=. y
-if. #PForm do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_focuslost_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysfocus__PLocale=: PId
-      syslastfocus__PLocale=: PId
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysfocus__PLocale=: PId
-      syslastfocus__PLocale=: PId
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ ,<'focuslost'
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+    (coname'') (f~)~ ,<'focuslost'
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
   end.
 end.
 1
-)
-realize_event=: 3 : 0
-'widget data'=. y
-gtkwh=: _2{. getGtkWidgetAllocation widget
-0
 )
 configure_event=: 3 : 0
 'widget event data'=. y
@@ -545,7 +424,9 @@ gtkwin=: getGtkWidgetWindow widget
 newsize=: 1
 if. (iOPENGL=gloption) *. #ogl do.
   wh__ogl=: gtkwh
-  if. #PForm do. openglut_newsize__PLocale=: 1 end.
+  if. (0: <: 18!:0) PLocale do.
+    openglut_newsize__PLocale=: 1
+  end.
   if. OsMesa_jzopengl_ do. free__ogl widget end.
   if. 0= ctx=. getglctx__ogl widget do.
     ctx=. alloc__ogl widget
@@ -558,62 +439,48 @@ if. iOPENGL~:gloption do.
     if. 0~:gtkpl do. gtkpl=: 0 [ g_object_unref gtkpl end.
     if. 0~:gtkplc do. gtkplc=: 0 [ g_object_unref gtkplc end.
     if. 0~:gtkcr do. gtkcr=: 0 [ cairo_destroy gtkcr end.
-    gtkcr=: cairo_create surface=. cairo_image_surface_create CAIRO_FORMAT_RGB24,gtkwh
-    cairo_surface_destroy surface
+    if. nodoublebuf do.
+      gtkcr=: gdk_cairo_create getGtkWidgetWindow widget
+    else.
+      gtkcr=: cairo_create surface=. cairo_image_surface_create CAIRO_FORMAT_RGB24,gtkwh
+      cairo_surface_destroy surface
+    end.
     gtkplc=: pango_cairo_create_context gtkcr
     gtkpl=: pango_layout_new gtkplc
+    cairo_glclear''
   elseif. 1=GL2Backend_jgl2_ do.
     if. 0~:HDC do. gdi32_free '' end.
     gdi32_init gtkwh
     assert. 0~:HDC,BMP
+    gdi32_glclear''
   end.
-  glclear''
 end.
 initialized=: 1
-if. #PForm do.
-  locGL2_jgl2_=: coname''
-elseif. 'gtkwd'-:PId do.
-  locGL2_jgl2_=: coname''
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+  end.
 end.
-
 0
 )
 draw=: expose_event=: 3 : 0
 'widget event data'=. y
 gtkwh=: _2{. getGtkWidgetAllocation widget
 gltrash''
-if. #PForm do.
-  locGL2_jgl2_=: coname''
-  if. (iOPENGL=gloption) *. #ogl do.
-    current__ogl widget
-  end.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_paint_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      f~ ''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+if. (iOPENGL=gloption) *. #ogl do.
+  current__ogl widget
+end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl widget [ ogl__PLocale=: ogl
     end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  locGL2_jgl2_=: coname''
-  if. (iOPENGL=gloption) *. #ogl do.
-    current__ogl widget
-  end.
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl widget [ ogl__PLocale=: ogl
-      end.
-      (coname'') (f~)~ ,<'paint'
-      if. (iOPENGL=gloption) *. #ogl do.
-        current__ogl 0 [ show__ogl widget
-      end.
+    (coname'') (f~)~ ,<'paint'
+    if. (iOPENGL=gloption) *. #ogl do.
+      current__ogl 0 [ show__ogl widget
     end.
   end.
 end.
@@ -622,19 +489,22 @@ if. iOPENGL~:gloption do.
   if. 0=GL2Backend_jgl2_ do.
     gltrash @: cairo_glpaint''
     if. 3=GTKVER_j_ do.
-      cr=. event
-      cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
-      cairo_paint cr
+      if. -.nodoublebuf do.
+        cr=. event
+        cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
+        cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
+        cairo_paint cr
+      end.
     else.
-      cairo_surface_flush cairo_get_target gtkcr
-      cr=. gdk_cairo_create getGtkWidgetWindow widget
-      cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-      cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
-      cairo_rectangle cr; 0 ;0; <"0 gtkwh
-      cairo_clip cr
-      cairo_paint cr
-      cairo_destroy cr
+      if. -.nodoublebuf do.
+        cr=. gdk_cairo_create getGtkWidgetWindow widget
+        cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
+        cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
+        cairo_rectangle cr; 0 ;0; <"0 gtkwh
+        cairo_clip cr
+        cairo_paint cr
+        cairo_destroy cr
+      end.
     end.
   elseif. 1=GL2Backend_jgl2_ do.
     gltrash @: gdi32_glpaint''
@@ -701,22 +571,11 @@ gtkwh=: w,h
 dpix=: <. gtk_print_context_get_dpi_x context
 dpiy=: <. gtk_print_context_get_dpi_y context
 twipscaled=: 1440 %~ dpix,dpiy
-if. #PForm do.
-  locGL2_jgl2_=: coname''
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_print_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysdata__PLocale=: ":0 0
-      f~ ''
-    end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  locGL2_jgl2_=: coname''
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      (coname'') (f~)~ 'print'; ":0 0
-    end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    (coname'') (f~)~ 'print'; ":0 0
   end.
 end.
 printoperation=: printcontext=: 0
@@ -743,22 +602,11 @@ h=. <. gtk_print_context_get_height context
 gtkwh=: w,h
 gtkclipped=: 0
 glclear''
-if. #PForm do.
-  locGL2_jgl2_=: coname''
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_print_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysdata__PLocale=: ":page_nr, 1
-      f~ ''
-    end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  locGL2_jgl2_=: coname''
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      (coname'') (f~)~ 'print'; ":page_nr, 1
-    end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    (coname'') (f~)~ 'print'; ":page_nr, 1
   end.
 end.
 printoperation=: printcontext=: 0
@@ -770,22 +618,11 @@ gtkcr=: 0
 print_done=: 3 : 0
 'operation res data'=. y
 assert. iOPENGL~:gloption
-if. #PForm do.
-  locGL2_jgl2_=: coname''
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. PForm,'_',PId,'_print_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      sysdata__PLocale=: ":0 _1
-      f~ ''
-    end.
-  end.
-elseif. 'gtkwd'-:PId do.
-  locGL2_jgl2_=: coname''
-  if. (0: <: 18!:0) PLocale do.
-    if. 3= nc <f=. 'isigraph_event_',(>PLocale),'_' do.
-      locGL2_jgl2_=: coname''
-      (coname'') (f~)~ 'print'; ":0 _1
-    end.
+plocale=. {. PLocalec,PLocale
+if. (0: <: 18!:0) plocale do.
+  if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
+    locGL2_jgl2_=: coname''
+    (coname'') (f~)~ 'print'; ":0 _1
   end.
 end.
 if. res= GTK_PRINT_OPERATION_RESULT_APPLY do.
@@ -943,7 +780,7 @@ end.
 if. 0~:printcontext do. cairo_restore gtkcr end.
 0
 )
-cairo_glcmds=: 3 : 0
+cairo_glcmds=: 3 : 0"1
 if. 0=#y do. 0 return. end.
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
@@ -1097,15 +934,17 @@ cairo_glpaint=: 3 : 0 "1
 assert. 0~:gtkcr,gtkpl
 if. #stash_buf do. stash_buf=: 0$0 [ cairo_glcmds stash_buf end.
 newsize=: 1
+if. 0~: s=. cairo_get_target gtkcr do. cairo_surface_flush s end.
 if. iOPENGL~:gloption do.
-  cairo_surface_flush cairo_get_target gtkcr
-  cr=. gdk_cairo_create getGtkWidgetWindow canvas
-  cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
-  cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
-  cairo_rectangle cr; 0 ;0; <"0 gtkwh
-  cairo_clip cr
-  cairo_paint cr
-  cairo_destroy cr
+  if. -.nodoublebuf do.
+    cr=. gdk_cairo_create getGtkWidgetWindow canvas
+    cairo_set_operator cr, CAIRO_OPERATOR_SOURCE
+    cairo_set_source_surface cr; (cairo_get_target gtkcr); 0 ; 0
+    cairo_rectangle cr; 0 ;0; <"0 gtkwh
+    cairo_clip cr
+    cairo_paint cr
+    cairo_destroy cr
+  end.
 end.
 0
 )
@@ -1243,7 +1082,7 @@ cairo_surface_destroy surface
 
 r=. fliprgb^:(-.RGBSEQ_j_) r
 )
-cairo_glqwh=: 3 : 0
+cairo_glqwh=: 3 : 0"1
 gtkwh
 )
 cairo_glrect=: 3 : 0 "1
@@ -1263,6 +1102,11 @@ else.
   cairo_stroke gtkcr
 end.
 if. 0~:printcontext do. cairo_restore gtkcr end.
+0
+)
+cairo_glsetlocale=: 3 : 0
+if. PLocale -: <'gtkwd' do. 0 return. end.
+PLocalec=: boxxopen y
 0
 )
 cairo_glsetbrush=: cairo_glbrush @ cairo_glrgb
@@ -1388,7 +1232,7 @@ res=. gtk_print_operation_run operation, GTK_PRINT_OPERATION_ACTION_PRINT, 0, 0
 if. 0=async_print do. print_done operation,res,0 end.
 0
 )
-cairo_printer_dialog=: 3 : 0
+cairo_printer_dialog=: 3 : 0"1
 z=. 0
 if. 0= printsettings do. printsettings_jglcanvas_=: gtk_print_settings_new '' end.
 operation=. gtk_print_operation_new ''
@@ -1402,7 +1246,7 @@ if. res= GTK_PRINT_OPERATION_RESULT_APPLY do.
 end.
 z [ g_object_unref operation
 )
-cairo_settings_printer=: 3 : 0
+cairo_settings_printer=: 3 : 0"1
 z=. ''
 if. 0~: printsettings do.
   if. p=. gtk_print_settings_get printsettings ; 'printer' do. z=. memr p, 0 _1 end.
@@ -1653,7 +1497,7 @@ if. gtkclipped do.
 end.
 0
 )
-gdi32_glcmds=: 3 : 0
+gdi32_glcmds=: 3 : 0"1
 if. 0=#y do. 0 return. end.
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:HDC,BMP
@@ -1930,7 +1774,7 @@ metrics=. 64${.a.
 r=. GetTextMetrics HDC, metrics
 'h as de int ext acw mcw'=. _2 ic 28{.metric
 )
-gdi32_glqwh=: 3 : 0
+gdi32_glqwh=: 3 : 0"1
 gtkwh
 )
 gdi32_glrect=: 3 : 0 "1
@@ -1938,6 +1782,11 @@ if. iOPENGL=gloption do. 0 return. end.
 if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:HDC,BMP
 Rectangle HDC, (2{.y), (2{.y) + 2}.y
+0
+)
+gdi32_glsetlocale=: 3 : 0
+if. PLocale -: <'gtkwd' do. 0 return. end.
+PLocalec=: boxxopen y
 0
 )
 gdi32_glsetbrush=: gdi32_glbrush @ gdi32_glrgb
@@ -2028,20 +1877,19 @@ gtk_print_operation_run operation, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, 0, 0
 g_object_unref operation
 0
 )
-glqmark=: 3 : 0
+glqmark=: 3 : 0"1
 stash_state
 )
-glmark=: 3 : 0
+glmark=: 3 : 0"1
 stash_state=: 1
 EMPTY
 )
-gltrash=: 3 : 0
+gltrash=: 3 : 0"1
 stash_state=: 0 [ stash_buf=: 0$0
 EMPTY
 )
-glbuf=: 4 : 0
+glbuf=: 4 : 0"0 1
 assert. 1=stash_state
-y=. ,y
 if. (*#y) *. 2 = 3!:0 y do. y=. a. i. y end.
 if. glcmds_n_jgl2_ = x do.
   stash_buf=: stash_buf, y
@@ -2088,19 +1936,6 @@ end.
 )
 NOTALPHA=: 0{_2 ic 255 255 255 0{a.
 ALPHARGB=: IF64{::_1;16bffffffff
-get_button=: 3 : 0
-if. IF64 do.
-  a.i.memr y,52 1
-else.
-  memr y,40 1,JINT
-end.
-)
-get_button=: 3 : 0
-256#.endian a.i.memr y,GdkEventButton_button,4
-)
-get_type=: 3 : 0
-memr y,0 1,JINT
-)
 cairo_cairocolor=: 3 : 0
 cairo_set_source_rgba gtkcr ; <"0 rgba2cairo 1 BGR`RGB@.RGBSEQ_j_ y
 )
@@ -2221,6 +2056,7 @@ glqwh=: (cairo_glqwh`gdi32_glqwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
 glrect=: (cairo_glrect`gdi32_glrect@.GL2Backend_jgl2_)`(glrect_n_jgl2_&glbuf)@.glqmark
 glrgb=: (cairo_glrgb`gdi32_glrgb@.GL2Backend_jgl2_)`(glrgb_n_jgl2_&glbuf)@.glqmark
 glsetbrush=: (cairo_glsetbrush`gdi32_glsetbrush@.GL2Backend_jgl2_)`(glsetbrush_n_jgl2_&glbuf)@.glqmark
+glsetlocale=: (cairo_glsetlocale`gdi32_glsetlocale@.GL2Backend_jgl2_)`(glsetlocale_n_jgl2_&glbuf)@.0:
 glsetpen=: (cairo_glsetpen`gdi32_glsetpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@.0:
 gltext=: (cairo_gltext`gdi32_gltext@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
 gltextcolor=: (cairo_gltextcolor`gdi32_gltextcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
