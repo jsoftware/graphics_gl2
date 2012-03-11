@@ -1133,7 +1133,7 @@ if. -.gtkbrushnull do.
     cairo_stroke gtkcr
   end.
 else.
-  for_p. do.
+  for_p. <. _4[\ y do.
     cairo_cairocolor gtkpenrgb
     cairo_rectangle gtkcr ; <"0 p
     cairo_stroke gtkcr
@@ -1824,9 +1824,10 @@ gtkwh
 )
 gdi32_glrect=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:HDC,BMP
-Rectangle HDC, (2{.y), (2{.y) + 2}.y
+for_p. <. _4[\ y do.
+  Rectangle HDC, (2{.p), (2{.p) + 2}.p
+end.
 0
 )
 gdi32_glsetlocale=: 3 : 0
