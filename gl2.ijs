@@ -307,8 +307,10 @@ button_event=: 4 : 0
 n=. ,(get_button event){' lmr'
 x=. ,>(5=get_type event){x;'dbl'
 name=. 'mb',n,x
-mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
-state=. 2{;gdk_event_get_state event;,0
+gdk_event_get_coords event;(x1=. ,1.5-1.5);(y1=. ,1.5-1.5)
+mousepos=. <.x1,y1
+gdk_event_get_state event;state=. ,0
+state=. {.state
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
@@ -350,8 +352,10 @@ button_release_event=: 3 : 0
 scroll_event=: 3 : 0
 'widget event data'=. y
 dir=. 256#.endian a.i.memr event,GdkEventScroll_direction,4
-mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
-state=. 2{;gdk_event_get_state event;,0
+gdk_event_get_coords event;(x1=. ,1.5-1.5);(y1=. ,1.5-1.5)
+mousepos=. <.x1,y1
+gdk_event_get_state event;state=. ,0
+state=. {.state
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
@@ -386,8 +390,10 @@ end.
 )
 motion_notify_event=: 3 : 0
 'widget event gpointer'=. y
-mousepos=. <.2 3{;gdk_event_get_coords event;(,0.0);,0.0
-state=. 2{;gdk_event_get_state event;,0
+gdk_event_get_coords event;(x1=. ,1.5-1.5);(y1=. ,1.5-1.5)
+mousepos=. <.x1,y1
+gdk_event_get_state event;state=. ,0
+state=. {.state
 'shift lock control mod1 mod2 mod3 mod4 mod5 button1 button2 button3 button4 button5'=. 13{. |.(32#2) #: state
 if. #PForm do.
   if. (0: <: 18!:0) PLocale do.
@@ -808,7 +814,8 @@ end.
 )
 gtkextent1=: 4 : 0
 pango_layout_set_text x;y;#y
-_2 {. ;pango_layout_get_pixel_size x;(,2);,3
+pango_layout_get_pixel_size x;(w=. ,_1);h=. ,_1
+w,h
 )
 gtkextentink=: 3 : 0
 'p txt font'=. y
@@ -1222,7 +1229,8 @@ cairo_rectangle cr ; 0 ; 0 ; w ; h
 cairo_clip cr
 cairo_paint cr
 
-assert. 0~: ad=. cairo_image_surface_get_data surface
+ad=. cairo_image_surface_get_data surface
+assert. 0~: ad
 assert. (4*w)= cairo_image_surface_get_stride surface
 
 if. IF64 do.
@@ -1306,8 +1314,8 @@ z=. 1 1
 if. iOPENGL=gloption do. z return. end.
 assert. 0~:gtkcr,gtkpl
 pango_layout_set_text gtkpl;(,y);#y
-z=. _2 {. ;pango_layout_get_pixel_size gtkpl;(,2);,3
-<. z % twipscaled
+pango_layout_get_pixel_size gtkpl;(w=. ,_1);h=. ,_1
+<. (w,h) % twipscaled
 )
 cairo_glqextentw=: 3 : 0 "1
 assert. 0~:gtkcr,gtkpl
