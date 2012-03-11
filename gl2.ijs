@@ -169,19 +169,28 @@ PLocale__b=: l
 b
 )
 glsel=: 3 : 0
+l=. 0$<''
+assert. 1 2 4 8 131072 e.~ 3!:0 y
 if. 2 131072 e.~ 3!:0 y do.
-  if. 3 = 4!:0 <'getlocgl2_gtkwd_' do.
-    y=. getlocgl2_gtkwd_ ,y
+  if. ({.y) e. '_0123456789' do.
+    y=. <. {. 0". y
+  else.
+    if. 3 = 4!:0 <'getlocgl2_gtkwd_' do.
+      l=. getlocgl2_gtkwd_ ,y
+    end.
   end.
 end.
-assert 0~: #>y
-l=. locGL2_jgl2_=: boxxopen y
-try.
-  if. iOPENGL_jglcanvas_=gloption__l do.
-    ogl=. ogl__l
-    current__ogl canvas__l
+if. 1 4 8 e.~ 3!:0 y do.
+  if. (#canvaslocale_jglcanvas_) > ix=. y i.~ >{."1 canvaslocale_jglcanvas_ do.
+    l=. (<ix,1){canvaslocale_jglcanvas_
   end.
-catch. end.
+end.
+assert 0~: #>l
+locGL2_jgl2_=: l
+if. iOPENGL_jglcanvas_=gloption__l do.
+  ogl=. ogl__l
+  current__ogl canvas__l
+end.
 EMPTY
 )
 3 : 0''
@@ -235,6 +244,7 @@ newctx=: 1
 newsize=: 1
 stash_state=: 0
 stash_buf=: 0$0
+canvaslocale=: 0 2$<''
 create=: 3 : 0
 'w h option'=. 3{.y
 canvas=: gtk_drawing_area_new''
@@ -267,7 +277,8 @@ consig canvas;'destroy';'destroy_event'
 if. iOPENGL=gloption do.
   ogl=: '' conew 'jzopengl'
 end.
-
+canvaslocale_jglcanvas_=: ~. canvaslocale_jglcanvas_, canvas;coname''
+gtk_widget_show canvas
 0
 )
 destroy=: 3 : 0
@@ -529,7 +540,9 @@ if. iOPENGL~:gloption do.
     if. 0~:HDC do. gdi32_free '' end.
   end.
 end.
-
+if. (#canvaslocale_jglcanvas_) > ix=. widget i.~ >@{."1 canvaslocale_jglcanvas_ do.
+  canvaslocale_jglcanvas_=: (<<<ix){canvaslocale_jglcanvas_
+end.
 destroy ''
 0
 )
@@ -930,6 +943,26 @@ cairo_stroke gtkcr
 if. 0~:printcontext do. cairo_restore gtkcr end.
 0
 )
+cairo_glnodblbuf=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:gtkcr,gtkpl
+if. nodoublebuf~:flag=. 0~:{.y do.
+  if. 0~:gtkpl do. gtkpl=: 0 [ g_object_unref gtkpl end.
+  if. 0~:gtkplc do. gtkplc=: 0 [ g_object_unref gtkplc end.
+  if. 0~:gtkcr do. gtkcr=: 0 [ cairo_destroy gtkcr end.
+  if. nodoublebuf=: flag do.
+    gtkcr=: gdk_cairo_create getGtkWidgetWindow canvas
+  else.
+    gtkcr=: cairo_create surface=. cairo_image_surface_create CAIRO_FORMAT_RGB24,gtkwh
+    cairo_surface_destroy surface
+  end.
+  gtkplc=: pango_cairo_create_context gtkcr
+  gtkpl=: pango_layout_new gtkplc
+  gtk_widget_set_double_buffered canvas, -.nodoublebuf
+  cairo_glclear''
+end.
+0
+)
 cairo_glpaint=: 3 : 0 "1
 assert. 0~:gtkcr,gtkpl
 if. #stash_buf do. stash_buf=: 0$0 [ cairo_glcmds stash_buf end.
@@ -972,7 +1005,9 @@ cairo_glpixel=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 cairo_cairocolor gtkrgb
-cairo_rectangle gtkcr ; <"0 (twipscaled * 2{.y), 1 1
+for_p. <. (twipscaled *("1) _2[\ y),("1) twipscaled * 1 1 do.
+  cairo_rectangle gtkcr ; <"0 p
+end.
 cairo_fill gtkcr
 0
 )
@@ -1087,19 +1122,22 @@ gtkwh
 )
 cairo_glrect=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
-if. 0 e. _2{.y do. 0 return. end.
 assert. 0~:gtkcr,gtkpl
 if. 0~:printcontext do. cairo_scale gtkcr ; <"0 twipscaled [ cairo_save gtkcr end.
 if. -.gtkbrushnull do.
-  cairo_cairocolor gtkbrushrgb
-  cairo_rectangle gtkcr ; <"0 y
-  cairo_fill_preserve gtkcr
-  cairo_cairocolor gtkpenrgb
-  cairo_stroke gtkcr
+  for_p. <. _4[\ y do.
+    cairo_cairocolor gtkbrushrgb
+    cairo_rectangle gtkcr ; <"0 p
+    cairo_fill_preserve gtkcr
+    cairo_cairocolor gtkpenrgb
+    cairo_stroke gtkcr
+  end.
 else.
-  cairo_cairocolor gtkpenrgb
-  cairo_rectangle gtkcr ; <"0 y
-  cairo_stroke gtkcr
+  for_p. do.
+    cairo_cairocolor gtkpenrgb
+    cairo_rectangle gtkcr ; <"0 p
+    cairo_stroke gtkcr
+  end.
 end.
 if. 0~:printcontext do. cairo_restore gtkcr end.
 0
@@ -1324,7 +1362,6 @@ cairo_glemfclose=: [:
 cairo_glemfopen=: [:
 cairo_glemfplay=: [:
 cairo_glfile=: [:
-cairo_glnodblbuf=: [:
 cairo_glroundr=: [:
 cairo_cleanup=: 3 : 0
 if. printsettings do. printsettings_jglcanvas_=: 0 [ g_object_unref printsettings end.
@@ -1643,6 +1680,12 @@ c=. 2>.(+ 2&|)#y
 Polyline HDC; (<.c{.y); (<.-:c)
 0
 )
+gdi32_glnodblbuf=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:HDC,BMP
+nodoublebuf=: flag=. 0~:{.y
+0
+)
 gdi32_glpaint=: 3 : 0 "1
 assert. 0~:HDC,BMP
 if. #stash_buf do. stash_buf=: 0$0 [ gdi32_glcmds stash_buf end.
@@ -1685,7 +1728,9 @@ Pie HDC, <.(2{.y),((2{.y)+(2 3{y)),4}.y
 gdi32_glpixel=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:HDC,BMP
-SetPixel HDC,(<.2{.y),gtkrgb
+for_p. <. (_2[\ y) do.
+  SetPixel HDC,p,gtkrgb
+end.
 0
 )
 gdi32_glpixels=: 3 : 0 "1
@@ -1840,7 +1885,6 @@ gdi32_glemfclose=: [:
 gdi32_glemfopen=: [:
 gdi32_glemfplay=: [:
 gdi32_glfile=: [:
-gdi32_glnodblbuf=: [:
 gdi32_glprint=: [:
 gdi32_glprintmore=: [:
 gdi32_glqhandles=: [:
@@ -2040,6 +2084,7 @@ glellipse=: (cairo_glellipse`gdi32_glellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl
 glfont=: (cairo_glfont`gdi32_glfont@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
 glfontangle=: (cairo_glfontangle`gdi32_glfontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
 gllines=: (cairo_gllines`gdi32_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
+glnodblbuf=: (cairo_glnodblbuf`gdi32_glnodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
 glpaint=: (cairo_glpaint`gdi32_glpaint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
 glpaintx=: (cairo_glpaintx`gdi32_glpaintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
 glpen=: (cairo_glpen`gdi32_glpen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
@@ -2071,5 +2116,4 @@ glemfclose=: cairo_glemfclose`gdi32_glemfclose@.GL2Backend_jgl2_
 glemfopen=: cairo_glemfopen`gdi32_glemfopen@.GL2Backend_jgl2_
 glemfplay=: cairo_glemfplay`gdi32_glemfplay@.GL2Backend_jgl2_
 glfile=: cairo_glfile`gdi32_glfile@.GL2Backend_jgl2_
-glnodblbuf=: cairo_glnodblbuf`gdi32_glnodblbuf@.GL2Backend_jgl2_
 glroundr=: cairo_glroundr`gdi32_glroundr@.GL2Backend_jgl2_
