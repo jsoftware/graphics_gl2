@@ -63,3 +63,4 @@ graphics/gl2 - change history
  * gl2: RGBSEQ
  * gl2: FIXFONT,PROFONT
  * gl2: api
+ * gl2: more robust event callback
