@@ -452,7 +452,7 @@ gtkwin=: getGtkWidgetWindow widget
 newsize=: 1
 if. (iOPENGL=gloption) *. #ogl do.
   wh__ogl=: gtkwh
-  if. #>plocale do.
+  if. #>PLocale do.
     if. (0: <: 18!:0) PLocale do.
       openglut_newsize__PLocale=: 1
     end.
