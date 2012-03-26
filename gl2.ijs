@@ -922,7 +922,7 @@ if. 0=#y=. ,y do. return. end.
 'Bold Italic Underline Strikeout'=. 4{. |. #: style
 gtkfontangle=: <.degree*10
 gtkunderline=: Underline
-fnt=. pango_font_description_from_string <y
+fnt=. pango_font_description_from_string <'"' -.~ ,y
 if. Bold do. pango_font_description_set_weight fnt, PANGO_WEIGHT_BOLD end.
 if. Italic do. pango_font_description_set_style fnt, PANGO_STYLE_ITALIC end.
 pango_font_description_set_size fnt, <.PANGO_SCALE*size
@@ -938,7 +938,7 @@ face=. a.{~3}.y
 'Bold Italic Underline Strikeout'=. 4{. |. #: style
 gtkfontangle=: <.degree10
 gtkunderline=: Underline
-fnt=. pango_font_description_from_string <face
+fnt=. pango_font_description_from_string <'"' -.~ face
 if. Bold do. pango_font_description_set_weight fnt, PANGO_WEIGHT_BOLD end.
 if. Italic do. pango_font_description_set_style fnt, PANGO_STYLE_ITALIC end.
 pango_font_description_set_size fnt, <.PANGO_SCALE*size10%10
