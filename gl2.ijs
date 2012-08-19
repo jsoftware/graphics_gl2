@@ -1425,7 +1425,7 @@ GPTR=: GMEM_FIXED + GMEM_ZEROINIT
 gdi32_init=: 3 : 0
 'w h'=. y
 gtkwin=. getGtkWidgetWindow canvas
-hwnd=. gdk_win32_drawable_get_handle gtkwin
+hwnd=. gdk_win32_drawable_get_handle`gdk_win32_window_get_impl_hwnd@.(3=GTKVER_j_) gtkwin
 hdc0=. GetDC hwnd
 HDC=: CreateCompatibleDC hdc0
 BMP=: CreateCompatibleBitmap hdc0,w,h

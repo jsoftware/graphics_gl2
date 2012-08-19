@@ -64,3 +64,6 @@ graphics/gl2 - change history
  * gl2: FIXFONT,PROFONT
  * gl2: api
  * gl2: more robust event callback
+
+== 1.0.37 ==
+  graphics/gl2: gtk+3 compatible
