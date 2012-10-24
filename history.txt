@@ -67,3 +67,6 @@ graphics/gl2 - change history
 
 == 1.0.37 ==
   graphics/gl2: gtk+3 compatible
+
+== 1.0.38 ==
+  graphics/gl2: glcmds shared library for macosx
