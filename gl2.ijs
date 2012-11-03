@@ -213,7 +213,11 @@ if. IFWIN do.
   coinsert 'jgdi32'
   so=. 'libglcmds',((-.IF64)#'_32'),'.dll'
 else.
-  so=. 'libglcmds',((-.IF64)#'_32'),(UNAME-:'Darwin'){::'.so';'.dylib'
+  if. 3=GTKVER_j_ do.
+    so=. 'libglcmds',((-.IF64)#'_32'),(UNAME-:'Darwin'){::'.so';'3.dylib'
+  else.
+    so=. 'libglcmds',((-.IF64)#'_32'),(UNAME-:'Darwin'){::'.so';'.dylib'
+  end.
 end.
 LIBGLCMDS=: ''
 if. fexist f=. jpath '~addons/graphics/gl2/',so do.
