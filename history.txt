@@ -70,3 +70,6 @@ graphics/gl2 - change history
 
 == 1.0.38 ==
   graphics/gl2: glcmds shared library for macosx
+
+== 1.0.39 ==
+  graphics/gl2: android
