@@ -12,11 +12,15 @@ if. 0~: 4!:0 <'FIXFONT_z_' do. FIXFONT=: IFUNIX{::'"Lucida Console" 10' ; ('Andr
 if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
 if. 0~: 4!:0 <'GL2ExtGlcmds_j_' do. GL2ExtGlcmds_j_=: 1 end.
 
-if. 'Android'-.@-:UNAME do.
-  GL2Backend=: (IFWIN > 3 = GTKVER_j_) <. GL2Backend_j_
-else.
+if. IFQT do.
+  GL2Backend=: 3
+  GL2ExtGlcmds=: GL2ExtGlcmds_j_
+  locGL2_jgl2_=: <'jglcanvas'
+elseif. 'Android'-:UNAME do.
   GL2Backend=: 2
   GL2ExtGlcmds=: GL2ExtGlcmds_j_
+elseif. do.
+  GL2Backend=: (IFWIN > 3 = GTKVER_j_) <. GL2Backend_j_
 end.
 GL2ExtGlcmds=: GL2ExtGlcmds_j_
 EMPTY
@@ -93,7 +97,7 @@ glnoerasebkgnd_n=: 2071
 glfont2_n=: 2312
 glfontangle_n=: 2342
 3 : 0''
-if. 'Android'-.@-:UNAME do.
+if. (-.IFQT) *. 'Android'-.@-:UNAME do.
   kbBS=: GDK_BackSpace_jgtk_
   kbLF=: GDK_Linefeed_jgtk_
   kbENTER=: GDK_Return_jgtk_
@@ -196,6 +200,7 @@ PLocale__b=: l
 canvas__b
 )
 glsel=: 3 : 0
+if. IFQT do. return. end.
 l=. glgetloc y
 if. 0= #>l do. EMPTY return. end.
 locGL2_jgl2_=: l
@@ -241,16 +246,23 @@ RGBA=: 3 : 'r (23 b.) 8 (33 b.) g (23 b.) 8 (33 b.) b (23 b.) 8 (33 b.) a [ ''r 
 BGRA=: 3 : 'b (23 b.) 8 (33 b.) g (23 b.) 8 (33 b.) r (23 b.) 8 (33 b.) a [ ''r g b a''=. <.y'
 
 3 : 0''
-if. 'Android'-:UNAME do.
+if. IFQT do.
+  coinsert'jqt'
+elseif. 'Android'-:UNAME do.
   coinsert'jni jaresu'
   if. 0~: 4!:0 <'CANVASIDN' do. CANVASIDN=: 1000 end.
-else.
+elseif. do.
   coinsert'jgtk'
 end.
+so=. ''
 if. IFWIN do.
-  coinsert 'jgdi32'
-  so=. 'libglcmds',((-.IF64)#'_32'),'.dll'
-else.
+  if. -. IFQT do.
+    coinsert 'jgdi32'
+    so=. 'libglcmds',((-.IF64)#'_32'),'.dll'
+  end.
+elseif. IFQT do.
+elseif. 'Android'-:UNAME do.
+elseif. do.
   if. 3=GTKVER_j_ do.
     so=. 'libglcmds',((-.IF64)#'_32'),(UNAME-:'Darwin'){::'.so';'3.dylib'
   else.
@@ -258,14 +270,16 @@ else.
   end.
 end.
 LIBGLCMDS=: ''
-if. fexist f=. jpath '~addons/graphics/gl2/',so do.
-  LIBGLCMDS=: f
-elseif. fexist f=. jpath '~tools/',so do.
-  LIBGLCMDS=: f
-elseif. fexist f=. jpath '~bin/',so do.
-  LIBGLCMDS=: f
+if. #so do.
+  if. fexist f=. jpath '~addons/graphics/gl2/',so do.
+    LIBGLCMDS=: f
+  elseif. fexist f=. jpath '~tools/',so do.
+    LIBGLCMDS=: f
+  elseif. fexist f=. jpath '~bin/',so do.
+    LIBGLCMDS=: f
+  end.
+  LIBGLCMDS=: dquote^:(' 'e.]) LIBGLCMDS
 end.
-LIBGLCMDS=: dquote^:(' 'e.]) LIBGLCMDS
 EMPTY
 )
 
@@ -296,6 +310,13 @@ gtkclipped=: gtkrgb=: gtkfontangle=: gtkunderline=: gtkorgx=: gtkorgy=: 0
 gtktextxy=: 0 0
 gtkpenrgb=: gtkbrushrgb=: gtktextrgb=: gtkbrushnull=: 0
 HDC=: BMP=: PEN=: BRUSH=: FONT=: OLDPEN=: OLDBRUSH=: OLDFONT=: 0
+qtpenrgb=: qtbrushrgb=: qttextrgb=: RGBA 0 0 0 255
+qtbrushnull=: 0
+qtcr=: qtpl=: qtplc=: 0
+qtclipped=: qtrgb=: qtfontangle=: qtunderline=: qtorgx=: qtorgy=: 0
+qttextxy=: 0 0
+qtcs1=: 0
+qtcs=: qtpt=: 0
 andpenrgb=: andbrushrgb=: andtextrgb=: RGBA 0 0 0 255
 andbrushnull=: 0
 andcr=: andpl=: andplc=: 0
@@ -317,7 +338,32 @@ stash_state=: 0
 stash_buf=: 0$0
 canvaslocale=: 0 2$<''
 create=: 3 : 0
-if. 'Android'-.@-:UNAME do.
+if. IFQT do.
+
+elseif. 'Android'-:UNAME do.
+  'w h option context'=. 4{.y
+  assert. 0~: context
+  idn=. CANVASIDN_jglcanvas_=: >:CANVASIDN_jglcanvas_
+  jniCheck view=: context jniOverride 'org.dykman.jn.android.view.View LContext;' ; (>coname'') ; 'view' ; 'onDraw onLayout onDetachedFromWindow'
+  jniCheck view ('setId (I)V' jniMethod)~ idn
+  canvas=: idn
+  Activity=: context
+  andwh=: w,h
+  gloption=: option
+  jniCheck view ('setFocusable (Z)V' jniMethod)~ 1
+
+  if. iOPENGL=gloption do.
+    ogl=: '' conew 'jzopengl'
+  else.
+    jniCheck path=: NewGlobalRef <a1=. 'android/graphics/Path' jniNewObject~ ''
+    jniCheck andpt=: NewGlobalRef <a2=. 'android.graphics.Paint' jniNewObject~ ''
+    jniCheck ontouchlistener=: NewGlobalRef <a3=. '' jniOverride 'org.dykman.jn.android.view.View$OnTouchListener' ; (>coname'') ; 'view'
+    jniCheck DeleteLocalRef"0 a1;a2;a3
+    jniCheck view ('setOnTouchListener (LView$OnTouchListener;)V' jniMethod)~ ontouchlistener
+  end.
+  canvaslocale_jglcanvas_=: ~. canvaslocale_jglcanvas_, canvas;coname''
+  0
+elseif. do.
   'w h option'=. 3{.y
   canvas=: gtk_drawing_area_new''
   gtkwh=: w,h
@@ -353,38 +399,16 @@ if. 'Android'-.@-:UNAME do.
   gtk_widget_show canvas
 
   0
-else.
-  'w h option context'=. 4{.y
-  assert. 0~: context
-  idn=. CANVASIDN_jglcanvas_=: >:CANVASIDN_jglcanvas_
-  jniCheck view=: context jniOverride 'org.dykman.jn.android.view.View LContext;' ; (>coname'') ; 'view' ; 'onDraw onLayout onDetachedFromWindow'
-  jniCheck view ('setId (I)V' jniMethod)~ idn
-  canvas=: idn
-  Activity=: context
-  andwh=: w,h
-  gloption=: option
-  jniCheck view ('setFocusable (Z)V' jniMethod)~ 1
-
-  if. iOPENGL=gloption do.
-    ogl=: '' conew 'jzopengl'
-  else.
-    jniCheck path=: NewGlobalRef <a1=. 'android/graphics/Path' jniNewObject~ ''
-    jniCheck andpt=: NewGlobalRef <a2=. 'android.graphics.Paint' jniNewObject~ ''
-    jniCheck ontouchlistener=: NewGlobalRef <a3=. '' jniOverride 'org.dykman.jn.android.view.View$OnTouchListener' ; (>coname'') ; 'view'
-    jniCheck DeleteLocalRef"0 a1;a2;a3
-    jniCheck view ('setOnTouchListener (LView$OnTouchListener;)V' jniMethod)~ ontouchlistener
-  end.
-  canvaslocale_jglcanvas_=: ~. canvaslocale_jglcanvas_, canvas;coname''
-  0
 end.
 )
 destroy=: 3 : 0
 if. (iOPENGL=gloption) *. *#ogl do.
   destroy__ogl ''
 end.
-if. 'Android'-:UNAME do.
+if. IFQT do.
+elseif. 'Android'-:UNAME do.
   jniCheck DeleteGlobalRef"0 path;andpt;ontouchlistener
-else.
+elseif. do.
   cbfree ''
 end.
 codestroy''
@@ -2667,6 +2691,526 @@ gdi32_glqhandles=: [:
 gdi32_glqprintpaper=: [:
 gdi32_glqprintwh=: [:
 gdi32_glroundr=: [:
+NB cairo gl2
+qt_glarc=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+qtroidcolor qtpt, qtpenrgb
+'x y r s ang1 ang2'=. android_arcisi y
+rectf=. 'android/graphics/RectF FFFF' jniNewObject~ x;y;r;s
+qtcs ('drawArc (Landroid/graphics/RectF;FFZLandroid/graphics/Paint;)V' jniMethod)~ rectf;ang1;ang2;0;qtpt
+jniCheck DeleteLocalRef <rectf
+0
+)
+qt_glbrush=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qtbrushrgb=: qtrgb
+qtbrushnull=: 0
+0
+)
+qt_glbrushnull=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qtbrushnull=: 1
+0
+)
+qt_glcapture=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+select. cap=. {.y
+case. 0 do.
+  capture=: cap
+case. 1 do.
+  capture=: cap
+case. 5 do.
+  capture=: cap
+case. 6 do.
+  capture=: cap
+case. 7 do.
+  capture=: cap
+  rect=. }.cap
+end.
+0
+)
+qt_glcaret=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+if. 0 e. _2{.y do. 0 return. end.
+assert. 0~:qtcs,qtpt
+0
+)
+qt_glclear=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+qtunderline=: 0
+qtfontangle=: 0
+qt_glclipreset''
+qt_glwindoworg - qtorgx, qtorgy
+qtorgx=: qtorgy=: 0
+qt_glrgb 255 255 255
+qt_glpen 1 0
+qt_glbrush''
+qt_glrect 0 0,andwh
+qt_glbrushnull''
+qt_glrgb 0 0 0
+qt_glpen 1 0
+qt_gltextcolor''
+qt_glfont PROFONT_jgl2_
+qt_glfontangle 0
+qt_gltextxy 0 0
+0
+)
+qt_glclip=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+qtclipped=: 1
+0
+)
+qt_glclipreset=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+if. andclipped do.
+  if. 0~:qtcs do.
+  end.
+end.
+qtclipped=: 0
+0
+)
+qt_glcmds=: 3 : 0"1
+if. 0=#y do. 0 return. end.
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+if. 1[GL2ExtGlcmds_jgl2_ do.
+  jniCheck jbuf=. NewIntArray <#y=. <.y
+  jniCheck SetIntArrayRegion jbuf; 0; (#y); y
+  ipar=. qtclipped,qtwh,qtrgb,qttextxy,qtunderline,qtfontangle,qtpenrgb,qtbrushrgb,qttextrgb,qtbrushnull,qtorgx,qtorgy,nodoublebuf
+  assert. 15=#ipar
+  jniCheck ibuf=. NewIntArray <#ipar
+  jniCheck SetIntArrayRegion ibuf; 0; (#ipar); ipar
+  jniCheck glc=. 'org/dykman/jn/Glcmds' jniNewObject~ ''
+  jniCheck glcmdsrc=. glc ('glcmds (LCanvas;LPaint;LPath;[ILString;[III)I' jniMethod)~ qtcs;qtpt;path;ibuf;(utf8 PROFONT_jgl2_);jbuf;(#y);RGBSEQ_j_
+
+  jniCheck GetIntArrayRegion ibuf; 0; (#ipar); ipar=. 15#2-2
+  'clip qtw qth rgb tx ty underline angle penrgb brushrgb textrgb brushnull orgx orgy no_doublebuf'=. ipar
+  qtclipped=: clip [ qtwh=: qtw,qth [ qtrgb=: rgb [ qttextxy=: tx,ty [ qtunderline=: underline [ qtfontangle=: angle
+  qtpenrgb=: penrgb [ qtbrushrgb=: brushrgb [ qttextrgb=: textrgb [ qtbrushnull=: brushnull [ qtorgx=: orgx ] qtorgy=: orgy [ nodoublebuf=: no_doublebuf
+
+  jniCheck DeleteLocalRef"0 jbuf;ibuf;glc
+  0 return.
+end.
+p=. 0
+while. p<#y do.
+  cnt=. p{y
+  cmd=. (1+p){y
+  dat=. (2+p+i.cnt-2){y
+  select. cmd
+  case. glarc_n_jgl2_ do. qt_glarc dat
+  case. glbkmode_n_jgl2_ do. ''
+  case. glbrush_n_jgl2_ do. qt_glbrush dat
+  case. glbrushnull_n_jgl2_ do. qt_glbrushnull dat
+  case. glcapture_n_jgl2_ do. ''
+  case. glcaret_n_jgl2_ do. qt_glcaret dat
+  case. glclear_n_jgl2_ do. qt_glclear dat
+  case. glclip_n_jgl2_ do. qt_glclip dat
+  case. glclipreset_n_jgl2_ do. qt_glclipreset dat
+  case. glcmds_n_jgl2_ do. ''
+  case. glcursor_n_jgl2_ do. ''
+  case. glellipse_n_jgl2_ do. qt_glellipse dat
+  case. glemfclose_n_jgl2_ do. qt_glemfclose dat
+  case. glemfopen_n_jgl2_ do. qt_glemfopen dat
+  case. glemfplay_n_jgl2_ do. qt_glemfplay dat
+  case. glfile_n_jgl2_ do. qt_glfile dat{a.
+  case. glfont_n_jgl2_ do. qt_glfont dat{a.
+  case. glfont2_n_jgl2_ do. qt_glfont2 dat
+  case. glfontangle_n_jgl2_ do. qt_glfontangle dat
+  case. gllines_n_jgl2_ do. qt_gllines dat
+  case. glnodblbuf_n_jgl2_ do. ''
+  case. glnoerasebkgnd_n_jgl2_ do. ''
+  case. glpaint_n_jgl2_ do. ''
+  case. glpaintx_n_jgl2_ do. ''
+  case. glpen_n_jgl2_ do. qt_glpen dat
+  case. glpie_n_jgl2_ do. qt_glpie dat
+  case. glpixel_n_jgl2_ do. qt_glpixel dat
+  case. glpixels_n_jgl2_ do. qt_glpixels dat
+  case. glpixelsx_n_jgl2_ do. qt_glpixelsx dat
+  case. glpolygon_n_jgl2_ do. qt_glpolygon dat
+  case. glprint_n_jgl2_ do. ''
+  case. glprintmore_n_jgl2_ do. ''
+  case. glqextent_n_jgl2_ do. ''
+  case. glqextentw_n_jgl2_ do. ''
+  case. glqhandles_n_jgl2_ do. ''
+  case. glqpixels_n_jgl2_ do. ''
+  case. glqprintpaper_n_jgl2_ do. ''
+  case. glqprintwh_n_jgl2_ do. ''
+  case. glqtextmetrics_n_jgl2_ do. ''
+  case. glqwh_n_jgl2_ do. ''
+  case. glrect_n_jgl2_ do. qt_glrect dat
+  case. glrgb_n_jgl2_ do. qt_glrgb dat
+  case. glroundr_n_jgl2_ do. qt_glroundr dat
+  case. glsel_n_jgl2_ do. ''
+  case. gltext_n_jgl2_ do. qt_gltext dat{a.
+  case. gltextcolor_n_jgl2_ do. qt_gltextcolor dat
+  case. gltextxy_n_jgl2_ do. qt_gltextxy dat
+  case. glwindoworg_n_jgl2_ do. qt_glwindoworg dat
+  case. do.
+    ('un-implemented glcmds ', ":cmd) 13!:8[3
+  end.
+  p=. p+cnt
+end.
+0
+)
+qt_glcursor=: 3 : 0 "1
+0
+)
+qt_glellipse=: 3 : 0"1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ FILL
+qtroidcolor qtpt, qtbrushrgb
+'x y r s ang1 ang2'=. android_arcisi (4#0),~ y
+rectf=. 'android/graphics/RectF FFFF' jniNewObject~ x;y;r;s
+qtcs ('drawOval (Landroid/graphics/RectF;Landroid/graphics/Paint;)V' jniMethod)~ rectf;qtpt
+
+qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+qtroidcolor qtpt, qtpenrgb
+qtcs ('drawOval (Landroid/graphics/RectF;Landroid/graphics/Paint;)V' jniMethod)~ rectf;qtpt
+jniCheck DeleteLocalRef <rectf
+0
+)
+qt_glfont=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtpt
+if. 0=#y=. ,y do. return. end.
+'face size style degree'=. parseFontSpec y
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+qtfontangle=: <.degree*10
+qtunderline=: Underline
+jniCheck ft=. 'android.graphics.Typeface' ('create (LString;I)LTypeface;' jniStaticMethod)~ face;(Bold + 2*Italic)
+jniCheck qtpt ('setTypeface (LTypeface;)LTypeface;' jniMethod)~ ft
+jniCheck qtpt ('setTextSize (F)V' jniMethod)~ (96%72) * size
+jniCheck DeleteLocalRef <ft
+0
+)
+qt_glfont2=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtpt
+'size10 style degree10'=. 3{.y
+face=. a.{~3}.y
+'Bold Italic Underline Strikeout'=. 4{. |. #: style
+qtfontangle=: <.degree10
+qtunderline=: Underline
+jniCheck ft=. 'android.graphics.Typeface' ('create (LString;I)LTypeface;' jniStaticMethod)~ face;(Bold + 2*Italic)
+jniCheck qtpt ('setTypeface (LTypeface;)LTypeface;' jniMethod)~ ft
+jniCheck qtpt ('setTextSize (F)V' jniMethod)~ (96%72) * size10%10
+jniCheck DeleteLocalRef <ft
+0
+)
+qt_glfontangle=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qtfontangle=: <.y
+0
+)
+qt_glrgb=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qtrgb=: BGRA`RGBA@.RGBSEQ_j_ 255,~ y
+0
+)
+qt_gllines=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+if. 0=#y=. ,y do. return. end.
+assert. 0~:qtcs,qtpt
+qtroidcolor qtpt, qtpenrgb
+jniCheck qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+c=. <.2%~#y
+pt=. 2{.y
+jniCheck path ('reset ()V' jniMethod)~ ''
+jniCheck path ('moveTo (FF)V' jniMethod)~ <"0 pt
+for_i. i.c-1 do.
+  pt=. (0 1 + 2*1+i){y
+  jniCheck path ('lineTo (FF)V' jniMethod)~ (<"0 pt)
+end.
+jniCheck qtcs ('drawPath (Landroid/graphics/Path;Landroid/graphics/Paint;)V' jniMethod)~ path;qtpt
+jniCheck path ('reset ()V' jniMethod)~ ''
+0
+)
+qt_glnodblbuf=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+if. nodoublebuf~:flag=. 0~:{.y do.
+  if. 0=nodoublebuf do.
+    qtcs=: 0 [ jniCheck DeleteGlobalRef <qtcs
+    andbm=: 0 [ jniCheck DeleteGlobalRef <andbm
+  end.
+  if. 0=nodoublebuf=: flag do.
+    jniCheck andbm=: 'android.graphics.Bitmap' ('createBitmap (IILBitmap$Config;)LBitmap;' jniStaticMethod)~ <"0 andwh, ARGB_8888
+    jniCheck qtcs=: 'android/graphics/Canvas LBitmap;' jniNewObject~ andbm
+  end.
+  qt_glclear''
+end.
+0
+)
+qt_glpaint=: 3 : 0 "1
+if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
+newsize=: 1
+if. iOPENGL~:gloption do.
+  if. -.nodoublebuf do.
+  end.
+end.
+0
+)
+qt_glpaintx=: 3 : 0 "1
+newsize=: 1
+jniCheck ocs=. Activity ('findViewById (I)LView;' jniMethod)~ canvas
+jniCheck ocs ('invalidate ()V' jniMethod)~ ''
+jniCheck DeleteLocalRef <ocs
+0
+)
+qt_glpen=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qtpenrgb=: qtrgb
+penwidth=. 1.3 >.{.y
+penstyle=. {:y
+jniCheck qtpt ('setStrokeWidth (F)V' jniMethod)~ penwidth
+0
+)
+qt_glpie=: 3 : 0 "1
+qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ FILL
+qtroidcolor qtpt, qtbrushrgb
+'x y r s ang1 ang2'=. android_arcisi y
+rectf=. 'android/graphics/RectF FFFF' jniNewObject~ x;y;r;s
+qtcs ('drawArc (Landroid/graphics/RectF;FFZLandroid/graphics/Paint;)V' jniMethod)~ rectf;ang1;ang2;1;qtpt
+jniCheck DeleteLocalRef <rectf
+0
+)
+qt_glpixel=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+qtroidcolor qtpt, qtrgb
+i=. 0
+while. i<#y do.
+  qtcs 'drawPoint (FFZLandroid/graphics/Paint;)V' jniMethod)~ (<"0 (0 1+i){y), <qtpt
+  i=. 2+i
+end.
+
+0
+)
+qt_glpixels=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+'a b'=. <. twipscaled * 2{.y
+'w h1'=. <. 2{.2}.y
+h=. |h1
+d=. <. 4}.y
+if. h1<0 do. d=. ,|.(h,w)$d end.
+d=. fliprgb^:(-.RGBSEQ_j_) d
+jniCheck colors=. NewIntArray <#d
+jniCheck SetIntArrayRegion colors;0;(#d);d
+jniCheck qtcs ('drawBitmap ([IIIIIIIZLPaint;)V' jniMethod)~ colors;0;w;a;b;w;h;0;qtpt
+jniCheck DeleteLocalRef <colors
+0
+)
+qt_glpixelsx=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+'a b'=. <. twipscaled * 2{.y
+'w h1'=. <. 2{.2}.y
+da=. <. {:y
+h=. |h1
+d=. memr da,0,(w*h),JINT
+if. h1<0 do. d=. ,|.(h,w)$ d end.
+d=. fliprgb^:(-.RGBSEQ_j_) d
+
+jniCheck colors=. NewIntArray <#d
+jniCheck SetIntArrayRegion colors;0;(#d);d
+jniCheck qtcs ('drawBitmap ([IIIIIIIZLPaint;)V' jniMethod)~ colors;0;w;a;b;w;h;0;qtpt
+jniCheck DeleteLocalRef <colors
+0
+)
+qt_glpolygon=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+if. *./ 0=y do. 0 return. end.
+c=. <.-:#y
+if. 0=c do. 0 return. end.
+assert. 0~:qtcs,qtpt
+c=. <.2%~(#y)-2
+path ('reset ()V' jniMethod)~ ''
+if. 0 = qtbrushnull do.
+  pt=. 2{.y
+  path ('moveTo (FF)V' jniMethod)~ <"0 pt
+  for_i. i.c-1 do.
+    pt=. (0 1 + 2*1+i){y
+    path ('lineTo (FF)V' jniMethod)~ <"0 pt
+  end.
+  path ('close ()V' jniMethod)~ ''
+  qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ FILL
+  qtcolor qtpt, qtbrushrgb
+  qtcs ('drawPath (Landroid/graphics/Path;Landroid/graphics/Paint;)V' jniMethod)~ path;qtpt
+  qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+  qtcolor qtpt, qtpenrgb
+  qtcs ('drawPath (Landroid/graphics/Path;Landroid/graphics/Paint;)V' jniMethod)~ path;qtpt
+else.
+  pt=. 2{.y
+  path ('moveTo (FF)V' jniMethod)~ <"0 pt
+  for_i. i.c-1 do.
+    pt=. (0 1 + 2*1+i){y
+    path ('lineTo (FF)V' jniMethod)~ <"0 pt
+  end.
+  path ('close ()V' jniMethod)~ ''
+  qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+  qtcolor qtpt, qtpenrgb
+  qtcs ('drawPath (Landroid/graphics/Path;Landroid/graphics/Paint;)V' jniMethod)~ path;qtpt
+end.
+path ('reset ()V' jniMethod)~ ''
+0
+)
+qt_glqpixels=: 3 : 0 "1
+if. iOPENGL=gloption do. 0$0 return. end.
+assert. 0~:qtcs,qtpt
+'a b'=. <. twipscaled * 2{.y
+'w h'=. <. 2{.2}.y
+d=. (w*h)#2-2
+if. nodoublebuf do. d return. end.
+assert. 0~:andbm
+
+jniCheck colors=. NewIntArray <#d
+jniCheck andbm ('getPixels ([IIIIIII)V' jniMethod)~ colors;0;w;a;b;w;h
+jniCheck GetIntArrayRegion colors;0;(#d);d
+jniCheck DeleteLocalRef <colors
+
+d=. 16bffffff (17 b.) d
+d=. fliprgb^:(-.RGBSEQ_j_) d
+)
+qt_glqwh=: 3 : 0"1
+qtwh
+)
+qt_glrect=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+if. (0 = qtbrushnull) do.
+  i=. 0
+  while. i<#y do.
+    qtcolor qtpt , qtbrushrgb
+    qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ FILL
+    qtcs ('drawRect (FFFFLandroid/graphics/Paint;)V' jniMethod)~ (<"0 tors (0 1 2 3 +i){y), <qtpt
+    qtcolor qtpt, qtpenrgb
+    qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+    qtcs ('drawRect (FFFFLandroid/graphics/Paint;)V' jniMethod)~ (<"0 tors (0 1 2 3 +i){y), <qtpt
+    i=. i+4
+  end.
+else.
+  qtcolor qtpt, qtpenrgb
+  qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ STROKE
+  i=. 0
+  while. i<#y do.
+    qtcs ('drawRect (FFFFLandroid/graphics/Paint;)V' jniMethod)~ (<"0 tors (0 1 2 3 +i){y), <qtpt
+    i=. i+4
+  end.
+end.
+0
+)
+qt_glsetlocale=: 3 : 0
+if. PLocale -: <'droidwd' do. 0 return. end.
+PLocalec=: boxxopen y
+0
+)
+qt_glsetbrush=: qt_glbrush @ qt_glrgb
+qt_glsetpen=: qt_glpen @ ((1 0 [ qt_glrgb) :((2 {. [) qt_glrgb))
+qt_gltext=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+assert. 0~:qtcs,qtpt
+qtroidcolor qtpt , andtextrgb
+qtpt ('setStyle (Landroid/graphics/Paint$Style;)V' jniMethod)~ FILL
+'tx ty'=. andtextxy
+qtcs ('drawText (Ljava/lang/String;FFLandroid/graphics/Paint;)V' jniMethod)~ y;tx;ty;qtpt
+0
+)
+qt_gltextcolor=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qttextrgb=: qtrgb
+0
+)
+qt_gltextxy=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qttextxy=: <. y
+0
+)
+qt_glqextent=: 3 : 0 "1
+z=. 1 1
+if. iOPENGL=gloption do. z return. end.
+assert. 0~:qtpt
+jniCheck rect=. 'android/graphics/Rect' jniNewObject~ ''
+jniCheck qtpt ('getTextBounds (LString;IILRect;)V' jniMethod)~ (utf8 y);0;(#ucp y);rect
+jniCheck w=. rect ('width ()I' jniMethod)~ ''
+jniCheck h=. rect ('height ()I' jniMethod)~ ''
+jniCheck DeleteLocalRef <rect
+w,h
+)
+qt_glqextentw=: 3 : 0 "1
+assert. 0~:qtpt
+if. iOPENGL=gloption do. 0$0 return. end.
+if. 1[ GL2ExtGlcmds_jgl2_ do.
+  len=. #@ucp;._2 txt=. y,LF#~LF~:{:y
+  jniCheck olen=. NewIntArray <#len
+  jniCheck SetIntArrayRegion olen; 0; (#len); len
+  jniCheck glc=. 'org/dykman/jn/Glcmds' jniNewObject~ ''
+  jniCheck wlen=. glc ('qextentwv (LPaint;LString;[II)[I' jniMethod)~ qtpt;(txt-.LF);olen;(#len)
+  w=. (#len)$2-2
+  jniCheck GetIntArrayRegion wlen;0;(#w);w
+  jniCheck DeleteLocalRef"0 olen;wlen;glc
+  w
+else.
+  w=. {. glqextent '8'
+  w * #@ucp;._2 txt=. y,LF#~LF~:{:y
+end.
+)
+qt_glwindoworg=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+qtorgx=: qtorgx + <.{.y
+qtorgy=: qtorgy + <.{:y
+if. 0~:qtcs do.
+end.
+0
+)
+qt_glqhandles=: 3 : 0 "1
+if. 0< #y do. (13!:8) 3 end.
+canvas,qtcs,0
+)
+qt_glprint=: [:
+qt_glprintmore=: [:
+qt_glqprintpaper=: [:
+qt_glqprintwh=: [:
+qt_glqtextmetrics=: 3 : 0 "1
+if. 0< #y do. (13!:8) 3 end.
+assert. 0~:qtpt
+metrics=. qtpt ('getFontMetrics ()LPaint$FontMetrics;' jniMethod)~ ''
+asc=. | ('ascend ()LPaint$FontMetrics;' jniField)~ metrics
+bottom=. | ('bottom ()LPaint$FontMetrics;' jniField)~ metrics
+descent=. | ('descent ()LPaint$FontMetrics;' jniField)~ metrics
+leading=. | ('leading ()LPaint$FontMetrics;' jniField)~ metrics
+top=. | ('top ()LPaint$FontMetrics;' jniField)~ metrics
+jniCheck DeleteLocalRef <metrics
+cw=. {. qt_glqextent ,'8'
+cw1=. {. qt_glqextent ,'M'
+<. (asc + dsc),asc,dsc,0,leading,cw,cw1
+)
+qt_glemfclose=: [:
+qt_glemfopen=: [:
+qt_glemfplay=: [:
+qt_glfile=: [:
+qt_glroundr=: [:
+qt_cleanup=: 3 : 0
+EMPTY
+)
+3 : 0''
+if. IFQT do.
+  libjqt_z_=: jpath '~bin/libjqt.so.1'
+  wd_z_=: (libjqt,' wd >+ i *c *c') cd (;(coname bind ''))
+  qt_glpixels=: (libjqt,' glpixels >+ n *i i') cd (;#)
+  qt_glqwh=: 320 320"_
+  qt_glrect=: 0:
+  qt_glbrsuh=: 0:
+  qt_glpaint=: 0:
+  qt_glclear=: 0:
+end.
+EMPTY
+)
 qwh=: 3 : 0
 assert. iOPENGL=gloption
 gtkwh
@@ -2878,51 +3422,51 @@ androidcolor=: 3 : 0
 'paint andcolor'=. y
 jniCheck paint ('setColor (I)V' jniMethod)~ andcolor
 )
-glarc=: (cairo_glarc`gdi32_glarc`and_glarc@.GL2Backend_jgl2_)`(glarc_n_jgl2_&glbuf)@.glqmark
-glarcx=: (cairo_glarcx`gdi32_glarcx`and_glarcx@.GL2Backend_jgl2_)`(glarcx_n_jgl2_&glbuf)@.glqmark
-glbrush=: (cairo_glbrush`gdi32_glbrush`and_glbrush@.GL2Backend_jgl2_)`(glbrush_n_jgl2_&glbuf)@.glqmark
-glbrushnull=: (cairo_glbrushnull`gdi32_glbrushnull`and_glbrushnull@.GL2Backend_jgl2_)`(glbrushnull_n_jgl2_&glbuf)@.glqmark
-glcapture=: (cairo_glcapture`gdi32_glcapture`and_glcapture@.GL2Backend_jgl2_)`(glcapture_n_jgl2_&glbuf)@.0:
-glcaret=: (cairo_glcaret`gdi32_glcaret`and_glcaret@.GL2Backend_jgl2_)`(glcaret_n_jgl2_&glbuf)@.0:
-glclear=: (cairo_glclear`gdi32_glclear`and_glclear@.GL2Backend_jgl2_)`(glclear_n_jgl2_&glbuf)@.glqmark
-glclip=: (cairo_glclip`gdi32_glclip`and_glclip@.GL2Backend_jgl2_)`(glclip_n_jgl2_&glbuf)@.glqmark
-glclipreset=: (cairo_glclipreset`gdi32_glclipreset`and_glclipreset@.GL2Backend_jgl2_)`(glclipreset_n_jgl2_&glbuf)@.glqmark
-glcmds=: (cairo_glcmds`gdi32_glcmds`and_glcmds@.GL2Backend_jgl2_)`(glcmds_n_jgl2_&glbuf)@.glqmark
-glcursor=: (cairo_glcursor`gdi32_glcursor`and_glcursor@.GL2Backend_jgl2_)`(glcursor_n_jgl2_&glbuf)@.0:
-glellipse=: (cairo_glellipse`gdi32_glellipse`and_glellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl2_&glbuf)@.glqmark
-glfont=: (cairo_glfont`gdi32_glfont`and_glfont@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
-glfontangle=: (cairo_glfontangle`gdi32_glfontangle`and_glfontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
-gllines=: (cairo_gllines`gdi32_gllines`and_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
-glnodblbuf=: (cairo_glnodblbuf`gdi32_glnodblbuf`and_glnodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
-glpaint=: (cairo_glpaint`gdi32_glpaint`and_glpaint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
-glpaintx=: (cairo_glpaintx`gdi32_glpaintx`and_glpaintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
-glpen=: (cairo_glpen`gdi32_glpen`and_glpen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
-glpie=: (cairo_glpie`gdi32_glpie`and_glpie@.GL2Backend_jgl2_)`(glpie_n_jgl2_&glbuf)@.glqmark
-glpixel=: (cairo_glpixel`gdi32_glpixel`and_glpixel@.GL2Backend_jgl2_)`(glpixel_n_jgl2_&glbuf)@.glqmark
-glpixels=: (cairo_glpixels`gdi32_glpixels`and_glpixels@.GL2Backend_jgl2_)`(glpixels_n_jgl2_&glbuf)@.glqmark
-glpixelsx=: (cairo_glpixelsx`gdi32_glpixelsx`and_glpixelsx@.GL2Backend_jgl2_)`(glpixelsx_n_jgl2_&glbuf)@.glqmark
-glpolygon=: (cairo_glpolygon`gdi32_glpolygon`and_glpolygon@.GL2Backend_jgl2_)`(glpolygon_n_jgl2_&glbuf)@.glqmark
-glqextent=: (cairo_glqextent`gdi32_glqextent`and_glqextent@.GL2Backend_jgl2_)`(glqextent_n_jgl2_&glbuf)@.0:
-glqextentw=: (cairo_glqextentw`gdi32_glqextentw`and_glqextentw@.GL2Backend_jgl2_)`(glqextentw_n_jgl2_&glbuf)@.0:
-glqpixels=: (cairo_glqpixels`gdi32_glqpixels`and_glqpixels@.GL2Backend_jgl2_)`(glqpixels_n_jgl2_&glbuf)@.0:
-glqtextmetrics=: (cairo_glqtextmetrics`gdi32_glqtextmetrics`and_glqtextmetrics@.GL2Backend_jgl2_)`(glqtextmetrics_n_jgl2_&glbuf)@.0:
-glqwh=: (cairo_glqwh`gdi32_glqwh`and_glqwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
-glrect=: (cairo_glrect`gdi32_glrect`and_glrect@.GL2Backend_jgl2_)`(glrect_n_jgl2_&glbuf)@.glqmark
-glrgb=: (cairo_glrgb`gdi32_glrgb`and_glrgb@.GL2Backend_jgl2_)`(glrgb_n_jgl2_&glbuf)@.glqmark
-glsetbrush=: (cairo_glsetbrush`gdi32_glsetbrush`and_glsetbrush@.GL2Backend_jgl2_)`(glsetbrush_n_jgl2_&glbuf)@.glqmark
-glsetlocale=: (cairo_glsetlocale`gdi32_glsetlocale`and_glsetlocale@.GL2Backend_jgl2_)`(glsetlocale_n_jgl2_&glbuf)@.0:
-glsetpen=: (cairo_glsetpen`gdi32_glsetpen`and_glsetpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@.0:
-gltext=: (cairo_gltext`gdi32_gltext`and_gltext@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
-gltextcolor=: (cairo_gltextcolor`gdi32_gltextcolor`and_gltextcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
-gltextxy=: (cairo_gltextxy`gdi32_gltextxy`and_gltextxy@.GL2Backend_jgl2_)`(gltextxy_n_jgl2_&glbuf)@.glqmark
-glwindoworg=: (cairo_glwindoworg`gdi32_glwindoworg`and_glwindoworg@.GL2Backend_jgl2_)`(glwindoworg_n_jgl2_&glbuf)@.glqmark
-glprint=: cairo_glprint`gdi32_glprint`and_glprint@.GL2Backend_jgl2_
-glprintmore=: cairo_glprintmore`gdi32_glprintmore`and_glprintmore@.GL2Backend_jgl2_
-glqhandles=: cairo_glqhandles`gdi32_glqhandles`and_glqhandles@.GL2Backend_jgl2_
-glqprintpaper=: cairo_glqprintpaper`gdi32_glqprintpaper`and_glqprintpaper@.GL2Backend_jgl2_
-glqprintwh=: cairo_glqprintwh`gdi32_glqprintwh`and_glqprintwh@.GL2Backend_jgl2_
-glemfclose=: cairo_glemfclose`gdi32_glemfclose`and_glemfclose@.GL2Backend_jgl2_
-glemfopen=: cairo_glemfopen`gdi32_glemfopen`and_glemfopen@.GL2Backend_jgl2_
-glemfplay=: cairo_glemfplay`gdi32_glemfplay`and_glemfplay@.GL2Backend_jgl2_
-glfile=: cairo_glfile`gdi32_glfile`and_glfile@.GL2Backend_jgl2_
-glroundr=: cairo_glroundr`gdi32_glroundr`and_glroundr@.GL2Backend_jgl2_
+glarc=: (cairo_glarc`gdi32_glarc`and_glarc`qt_glarc@.GL2Backend_jgl2_)`(glarc_n_jgl2_&glbuf)@.glqmark
+glarcx=: (cairo_glarcx`gdi32_glarcx`and_glarcx`qt_glarcx@.GL2Backend_jgl2_)`(glarcx_n_jgl2_&glbuf)@.glqmark
+glbrush=: (cairo_glbrush`gdi32_glbrush`and_glbrush`qt_glbrush@.GL2Backend_jgl2_)`(glbrush_n_jgl2_&glbuf)@.glqmark
+glbrushnull=: (cairo_glbrushnull`gdi32_glbrushnull`and_glbrushnull`qt_glbrushnull@.GL2Backend_jgl2_)`(glbrushnull_n_jgl2_&glbuf)@.glqmark
+glcapture=: (cairo_glcapture`gdi32_glcapture`and_glcapture`qt_glcapture@.GL2Backend_jgl2_)`(glcapture_n_jgl2_&glbuf)@.0:
+glcaret=: (cairo_glcaret`gdi32_glcaret`and_glcaret`qt_glcaret@.GL2Backend_jgl2_)`(glcaret_n_jgl2_&glbuf)@.0:
+glclear=: (cairo_glclear`gdi32_glclear`and_glclear`qt_glclear@.GL2Backend_jgl2_)`(glclear_n_jgl2_&glbuf)@.glqmark
+glclip=: (cairo_glclip`gdi32_glclip`and_glclip`qt_glclip@.GL2Backend_jgl2_)`(glclip_n_jgl2_&glbuf)@.glqmark
+glclipreset=: (cairo_glclipreset`gdi32_glclipreset`and_glclipreset`qt_glclipreset@.GL2Backend_jgl2_)`(glclipreset_n_jgl2_&glbuf)@.glqmark
+glcmds=: (cairo_glcmds`gdi32_glcmds`and_glcmds`qt_glcmds@.GL2Backend_jgl2_)`(glcmds_n_jgl2_&glbuf)@.glqmark
+glcursor=: (cairo_glcursor`gdi32_glcursor`and_glcursor`qt_glcursor@.GL2Backend_jgl2_)`(glcursor_n_jgl2_&glbuf)@.0:
+glellipse=: (cairo_glellipse`gdi32_glellipse`and_glellipse`qt_glellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl2_&glbuf)@.glqmark
+glfont=: (cairo_glfont`gdi32_glfont`and_glfont`qt_glfont@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
+glfontangle=: (cairo_glfontangle`gdi32_glfontangle`and_glfontangle`qt_glfontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
+gllines=: (cairo_gllines`gdi32_gllines`and_gllines`qt_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
+glnodblbuf=: (cairo_glnodblbuf`gdi32_glnodblbuf`and_glnodblbuf`qt_glnodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
+glpaint=: (cairo_glpaint`gdi32_glpaint`and_glpaint`qt_glpaint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
+glpaintx=: (cairo_glpaintx`gdi32_glpaintx`and_glpaintx`qt_glpaintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
+glpen=: (cairo_glpen`gdi32_glpen`and_glpen`qt_glpen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
+glpie=: (cairo_glpie`gdi32_glpie`and_glpie`qt_glpie@.GL2Backend_jgl2_)`(glpie_n_jgl2_&glbuf)@.glqmark
+glpixel=: (cairo_glpixel`gdi32_glpixel`and_glpixel`qt_glpixel@.GL2Backend_jgl2_)`(glpixel_n_jgl2_&glbuf)@.glqmark
+glpixels=: (cairo_glpixels`gdi32_glpixels`and_glpixels`qt_glpixels@.GL2Backend_jgl2_)`(glpixels_n_jgl2_&glbuf)@.glqmark
+glpixelsx=: (cairo_glpixelsx`gdi32_glpixelsx`and_glpixelsx`qt_glpixelsx@.GL2Backend_jgl2_)`(glpixelsx_n_jgl2_&glbuf)@.glqmark
+glpolygon=: (cairo_glpolygon`gdi32_glpolygon`and_glpolygon`qt_glpolygon@.GL2Backend_jgl2_)`(glpolygon_n_jgl2_&glbuf)@.glqmark
+glqextent=: (cairo_glqextent`gdi32_glqextent`and_glqextent`qt_glqextent@.GL2Backend_jgl2_)`(glqextent_n_jgl2_&glbuf)@.0:
+glqextentw=: (cairo_glqextentw`gdi32_glqextentw`and_glqextentw`qt_glqextentw@.GL2Backend_jgl2_)`(glqextentw_n_jgl2_&glbuf)@.0:
+glqpixels=: (cairo_glqpixels`gdi32_glqpixels`and_glqpixels`qt_glqpixels@.GL2Backend_jgl2_)`(glqpixels_n_jgl2_&glbuf)@.0:
+glqtextmetrics=: (cairo_glqtextmetrics`gdi32_glqtextmetrics`and_glqtextmetrics`qt_glqtextmetrics@.GL2Backend_jgl2_)`(glqtextmetrics_n_jgl2_&glbuf)@.0:
+glqwh=: (cairo_glqwh`gdi32_glqwh`and_glqwh`qt_glqwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
+glrect=: (cairo_glrect`gdi32_glrect`and_glrect`qt_glrect@.GL2Backend_jgl2_)`(glrect_n_jgl2_&glbuf)@.glqmark
+glrgb=: (cairo_glrgb`gdi32_glrgb`and_glrgb`qt_glrgb@.GL2Backend_jgl2_)`(glrgb_n_jgl2_&glbuf)@.glqmark
+glsetbrush=: (cairo_glsetbrush`gdi32_glsetbrush`and_glsetbrush`qt_glsetbrush@.GL2Backend_jgl2_)`(glsetbrush_n_jgl2_&glbuf)@.glqmark
+glsetlocale=: (cairo_glsetlocale`gdi32_glsetlocale`and_glsetlocale`qt_glsetlocale@.GL2Backend_jgl2_)`(glsetlocale_n_jgl2_&glbuf)@.0:
+glsetpen=: (cairo_glsetpen`gdi32_glsetpen`and_glsetpen`qt_glsetpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@.0:
+gltext=: (cairo_gltext`gdi32_gltext`and_gltext`qt_gltext@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
+gltextcolor=: (cairo_gltextcolor`gdi32_gltextcolor`and_gltextcolor`qt_gltextcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
+gltextxy=: (cairo_gltextxy`gdi32_gltextxy`and_gltextxy`qt_gltextxy@.GL2Backend_jgl2_)`(gltextxy_n_jgl2_&glbuf)@.glqmark
+glwindoworg=: (cairo_glwindoworg`gdi32_glwindoworg`and_glwindoworg`qt_glwindoworg@.GL2Backend_jgl2_)`(glwindoworg_n_jgl2_&glbuf)@.glqmark
+glprint=: cairo_glprint`gdi32_glprint`and_glprint`qt_glprint@.GL2Backend_jgl2_
+glprintmore=: cairo_glprintmore`gdi32_glprintmore`and_glprintmore`qt_glprintmore@.GL2Backend_jgl2_
+glqhandles=: cairo_glqhandles`gdi32_glqhandles`and_glqhandles`qt_glqhandles@.GL2Backend_jgl2_
+glqprintpaper=: cairo_glqprintpaper`gdi32_glqprintpaper`and_glqprintpaper`qt_glqprintpaper@.GL2Backend_jgl2_
+glqprintwh=: cairo_glqprintwh`gdi32_glqprintwh`and_glqprintwh`qt_glqprintwh@.GL2Backend_jgl2_
+glemfclose=: cairo_glemfclose`gdi32_glemfclose`and_glemfclose`qt_glemfclose@.GL2Backend_jgl2_
+glemfopen=: cairo_glemfopen`gdi32_glemfopen`and_glemfopen`qt_glemfopen@.GL2Backend_jgl2_
+glemfplay=: cairo_glemfplay`gdi32_glemfplay`and_glemfplay`qt_glemfplay@.GL2Backend_jgl2_
+glfile=: cairo_glfile`gdi32_glfile`and_glfile`qt_glfile@.GL2Backend_jgl2_
+glroundr=: cairo_glroundr`gdi32_glroundr`and_glroundr`qt_glroundr@.GL2Backend_jgl2_
