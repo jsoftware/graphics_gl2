@@ -3198,19 +3198,24 @@ qt_glroundr=: [:
 qt_cleanup=: 3 : 0
 EMPTY
 )
-3 : 0''
-if. IFQT do.
-  libjqt_z_=: jpath '~bin/libjqt.so.1'
-  wd_z_=: (libjqt,' wd >+ i *c *c') cd (;(coname bind ''))
-  qt_glpixels=: (libjqt,' glpixels >+ n *i i') cd (;#)
-  qt_glqwh=: 320 320"_
-  qt_glrect=: 0:
-  qt_glbrsuh=: 0:
-  qt_glpaint=: 0:
-  qt_glclear=: 0:
-end.
-EMPTY
+libjqt_z_=: jpath '~bin/libjqt.so.1'
+wd_z_=: (libjqt,' wd >+ i *c *c') cd (;(coname bind ''))
+qt_glpaintx=: (libjqt,' glpaintx >+ n')&cd bind ''
+qt_glpixels=: (libjqt,' glpixels >+ i *i i') cd (;#)
+qt_glqhandles=: 3 : 0"1
+hs=. 3#2-2
+(libjqt,' glqhandles >+ i *i') cd <hs
+hs
 )
+qt_glqwh=: 3 : 0"1
+wh=. 2#2-2
+(libjqt,' glqwh >+ i *i') cd <wh
+wh
+)
+
+qt_glrect=: 0:
+qt_glbrsuh=: 0:
+qt_glclear=: 0:
 qwh=: 3 : 0
 assert. iOPENGL=gloption
 gtkwh
