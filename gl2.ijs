@@ -3199,7 +3199,12 @@ qt_cleanup=: 3 : 0
 EMPTY
 )
 libjqt_z_=: jpath '~bin/libjqt.so.1'
-wd_z_=: (libjqt,' wd >+ i *c *c') cd (;(coname bind ''))
+3 : 0''
+if. IFQT do.
+  wd_z_=: (libjqt,' wd >+ i *c *c') cd (;(coname bind ''))
+end.
+EMPTY
+)
 qt_glpaintx=: (libjqt,' glpaintx >+ n')&cd bind ''
 qt_glpixels=: (libjqt,' glpixels >+ i *i i') cd (;#)
 qt_glqhandles=: 3 : 0"1
