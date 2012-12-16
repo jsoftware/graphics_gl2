@@ -3205,6 +3205,29 @@ if. IFQT do.
 end.
 EMPTY
 )
+qthandler_z_=: 4 : 0
+if. 3~: 4!:0 <x do. 0 return. end.
+if. 3=4!:0<'qthandler_debug' do.
+  try. x qthandler_debug y catch. end.
+end.
+qt_fn=. x
+if. 13!:17'' do.
+  z=. qt_fn~ y
+else.
+  try. z=. qt_fn~ y
+  catch.
+    qt_err=. 13!:12''
+    if. 0=4!:0 <'ERM_j_' do.
+      qt_erm=. ERM_j_
+      ERM_j_=: ''
+      if. qt_erm -: qt_err do. 0 return. end.
+    end.
+    qt_err=. LF,,LF,.}.;._2 qt_err
+    smoutput 'qthandler error in: ',qt_fn,qt_err
+    0
+  end.
+end.
+)
 qt_glpaintx=: (libjqt,' glpaintx >+ n')&cd bind ''
 qt_glpixels=: (libjqt,' glpixels >+ i *i i') cd (;#)
 qt_glqhandles=: 3 : 0"1
