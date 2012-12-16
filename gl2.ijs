@@ -3198,46 +3198,27 @@ qt_glroundr=: [:
 qt_cleanup=: 3 : 0
 EMPTY
 )
-libjqt_z_=: jpath '~bin/libjqt.so.1'
 3 : 0''
-if. IFQT do.
-  wd_z_=: (libjqt,' wd >+ i *c *c') cd (;(coname bind ''))
+select. UNAME
+case. 'Linux' do. S=. BINPATH,'/libjqt.so.1'
+case. 'Android' do. S=. BINPATH,'/libjqt.so'
+case. 'Darwin' do. S=. BINPATH,'/libjqt.dylib'
+case. 'Win' do. S=. BINPATH,'/libjqt.dll'
 end.
+libjqt=: '"',S,'"'
 EMPTY
 )
-qthandler_z_=: 4 : 0
-if. 3~: 4!:0 <x do. 0 return. end.
-if. 3=4!:0<'qthandler_debug' do.
-  try. x qthandler_debug y catch. end.
-end.
-qt_fn=. x
-if. 13!:17'' do.
-  z=. qt_fn~ y
-else.
-  try. z=. qt_fn~ y
-  catch.
-    qt_err=. 13!:12''
-    if. 0=4!:0 <'ERM_j_' do.
-      qt_erm=. ERM_j_
-      ERM_j_=: ''
-      if. qt_erm -: qt_err do. 0 return. end.
-    end.
-    qt_err=. LF,,LF,.}.;._2 qt_err
-    smoutput 'qthandler error in: ',qt_fn,qt_err
-    0
-  end.
-end.
-)
-qt_glpaintx=: (libjqt,' glpaintx >+ n')&cd bind ''
-qt_glpixels=: (libjqt,' glpixels >+ i *i i') cd (;#)
+qt_glpaint=: (libjqt,' glpaint >',(IFWIN#'+'),' i')&cd bind ''
+qt_glpaintx=: (libjqt,' glpaintx >',(IFWIN#'+'),' i')&cd bind ''
+qt_glpixels=: (libjqt,' glpixels >',(IFWIN#'+'),' i *i i') cd (;#)
 qt_glqhandles=: 3 : 0"1
 hs=. 3#2-2
-(libjqt,' glqhandles >+ i *i') cd <hs
+(libjqt,' glqhandles >',(IFWIN#'+'),' i *i') cd <hs
 hs
 )
 qt_glqwh=: 3 : 0"1
 wh=. 2#2-2
-(libjqt,' glqwh >+ i *i') cd <wh
+(libjqt,' glqwh >',(IFWIN#'+'),' i *i') cd <wh
 wh
 )
 
