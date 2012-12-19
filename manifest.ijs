@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 Base class for gl2 commands. This is only intended to support legacy J6 packages and should not be used in newly-written code.  Use Cairo instead.
 )
 
-VERSION=: '1.0.43'
+VERSION=: '1.0.44'
 
 RELEASE=: 'j701'
 
