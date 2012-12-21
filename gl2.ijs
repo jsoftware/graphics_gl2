@@ -1,4 +1,6 @@
-require 'gui/android gtk graphics/color/rgb'
+require 'gui/android gui/gtk graphics/color/rgb'
+require^:(IFWIN>IFQT) 'api/gdi32'
+
 coclass 'jgl2'
 
 
@@ -233,13 +235,6 @@ if. 1 4 8 e.~ 3!:0 y do.
   end.
 end.
 l
-)
-
-3 : 0''
-if. IFWIN do.
-  require 'api/gdi32'
-end.
-EMPTY
 )
 
 coclass'jglcanvas'

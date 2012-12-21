@@ -74,5 +74,5 @@ graphics/gl2 - change history
 == 1.0.39 ==
   graphics/gl2: android
 
-== 1.0.40/45 ==
+== 1.0.40/46 ==
   graphics/gl2: qt
