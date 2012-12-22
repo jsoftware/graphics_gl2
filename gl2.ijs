@@ -284,7 +284,7 @@ select. UNAME
 case. 'Linux' do. S=. BINPATH,'/libjqt.so'
 case. 'Android' do. S=. BINPATH,'/libjqt.so'
 case. 'Darwin' do. S=. BINPATH,'/libjqt.dylib'
-case. 'Win' do. S=. BINPATH,'/libjqt.dll'
+case. 'Win' do. S=. BINPATH,'/jqt.dll'
 end.
 libjqt=: '"',S,'"'
 EMPTY
