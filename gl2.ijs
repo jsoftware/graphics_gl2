@@ -203,7 +203,15 @@ canvas__b
 )
 glsel=: 3 : 0
 if. IFQT do.
-  qt_glsel2_jglcanvas_`qt_glsel_jglcanvas_@.(0={.@(0&{.)) y return.
+  if. 2 131072 e.~ 3!:0 y do.
+    if. ({.y) e. '_0123456789' do.
+      qt_glsel_jglcanvas_ <.0".y return.
+    else.
+      qt_glsel2_jglcanvas_ utf8 y return.
+    end.
+  else.
+    qt_glsel_jglcanvas_ <.y return.
+  end.
 end.
 l=. glgetloc y
 if. 0= #>l do. EMPTY return. end.
@@ -453,7 +461,7 @@ name=. 'mb',n,x
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -476,7 +484,7 @@ scroll_event=: 3 : 0
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -497,7 +505,7 @@ motion_notify_event=: 3 : 0
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -518,7 +526,7 @@ key_press_event=: 3 : 0
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -538,7 +546,7 @@ focus_in_event=: 3 : 0
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -557,7 +565,7 @@ focus_out_event=: 3 : 0
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -615,7 +623,7 @@ initialized=: 1
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
     end.
   end.
@@ -632,7 +640,7 @@ end.
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -737,7 +745,7 @@ twipscaled=: 1440 %~ dpix,dpiy
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       rc=. ('jglcanvas';(coname''),<y) (f~) 'print'; ":0 0
     end.
@@ -770,7 +778,7 @@ glclear''
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       rc=. ('jglcanvas';(coname''),<y) (f~) 'print'; ":page_nr, 1
     end.
@@ -788,7 +796,7 @@ assert. iOPENGL~:gloption
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'gtkwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       rc=. ('jglcanvas';(coname''),<y) (f~) 'print'; ":0 _1
     end.
@@ -842,7 +850,7 @@ initialized=: 1
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'androidwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
     end.
   end.
@@ -871,7 +879,7 @@ end.
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'androidwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
@@ -912,7 +920,7 @@ button1=. 1
 plocale=. {. PLocalec,PLocale
 if. #>plocale do.
   if. (0: <: 18!:0) plocale do.
-    if. 3= nc <f=. 'androidwidget_event_',(>plocale),'_' do.
+    if. 3= nc <f=. 'isigraph_event_',(>plocale),'_' do.
       locGL2_jgl2_=: coname''
       if. (iOPENGL=gloption) *. *#ogl do.
         current__ogl widget [ ogl__PLocale=: ogl
