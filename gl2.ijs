@@ -281,12 +281,11 @@ EMPTY
 )
 3 : 0''
 select. UNAME
-case. 'Linux' do. S=. BINPATH,'/libjqt.so'
-case. 'Android' do. S=. BINPATH,'/libjqt.so'
-case. 'Darwin' do. S=. BINPATH,'/libjqt.dylib'
-case. 'Win' do. S=. BINPATH,'/jqt.dll'
+case. 'Linux' do. libjqt_z_=: BINPATH,'/libjqt.so'
+case. 'Android' do. libjqt_z_=: BINPATH,'/libjqt.so'
+case. 'Darwin' do. libjqt_z_=: BINPATH,'/libjqt.dylib'
+case. 'Win' do. libjqt_z_=: BINPATH,'/jqt.dll'
 end.
-libjqt=: '"',S,'"'
 EMPTY
 )
 
@@ -2699,71 +2698,72 @@ gdi32_glqprintpaper=: [:
 gdi32_glqprintwh=: [:
 gdi32_glroundr=: [:
 NB qt gl2
-qt_glarc=: (libjqt,' glarc >',(IFWIN#'+'),' i *i') cd <
-qt_glbrush=: (libjqt,' glbrush >',(IFWIN#'+'),' i')&cd bind ''
-qt_glbrushnull=: (libjqt,' glbrushnull >',(IFWIN#'+'),' i')&cd bind ''
-qt_glcapture=: (libjqt,' glcapture >',(IFWIN#'+'),' i i')&cd
-qt_glcaret=: (libjqt,' glcaret >',(IFWIN#'+'),' i *i') cd <
-qt_glclear=: (libjqt,' glclear >',(IFWIN#'+'),' i')&cd bind ''
-qt_glclip=: (libjqt,' glclip >',(IFWIN#'+'),' i *i') cd <
-qt_glclipreset=: (libjqt,' glclipreset >',(IFWIN#'+'),' i')&cd bind ''
-qt_glcmds=: (libjqt,' glcmds >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glcursor=: (libjqt,' glcursor >',(IFWIN#'+'),' i i')&cd
-qt_glellipse=: (libjqt,' glellipse >',(IFWIN#'+'),' i *i') cd <
-qt_glfont=: (libjqt,' glfont >',(IFWIN#'+'),' i *c') cd <@,
-qt_glfont2=: (libjqt,' glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glfontangle=: (libjqt,' glfontangle >',(IFWIN#'+'),' i i')&cd
-qt_gllines=: (libjqt,' gllines >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glnodblbuf=: (libjqt,' glnodblbuf >',(IFWIN#'+'),' i i')&cd
-qt_glpaint=: (libjqt,' glpaint >',(IFWIN#'+'),' i')&cd bind ''
-qt_glpaintx=: (libjqt,' glpaintx >',(IFWIN#'+'),' i')&cd bind ''
-qt_glpen=: (libjqt,' glpen >',(IFWIN#'+'),' i *i') cd <@:(2&{.)
-qt_glpie=: (libjqt,' glpie >',(IFWIN#'+'),' i *i') cd <
-qt_glpixel=: (libjqt,' glpixel >',(IFWIN#'+'),' i *i') cd <
-qt_glpixels=: (libjqt,' glpixels >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glpixelsx=: (libjqt,' glpixelsx >',(IFWIN#'+'),' i *i') cd <
-qt_glpolygon=: (libjqt,' glpolygon >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glrect=: (libjqt,' glrect >',(IFWIN#'+'),' i *i') cd <
-qt_glrgb=: (libjqt,' glrgb >',(IFWIN#'+'),' i *i') cd <
-qt_glsel=: (libjqt,' glsel >',(IFWIN#'+'),' i x')&cd
-qt_glsel2=: (libjqt,' glsel2 >',(IFWIN#'+'),' i *c') cd <@,
-qt_gltext=: (libjqt,' gltext >',(IFWIN#'+'),' i *c') cd <@,
-qt_gltextcolor=: (libjqt,' gltextcolor >',(IFWIN#'+'),' i')&cd bind ''
-qt_gltextxy=: (libjqt,' gltextxy >',(IFWIN#'+'),' i *i') cd <
-qt_glwindoworg=: (libjqt,' glwindoworg >',(IFWIN#'+'),' i *i') cd <
+qt_glarc=: ('"',libjqt,'" glarc >',(IFWIN#'+'),' i *i') cd <
+qt_glbrush=: ('"',libjqt,'" glbrush >',(IFWIN#'+'),' i')&cd bind ''
+qt_glbrushnull=: ('"',libjqt,'" glbrushnull >',(IFWIN#'+'),' i')&cd bind ''
+qt_glcapture=: ('"',libjqt,'" glcapture >',(IFWIN#'+'),' i i')&cd
+qt_glcaret=: ('"',libjqt,'" glcaret >',(IFWIN#'+'),' i *i') cd <
+qt_glclear=: ('"',libjqt,'" glclear >',(IFWIN#'+'),' i')&cd bind ''
+qt_glclip=: ('"',libjqt,'" glclip >',(IFWIN#'+'),' i *i') cd <
+qt_glclipreset=: ('"',libjqt,'" glclipreset >',(IFWIN#'+'),' i')&cd bind ''
+qt_glcmds=: ('"',libjqt,'" glcmds >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glcursor=: ('"',libjqt,'" glcursor >',(IFWIN#'+'),' i i')&cd
+qt_glellipse=: ('"',libjqt,'" glellipse >',(IFWIN#'+'),' i *i') cd <
+qt_glfont=: ('"',libjqt,'" glfont >',(IFWIN#'+'),' i *c') cd <@,
+qt_glfont2=: ('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glfontangle=: ('"',libjqt,'" glfontangle >',(IFWIN#'+'),' i i')&cd
+qt_gllines=: ('"',libjqt,'" gllines >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glnodblbuf=: ('"',libjqt,'" glnodblbuf >',(IFWIN#'+'),' i i')&cd
+qt_glpaint=: ('"',libjqt,'" glpaint >',(IFWIN#'+'),' i')&cd bind ''
+qt_glpaintx=: ('"',libjqt,'" glpaintx >',(IFWIN#'+'),' i')&cd bind ''
+qt_glpen=: ('"',libjqt,'" glpen >',(IFWIN#'+'),' i *i') cd <@:(2&{.)
+qt_glpie=: ('"',libjqt,'" glpie >',(IFWIN#'+'),' i *i') cd <
+qt_glpixel=: ('"',libjqt,'" glpixel >',(IFWIN#'+'),' i *i') cd <
+qt_glpixels=: ('"',libjqt,'" glpixels >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glpixelsx=: ('"',libjqt,'" glpixelsx >',(IFWIN#'+'),' i *i') cd <
+qt_glpolygon=: ('"',libjqt,'" glpolygon >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glrect=: ('"',libjqt,'" glrect >',(IFWIN#'+'),' i *i') cd <
+qt_glrgb=: ('"',libjqt,'" glrgb >',(IFWIN#'+'),' i *i') cd <
+qt_glsel=: ('"',libjqt,'" glsel >',(IFWIN#'+'),' i x')&cd
+qt_glsel2=: ('"',libjqt,'" glsel2 >',(IFWIN#'+'),' i *c') cd <@,
+qt_gltext=: ('"',libjqt,'" gltext >',(IFWIN#'+'),' i *c') cd <@,
+qt_gltextcolor=: ('"',libjqt,'" gltextcolor >',(IFWIN#'+'),' i')&cd bind ''
+qt_gltextxy=: ('"',libjqt,'" gltextxy >',(IFWIN#'+'),' i *i') cd <
+qt_glwindoworg=: ('"',libjqt,'" glwindoworg >',(IFWIN#'+'),' i *i') cd <
+
+qt_glsetlocale=: ('"',libjqt,'" glsetlocale >',(IFWIN#'+'),' i *c') cd <@,
 qt_glqhandles=: 3 : 0"1
 hs=. 3#2-2
-(libjqt,' glqhandles >',(IFWIN#'+'),' i *i') cd <hs
+('"',libjqt,'" glqhandles >',(IFWIN#'+'),' i *i') cd <hs
 hs
 )
 qt_glqwh=: 3 : 0"1
 wh=. 2#2-2
-(libjqt,' glqwh >',(IFWIN#'+'),' i *i') cd <wh
+('"',libjqt,'" glqwh >',(IFWIN#'+'),' i *i') cd <wh
 wh
 )
 qt_glqpixels=: 3 : 0"1
 n=. */ 2{.2}.y
 pix=. n#2-2
-(libjqt,' glqpixels >',(IFWIN#'+'),' i *i *i') cd y;pix
+('"',libjqt,'" glqpixels >',(IFWIN#'+'),' i *i *i') cd y;pix
 pix
 )
 qt_glqextent=: 3 : 0"1
 wh=. 2#2-2
-(libjqt,' glqextent >',(IFWIN#'+'),' i *c *i') cd (,y);wh
+('"',libjqt,'" glqextent >',(IFWIN#'+'),' i *c *i') cd (,y);wh
 wh
 )
 qt_glqextentw=: 3 : 0"1
 y=. y,(LF~:{:y)#LF [ y=. ,y
 w=. (+/LF=y)#2-2
-(libjqt,' glqextentw >',(IFWIN#'+'),' i *c *i') cd y;w
+('"',libjqt,'" glqextentw >',(IFWIN#'+'),' i *c *i') cd y;w
 w
 )
 qt_glqtextmetrics=: 3 : 0"1
 tm=. 7#2-2
-(libjqt,' glqtextmetrics >',(IFWIN#'+'),' i *i') cd tm
+('"',libjqt,'" glqtextmetrics >',(IFWIN#'+'),' i *i') cd tm
 tm
 )
-qt_glsetlocale=: [:
 qt_glsetbrush=: qt_glbrush @ qt_glrgb
 qt_glsetpen=: qt_glpen @ ((1 0 [ qt_glrgb) :((2 {. [) qt_glrgb))
 qt_glprint=: [:
