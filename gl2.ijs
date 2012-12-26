@@ -251,7 +251,7 @@ RGBA=: 3 : 'r (23 b.) 8 (33 b.) g (23 b.) 8 (33 b.) b (23 b.) 8 (33 b.) a [ ''r 
 BGRA=: 3 : 'b (23 b.) 8 (33 b.) g (23 b.) 8 (33 b.) r (23 b.) 8 (33 b.) a [ ''r g b a''=. <.y'
 
 3 : 0''
-if. -.IFQT do. libjqt=: '' end.
+if. -.IFQT do. libjqt=: 'libjqt' end.
 if. IFQT do.
   coinsert'jqt'
 elseif. 'Android'-:UNAME do.
@@ -2731,7 +2731,7 @@ qt_gltextcolor=: ('"',libjqt,'" gltextcolor >',(IFWIN#'+'),' i')&cd bind ''
 qt_gltextxy=: ('"',libjqt,'" gltextxy >',(IFWIN#'+'),' i *i') cd <
 qt_glwindoworg=: ('"',libjqt,'" glwindoworg >',(IFWIN#'+'),' i *i') cd <
 
-qt_glsetlocale=: ('"',libjqt,'" glsetlocale >',(IFWIN#'+'),' i *c') cd <@,
+qt_glsetlocale=: ('"',libjqt,'" glsetlocale >',(IFWIN#'+'),' i *c') cd <@,@>
 qt_glqhandles=: 3 : 0"1
 hs=. 3#2-2
 ('"',libjqt,'" glqhandles >',(IFWIN#'+'),' i *i') cd <hs
