@@ -2706,32 +2706,36 @@ qt_glcaret=: ('"',libjqt,'" glcaret >',(IFWIN#'+'),' i *i') cd <
 qt_glclear=: ('"',libjqt,'" glclear >',(IFWIN#'+'),' i')&cd bind ''
 qt_glclip=: ('"',libjqt,'" glclip >',(IFWIN#'+'),' i *i') cd <
 qt_glclipreset=: ('"',libjqt,'" glclipreset >',(IFWIN#'+'),' i')&cd bind ''
-qt_glcmds=: ('"',libjqt,'" glcmds >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glcmds=: ('"',libjqt,'" glcmds >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
 qt_glcursor=: ('"',libjqt,'" glcursor >',(IFWIN#'+'),' i i')&cd
-qt_glellipse=: ('"',libjqt,'" glellipse >',(IFWIN#'+'),' i *i') cd <
+qt_glellipse=: ('"',libjqt,'" glellipse >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glfont=: ('"',libjqt,'" glfont >',(IFWIN#'+'),' i *c') cd <@,
-qt_glfont2=: ('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)
+qt_glfont2=: ('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
 qt_glfontangle=: ('"',libjqt,'" glfontangle >',(IFWIN#'+'),' i i')&cd
 qt_gllines=: ('"',libjqt,'" gllines >',(IFWIN#'+'),' i *i i') cd (;#)
 qt_glnodblbuf=: ('"',libjqt,'" glnodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0)
-qt_glpaint=: ('"',libjqt,'" glpaint >',(IFWIN#'+'),' i')&cd bind ''
 qt_glpaintx=: ('"',libjqt,'" glpaintx >',(IFWIN#'+'),' i')&cd bind ''
 qt_glpen=: ('"',libjqt,'" glpen >',(IFWIN#'+'),' i *i') cd <@:(2&{.)
 qt_glpie=: ('"',libjqt,'" glpie >',(IFWIN#'+'),' i *i') cd <
 qt_glpixel=: ('"',libjqt,'" glpixel >',(IFWIN#'+'),' i *i') cd <
-qt_glpixels=: ('"',libjqt,'" glpixels >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glpixelsx=: ('"',libjqt,'" glpixelsx >',(IFWIN#'+'),' i *i') cd <
-qt_glpolygon=: ('"',libjqt,'" glpolygon >',(IFWIN#'+'),' i *i i') cd (;#)
-qt_glrect=: ('"',libjqt,'" glrect >',(IFWIN#'+'),' i *i') cd <
-qt_glrgb=: ('"',libjqt,'" glrgb >',(IFWIN#'+'),' i *i') cd <
+qt_glpixels=: ('"',libjqt,'" glpixels >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
+qt_glpixelsx=: ('"',libjqt,'" glpixelsx >',(IFWIN#'+'),' i *i') cd <@:<.
+qt_glpolygon=: ('"',libjqt,'" glpolygon >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
+qt_glrect=: ('"',libjqt,'" glrect >',(IFWIN#'+'),' i *i') cd <@:<.
+qt_glrgb=: ('"',libjqt,'" glrgb >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glsel=: ('"',libjqt,'" glsel >',(IFWIN#'+'),' i x')&cd
 qt_glsel2=: ('"',libjqt,'" glsel2 >',(IFWIN#'+'),' i *c') cd <@,
 qt_gltext=: ('"',libjqt,'" gltext >',(IFWIN#'+'),' i *c') cd <@,
 qt_gltextcolor=: ('"',libjqt,'" gltextcolor >',(IFWIN#'+'),' i')&cd bind ''
-qt_gltextxy=: ('"',libjqt,'" gltextxy >',(IFWIN#'+'),' i *i') cd <
-qt_glwindoworg=: ('"',libjqt,'" glwindoworg >',(IFWIN#'+'),' i *i') cd <
+qt_gltextxy=: ('"',libjqt,'" gltextxy >',(IFWIN#'+'),' i *i') cd <@:<.
+qt_glwindoworg=: ('"',libjqt,'" glwindoworg >',(IFWIN#'+'),' i *i') cd <@:<.
 
 qt_glsetlocale=: ('"',libjqt,'" glsetlocale >',(IFWIN#'+'),' i *c') cd <@,@>
+qt_glpaint=: 3 : 0 "1
+if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
+('"',libjqt,'" glpaint >',(IFWIN#'+'),' i')&cd ''
+0
+)
 qt_glqhandles=: 3 : 0"1
 hs=. 3#2-2
 ('"',libjqt,'" glqhandles >',(IFWIN#'+'),' i *i') cd <hs
