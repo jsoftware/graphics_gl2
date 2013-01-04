@@ -2714,7 +2714,6 @@ qt_glfont2=: ('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
 qt_glfontangle=: ('"',libjqt,'" glfontangle >',(IFWIN#'+'),' i i')&cd
 qt_gllines=: ('"',libjqt,'" gllines >',(IFWIN#'+'),' i *i i') cd (;#)
 qt_glnodblbuf=: ('"',libjqt,'" glnodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0)
-qt_glpaintx=: ('"',libjqt,'" glpaintx >',(IFWIN#'+'),' i')&cd bind ''
 qt_glpen=: ('"',libjqt,'" glpen >',(IFWIN#'+'),' i *i') cd <@:(2&{.)
 qt_glpie=: ('"',libjqt,'" glpie >',(IFWIN#'+'),' i *i') cd <
 qt_glpixel=: ('"',libjqt,'" glpixel >',(IFWIN#'+'),' i *i') cd <
@@ -2734,6 +2733,11 @@ qt_glsetlocale=: ('"',libjqt,'" glsetlocale >',(IFWIN#'+'),' i *c') cd <@,@>
 qt_glpaint=: 3 : 0 "1
 if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
 ('"',libjqt,'" glpaint >',(IFWIN#'+'),' i')&cd ''
+0
+)
+qt_glpaintx=: 3 : 0 "1
+if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
+('"',libjqt,'" glpaintx >',(IFWIN#'+'),' i')&cd ''
 0
 )
 qt_glqhandles=: 3 : 0"1
