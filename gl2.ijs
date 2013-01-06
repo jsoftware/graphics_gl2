@@ -2698,6 +2698,10 @@ gdi32_glqprintpaper=: [:
 gdi32_glqprintwh=: [:
 gdi32_glroundr=: [:
 NB qt gl2
+
+rpcinfinity=: 3 : 0
+<. 0 (I.(_=y)+.__=y)}y
+)
 qt_glarc=: ('"',libjqt,'" glarc >',(IFWIN#'+'),' i *i') cd <
 qt_glbrush=: ('"',libjqt,'" glbrush >',(IFWIN#'+'),' i')&cd bind ''
 qt_glbrushnull=: ('"',libjqt,'" glbrushnull >',(IFWIN#'+'),' i')&cd bind ''
@@ -2706,7 +2710,7 @@ qt_glcaret=: ('"',libjqt,'" glcaret >',(IFWIN#'+'),' i *i') cd <
 qt_glclear=: ('"',libjqt,'" glclear >',(IFWIN#'+'),' i')&cd bind ''
 qt_glclip=: ('"',libjqt,'" glclip >',(IFWIN#'+'),' i *i') cd <
 qt_glclipreset=: ('"',libjqt,'" glclipreset >',(IFWIN#'+'),' i')&cd bind ''
-qt_glcmds=: ('"',libjqt,'" glcmds >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
+qt_glcmds=: ('"',libjqt,'" glcmds >',(IFWIN#'+'),' i *i i') cd (;#)@:rpcinfinity
 qt_glcursor=: ('"',libjqt,'" glcursor >',(IFWIN#'+'),' i i')&cd
 qt_glellipse=: ('"',libjqt,'" glellipse >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glfont=: ('"',libjqt,'" glfont >',(IFWIN#'+'),' i *c') cd <@,
@@ -2720,7 +2724,7 @@ qt_glpixel=: ('"',libjqt,'" glpixel >',(IFWIN#'+'),' i *i') cd <
 qt_glpixels=: ('"',libjqt,'" glpixels >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
 qt_glpixelsx=: ('"',libjqt,'" glpixelsx >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glpolygon=: ('"',libjqt,'" glpolygon >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
-qt_glrect=: ('"',libjqt,'" glrect >',(IFWIN#'+'),' i *i') cd <@:<.
+qt_glrect=: ('"',libjqt,'" glrect >',(IFWIN#'+'),' i *i') cd <@:rpcinfinity
 qt_glrgb=: ('"',libjqt,'" glrgb >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glsel=: ('"',libjqt,'" glsel >',(IFWIN#'+'),' i x')&cd
 qt_glsel2=: ('"',libjqt,'" glsel2 >',(IFWIN#'+'),' i *c') cd <@,
