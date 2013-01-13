@@ -16,6 +16,7 @@ if. 0~: 4!:0 <'GL2Backend_j_' do. GL2Backend_j_=: 0 end.
 if. 0~: 4!:0 <'GL2ExtGlcmds_j_' do. GL2ExtGlcmds_j_=: 1 end.
 
 if. IFQT do.
+  RGBSEQ_j_=: 1
   GL2Backend=: 3
   GL2ExtGlcmds=: GL2ExtGlcmds_j_
   locGL2_jgl2_=: <'jglcanvas'
