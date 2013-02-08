@@ -983,7 +983,7 @@ if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
 )
 qt_glqhandles=: 3 : 0"1
 hs=. 3#2-2
-('"',libjqt,'" glqhandles >',(IFWIN#'+'),' i *i') cd <hs
+('"',libjqt,'" glqhandles >',(IFWIN#'+'),' i *x') cd <hs
 hs
 )
 qt_glqwh=: 3 : 0"1
