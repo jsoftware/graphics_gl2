@@ -95,6 +95,7 @@ glnoerasebkgnd_n=: 2071
 
 glfont2_n=: 2312
 glfontangle_n=: 2342
+glrgba_n=: 2343
 3 : 0''
 if. IFQT+.'Android'-:UNAME do.
   kbBS=: 0
@@ -155,6 +156,7 @@ glqtextmetrics=: 3 : 'glqtextmetrics__l y [[ l=. locGL2_jgl2_'
 glqwh=: 3 : 'glqwh__l y [[ l=. locGL2_jgl2_'
 glrect=: 3 : 'glrect__l y [[ l=. locGL2_jgl2_'
 glrgb=: 3 : 'glrgb__l y [[ l=. locGL2_jgl2_'
+glrgba=: 3 : 'glrgba__l y [[ l=. locGL2_jgl2_'
 glroundr=: 3 : 'glroundr__l y [[ l=. locGL2_jgl2_'
 glsetbrush=: 3 : 'glsetbrush__l y [[ l=. locGL2_jgl2_'
 glsetlocale=: 3 : 'glsetlocale__l y [[ l=. locGL2_jgl2_'
@@ -580,6 +582,7 @@ while. p<#y do.
   case. glqwh_n_jgl2_ do. ''
   case. glrect_n_jgl2_ do. and_glrect dat
   case. glrgb_n_jgl2_ do. and_glrgb dat
+  case. glrgba_n_jgl2_ do. and_glrgba dat
   case. glroundr_n_jgl2_ do. and_glroundr dat
   case. glsel_n_jgl2_ do. ''
   case. gltext_n_jgl2_ do. and_gltext dat{a.
@@ -647,6 +650,11 @@ andfontangle=: <.y
 and_glrgb=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 andrgb=: BGRA`RGBA@.RGBSEQ_j_ 255,~ y
+0
+)
+and_glrgba=: 3 : 0 "1
+if. iOPENGL=gloption do. 0 return. end.
+andrgb=: BGRA`RGBA@.RGBSEQ_j_ y
 0
 )
 and_gllines=: 3 : 0 "1
@@ -963,6 +971,7 @@ qt_glpixelsx=: ('"',libjqt,'" glpixelsx >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glpolygon=: ('"',libjqt,'" glpolygon >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
 qt_glrect=: ('"',libjqt,'" glrect >',(IFWIN#'+'),' i *i') cd <@:rpcinfinity
 qt_glrgb=: ('"',libjqt,'" glrgb >',(IFWIN#'+'),' i *i') cd <@:<.
+qt_glrgba=: ('"',libjqt,'" glrgba >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glsel=: ('"',libjqt,'" glsel >',(IFWIN#'+'),' i x')&cd
 qt_glsel2=: ('"',libjqt,'" glsel2 >',(IFWIN#'+'),' i *c') cd <@,
 qt_gltext=: ('"',libjqt,'" gltext >',(IFWIN#'+'),' i *c') cd <@,
@@ -1183,6 +1192,7 @@ glqtextmetrics=: (and_glqtextmetrics`qt_glqtextmetrics@.GL2Backend_jgl2_)`(glqte
 glqwh=: (and_glqwh`qt_glqwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
 glrect=: (and_glrect`qt_glrect@.GL2Backend_jgl2_)`(glrect_n_jgl2_&glbuf)@.glqmark
 glrgb=: (and_glrgb`qt_glrgb@.GL2Backend_jgl2_)`(glrgb_n_jgl2_&glbuf)@.glqmark
+glrgba=: (and_glrgba`qt_glrgba@.GL2Backend_jgl2_)`(glrgba_n_jgl2_&glbuf)@.glqmark
 glsetbrush=: (and_glsetbrush`qt_glsetbrush@.GL2Backend_jgl2_)`(glsetbrush_n_jgl2_&glbuf)@.glqmark
 glsetlocale=: (and_glsetlocale`qt_glsetlocale@.GL2Backend_jgl2_)`(glsetlocale_n_jgl2_&glbuf)@.0:
 glsetpen=: (and_glsetpen`qt_glsetpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@.0:
