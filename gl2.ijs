@@ -97,7 +97,27 @@ glfont2_n=: 2312
 glfontangle_n=: 2342
 glrgba_n=: 2343
 3 : 0''
-if. IFQT+.'Android'-:UNAME do.
+if. IFQT do.
+  kbINS=: 6
+  kbBS=: 8
+  kbTAB=: 9
+  kbLF=: 10
+  kbENTER=: 13
+  kbHOME=: 16
+  kbEND=: 17
+  kbLEFT=: 18
+  kbUP=: 19
+  kbRIGHT=: 20
+  kbDOWN=: 21
+  kbPUP=: 22
+  kbPDOWN=: 23
+  kbESC=: 27
+  kbSHIFT=: 32
+  kbCTRL=: 33
+  kbMETA=: 34
+  kbALT=: 35
+  kbDEL=: 127
+elseif. 'Android'-:UNAME do.
   kbBS=: 0
   kbLF=: 0
   kbENTER=: 0
