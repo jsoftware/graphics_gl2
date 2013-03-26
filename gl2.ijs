@@ -98,29 +98,32 @@ glfontangle_n=: 2342
 glrgba_n=: 2343
 3 : 0''
 if. IFQT do.
-  kbINS=: 6
-  kbBS=: 8
-  kbTAB=: 9
-  kbLF=: 10
-  kbENTER=: 13
-  kbHOME=: 16
-  kbEND=: 17
-  kbLEFT=: 18
-  kbUP=: 19
-  kbRIGHT=: 20
-  kbDOWN=: 21
-  kbPUP=: 22
-  kbPDOWN=: 23
-  kbESC=: 27
-  kbSHIFT=: 32
-  kbCTRL=: 33
-  kbMETA=: 34
-  kbALT=: 35
-  kbDEL=: 127
+  kbBS =: Qt_Key_Backspace_jqtide_
+  kbTAB=: Qt_Key_Tab_jqtide_
+  kbLF =: Qt_Key_Enter_jqtide_
+  kbENTER =: Qt_Key_Enter_jqtide_
+  kbRETURN =: Qt_Key_Return_jqtide_
+  kbPUP =: Qt_Key_PageUp_jqtide_
+  kbPDOWN =: Qt_Key_PageDown_jqtide_
+  kbEND =: Qt_Key_End_jqtide_
+  kbHOME =: Qt_Key_Home_jqtide_
+  kbLEFT =: Qt_Key_Left_jqtide_
+  kbUP =: Qt_Key_Up_jqtide_
+  kbRIGHT =: Qt_Key_Right_jqtide_
+  kbDOWN =: Qt_Key_Down_jqtide_
+  kbESC =: Qt_Key_Escape_jqtide_
+  kbINS =: Qt_Key_Insert_jqtide_
+  kbDEL =: Qt_Key_Delete_jqtide_
+  kbMETA =: Qt_Key_Meta_jqtide_
+  kbALT =: Qt_Key_Alt_jqtide_
+  kbSHIFT =: Qt_Key_Shift_jqtide_
+  kbCTRL =: Qt_Key_Control_jqtide_
 elseif. 'Android'-:UNAME do.
   kbBS=: 0
+  kbTAB=: 0
   kbLF=: 0
   kbENTER=: 0
+  kbRETURN =: 0
   kbPUP=: 0
   kbPDOWN=: 0
   kbEND=: 0
@@ -132,6 +135,10 @@ elseif. 'Android'-:UNAME do.
   kbESC=: 0
   kbINS=: 0
   kbDEL=: 0
+  kbMETA =: 0
+  kbALT =: 0
+  kbSHIFT =: 0
+  kbCTRL =: 0
 end.
 EMPTY
 )
