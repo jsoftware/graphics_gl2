@@ -1,5 +1,5 @@
 require 'graphics/color/rgb'
-require^:(('Android'-:UNAME)>IFQT) 'gui/android'
+require^:IFJCDROID 'gui/android'
 
 coclass 'jgl2'
 
@@ -267,7 +267,7 @@ LIBGLCMDS=: ''
 EMPTY
 )
 
-jniImport ::0:^:(('Android'-:UNAME)>IFQT) (0 : 0)
+jniImport ::0:^:IFJCDROID (0 : 0)
 android.content.Context
 android.graphics.Bitmap
 android.graphics.Bitmap$Config
@@ -302,7 +302,7 @@ stash_state=: 0
 stash_buf=: 0$0
 canvaslocale=: 0 2$<''
 create=: 3 : 0
-if. ('Android'-:UNAME)>IFQT do.
+if. IFJCDROID do.
   'w h option context'=. 4{.y
   assert. 0~: context
   idn=. CANVASIDN_jglcanvas_=: >:CANVASIDN_jglcanvas_
