@@ -28,7 +28,7 @@ graphics/gl2 - change history
   graphics/gl2: dquote LIBGLCMDS
 
 == 1.0.11 ==
-  graphics/gl2: add glpixels glpixelsx glqpixels
+  graphics/gl2: add glpixels glpixelsx glqpixels 
 
 == 1.0.12/13 ==
   graphics/gl2: gtk+3 compatible
