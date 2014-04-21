@@ -6,9 +6,9 @@ DESCRIPTION=: 0 : 0
 Base class for gl2 commands.
 )
 
-VERSION=: '1.0.66'
+VERSION=: '1.0.67'
 
-RELEASE=: 'j801'
+RELEASE=: 'j802'
 
 FILES=: 0 : 0
 gl2.ijs
