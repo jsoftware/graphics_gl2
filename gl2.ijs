@@ -58,6 +58,7 @@ glemfopen_n=: 2084
 glemfclose_n=: 2085
 glemfplay_n=: 2086
 glfile_n=: 2066
+glfill_n=: 2093
 glfont_n=: 2012
 gllines_n=: 2015
 glnodblbuf_n=: 2070
@@ -140,60 +141,61 @@ elseif. 'Android'-:UNAME do.
 end.
 EMPTY
 )
-glarc=: 3 : 'glarc__l y [[ l=. locGL2_jgl2_'
-glarcx=: 3 : 'glarcx__l y [[ l=. locGL2_jgl2_'
-glbrush=: 3 : 'glbrush__l y [[ l=. locGL2_jgl2_'
-glbrushnull=: 3 : 'glbrushnull__l y [[ l=. locGL2_jgl2_'
-glcapture=: 3 : 'glcapture__l y [[ l=. locGL2_jgl2_'
-glcaret=: 3 : 'glcaret__l y [[ l=. locGL2_jgl2_'
-glclear=: 3 : 'glclear__l y [[ l=. locGL2_jgl2_'
-glclip=: 3 : 'glclip__l y [[ l=. locGL2_jgl2_'
-glclipreset=: 3 : 'glclipreset__l y [[ l=. locGL2_jgl2_'
-glcmds=: 3 : 'glcmds__l y [[ l=. locGL2_jgl2_'
-glcmds=: 3 : 'glcmds__l y [[ l=. locGL2_jgl2_'
-glcursor=: 3 : 'glcursor__l y [[ l=. locGL2_jgl2_'
-glellipse=: 3 : 'glellipse__l y [[ l=. locGL2_jgl2_'
-glemfclose=: 3 : 'glemfclose__l y [[ l=. locGL2_jgl2_'
-glemfopen=: 3 : 'glemfopen__l y [[ l=. locGL2_jgl2_'
-glemfplay=: 3 : 'glemfplay__l y [[ l=. locGL2_jgl2_'
-glfile=: 3 : 'glfile__l y [[ l=. locGL2_jgl2_'
-glfont=: 3 : 'glfont__l y [[ l=. locGL2_jgl2_'
-glfontangle=: 3 : 'glfontangle__l y [[ l=. locGL2_jgl2_'
-gllines=: 3 : 'gllines__l y [[ l=. locGL2_jgl2_'
-glnodblbuf=: 3 : 'glnodblbuf__l y [[ l=. locGL2_jgl2_'
-glpaint=: 3 : 'glpaint__l y [[ l=. locGL2_jgl2_'
-glpaintx=: 3 : 'glpaintx__l y [[ l=. locGL2_jgl2_'
-glpen=: 3 : 'glpen__l y [[ l=. locGL2_jgl2_'
-glpie=: 3 : 'glpie__l y [[ l=. locGL2_jgl2_'
-glpixel=: 3 : 'glpixel__l y [[ l=. locGL2_jgl2_'
-glpixels=: 3 : 'glpixels__l y [[ l=. locGL2_jgl2_'
-glpixelsx=: 3 : 'glpixelsx__l y [[ l=. locGL2_jgl2_'
-glpolygon=: 3 : 'glpolygon__l y [[ l=. locGL2_jgl2_'
-glprint=: 3 : 'glprint__l y [[ l=. locGL2_jgl2_'
-glprintmore=: 3 : 'glprintmore__l y [[ l=. locGL2_jgl2_'
-glqextent=: 3 : 'glqextent__l y [[ l=. locGL2_jgl2_'
-glqextentw=: 3 : 'glqextentw__l y [[ l=. locGL2_jgl2_'
-glqhandles=: 3 : 'glqhandles__l y [[ l=. locGL2_jgl2_'
-glqpixels=: 3 : 'glqpixels__l y [[ l=. locGL2_jgl2_'
-glqprintpaper=: 3 : 'glqprintpaper__l y [[ l=. locGL2_jgl2_'
-glqprintwh=: 3 : 'glqprintwh__l y [[ l=. locGL2_jgl2_'
-glqtextmetrics=: 3 : 'glqtextmetrics__l y [[ l=. locGL2_jgl2_'
-glqwh=: 3 : 'glqwh__l y [[ l=. locGL2_jgl2_'
-glrect=: 3 : 'glrect__l y [[ l=. locGL2_jgl2_'
-glrgb=: 3 : 'glrgb__l y [[ l=. locGL2_jgl2_'
-glrgba=: 3 : 'glrgba__l y [[ l=. locGL2_jgl2_'
-glroundr=: 3 : 'glroundr__l y [[ l=. locGL2_jgl2_'
-glsetbrush=: 3 : 'glsetbrush__l y [[ l=. locGL2_jgl2_'
-glsetlocale=: 3 : 'glsetlocale__l y [[ l=. locGL2_jgl2_'
-glsetpen=: 3 : 'glsetpen__l y [[ l=. locGL2_jgl2_'
-gltext=: 3 : 'gltext__l y [[ l=. locGL2_jgl2_'
-gltextcolor=: 3 : 'gltextcolor__l y [[ l=. locGL2_jgl2_'
-gltextxy=: 3 : 'gltextxy__l y [[ l=. locGL2_jgl2_'
-glwindoworg=: 3 : 'glwindoworg__l y [[ l=. locGL2_jgl2_'
-glbuf=: 3 : 'glbuf__l y [[ l=. locGL2_jgl2_'
-glmark=: 3 : 'glmark__l y [[ l=. locGL2_jgl2_'
-glqmark=: 3 : 'glqmark__l y [[ l=. locGL2_jgl2_'
-gltrash=: 3 : 'gltrash__l y [[ l=. locGL2_jgl2_'
+glarc=: glarc__locGL2
+glarcx=: glarcx__locGL2
+glbrush=: glbrush__locGL2
+glbrushnull=: glbrushnull__locGL2
+glcapture=: glcapture__locGL2
+glcaret=: glcaret__locGL2
+glclear=: glclear__locGL2
+glclip=: glclip__locGL2
+glclipreset=: glclipreset__locGL2
+glcmds=: glcmds__locGL2
+glcmds=: glcmds__locGL2
+glcursor=: glcursor__locGL2
+glellipse=: glellipse__locGL2
+glemfclose=: glemfclose__locGL2
+glemfopen=: glemfopen__locGL2
+glemfplay=: glemfplay__locGL2
+glfile=: glfile__locGL2
+glfill=: glfill__locGL2
+glfont=: glfont__locGL2
+glfontangle=: glfontangle__locGL2
+gllines=: gllines__locGL2
+glnodblbuf=: glnodblbuf__locGL2
+glpaint=: glpaint__locGL2
+glpaintx=: glpaintx__locGL2
+glpen=: glpen__locGL2
+glpie=: glpie__locGL2
+glpixel=: glpixel__locGL2
+glpixels=: glpixels__locGL2
+glpixelsx=: glpixelsx__locGL2
+glpolygon=: glpolygon__locGL2
+glprint=: glprint__locGL2
+glprintmore=: glprintmore__locGL2
+glqextent=: glqextent__locGL2
+glqextentw=: glqextentw__locGL2
+glqhandles=: glqhandles__locGL2
+glqpixels=: glqpixels__locGL2
+glqprintpaper=: glqprintpaper__locGL2
+glqprintwh=: glqprintwh__locGL2
+glqtextmetrics=: glqtextmetrics__locGL2
+glqwh=: glqwh__locGL2
+glrect=: glrect__locGL2
+glrgb=: glrgb__locGL2
+glrgba=: glrgba__locGL2
+glroundr=: glroundr__locGL2
+glsetbrush=: glsetbrush__locGL2
+glsetlocale=: glsetlocale__locGL2
+glsetpen=: glsetpen__locGL2
+gltext=: gltext__locGL2
+gltextcolor=: gltextcolor__locGL2
+gltextxy=: gltextxy__locGL2
+glwindoworg=: glwindoworg__locGL2
+glbuf=: glbuf__locGL2
+glmark=: glmark__locGL2
+glqmark=: glqmark__locGL2
+gltrash=: gltrash__locGL2
 glcanvas=: 0&$: : (4 : 0)
 'wh l'=. 2{.y
 if. 0=#>l do.
@@ -686,6 +688,7 @@ while. p<#y do.
   case. glemfopen_n_jgl2_ do. and_glemfopen dat
   case. glemfplay_n_jgl2_ do. and_glemfplay dat
   case. glfile_n_jgl2_ do. and_glfile dat{a.
+  case. glfill_n_jgl2_ do. and_glfill dat
   case. glfont_n_jgl2_ do. and_glfont dat{a.
   case. glfont2_n_jgl2_ do. and_glfont2 dat
   case. glfontangle_n_jgl2_ do. and_glfontangle dat
@@ -1088,6 +1091,7 @@ qt_glclipreset=: ('"',libjqt,'" glclipreset >',(IFWIN#'+'),' i')&cd bind ''
 qt_glcmds=: ('"',libjqt,'" glcmds >',(IFWIN#'+'),' i *i i') cd (;#)@:rpcinfinity
 qt_glcursor=: ('"',libjqt,'" glcursor >',(IFWIN#'+'),' i i')&cd
 qt_glellipse=: ('"',libjqt,'" glellipse >',(IFWIN#'+'),' i *i') cd <@:<.
+qt_glfill=: ('"',libjqt,'" glfill >',(IFWIN#'+'),' i *i') cd <@:<.
 qt_glfont=: ('"',libjqt,'" glfont >',(IFWIN#'+'),' i *c') cd <@,
 qt_glfont2=: ('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)@:<.
 qt_glfontangle=: ('"',libjqt,'" glfontangle >',(IFWIN#'+'),' i i')&cd
@@ -1303,6 +1307,7 @@ glclipreset=: (and_glclipreset`qt_glclipreset@.GL2Backend_jgl2_)`(glclipreset_n_
 glcmds=: (and_glcmds`qt_glcmds@.GL2Backend_jgl2_)`(glcmds_n_jgl2_&glbuf)@.glqmark
 glcursor=: (and_glcursor`qt_glcursor@.GL2Backend_jgl2_)`(glcursor_n_jgl2_&glbuf)@.0:
 glellipse=: (and_glellipse`qt_glellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl2_&glbuf)@.glqmark
+glfill=: (and_glfill`qt_glfill@.GL2Backend_jgl2_)`(glfill_n_jgl2_&glbuf)@.glqmark
 glfont=: (and_glfont`qt_glfont@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
 glfontangle=: (and_glfontangle`qt_glfontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
 gllines=: (and_gllines`qt_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
