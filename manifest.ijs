@@ -14,4 +14,3 @@ FILES=: 0 : 0
 gl2.ijs
 history.txt
 )
-PLATFORMS=: 'linux win darwin android'
