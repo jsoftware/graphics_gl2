@@ -269,6 +269,7 @@ gl_fontangle=: ('"',libjqt,'" gl_fontangle >',(IFWIN#'+'),' i i')&cd
 gl_lines=: ('"',libjqt,'" gl_lines >',(IFWIN#'+'),' i *i i') cd (;#)
 gl_nodblbuf=: ('"',libjqt,'" gl_nodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0)
 gl_paint=: ('"',libjqt,'" gl_paint >',(IFWIN#'+'),' i')&cd bind ''
+gl_paintx=: ('"',libjqt,'" gl_paintx >',(IFWIN#'+'),' i')&cd bind ''
 gl_pen=: ('"',libjqt,'" gl_pen >',(IFWIN#'+'),' i *i') cd <@:(2&{.)
 gl_pie=: ('"',libjqt,'" gl_pie >',(IFWIN#'+'),' i *i') cd <
 gl_pixel=: ('"',libjqt,'" gl_pixel >',(IFWIN#'+'),' i *i') cd <
