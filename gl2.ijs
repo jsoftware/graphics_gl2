@@ -22,13 +22,12 @@ end.
 GL2ExtGlcmds=: GL2ExtGlcmds_j_
 EMPTY
 )
-PS_DASH=: 1
-PS_DASHDOT=: 3
-PS_DASHDOTDOT=: 4
-PS_DOT=: 2
-PS_INSIDEFRAME=: 6
-PS_NULL=: 5
-PS_SOLID=: 0
+PS_NULL=: 0
+PS_SOLID=: 1
+PS_DASH=: 2
+PS_DOT=: 3
+PS_DASHDOT=: 4
+PS_DASHDOTDOT=: 5
 
 IDC_ARROW=: 32512
 IDC_IBEAM=: 32513
@@ -75,6 +74,7 @@ glpolygon_n=: 2029
 glqextent_n=: 2057
 glqextentw_n=: 2083
 glqpixels_n=: 2077
+glqpixelm_n=: 2080
 glqprintpaper_n=: 2092
 glqprintwh_n=: 2088
 glqtextmetrics_n=: 2058
@@ -178,6 +178,7 @@ if. #locGL2_jgl2_ do.
   glqextent=: glqextent__locGL2
   glqextentw=: glqextentw__locGL2
   glqhandles=: glqhandles__locGL2
+  glqpixelm=: glqpixelm__locGL2
   glqpixels=: glqpixels__locGL2
   glqprintpaper=: glqprintpaper__locGL2
   glqprintwh=: glqprintwh__locGL2
@@ -512,13 +513,12 @@ end.
 codestroy''
 0
 )
-PS_DASH=: 1
-PS_DASHDOT=: 3
-PS_DASHDOTDOT=: 4
-PS_DOT=: 2
-PS_INSIDEFRAME=: 6
-PS_NULL=: 5
-PS_SOLID=: 0
+PS_NULL=: 0
+PS_SOLID=: 1
+PS_DASH=: 2
+PS_DOT=: 3
+PS_DASHDOT=: 4
+PS_DASHDOTDOT=: 5
 
 IDC_ARROW=: 32512
 IDC_IBEAM=: 32513
@@ -783,6 +783,7 @@ while. p<#y do.
   case. glqextent_n_jgl2_ do. ''
   case. glqextentw_n_jgl2_ do. ''
   case. glqhandles_n_jgl2_ do. ''
+  case. glqpixelm_n_jgl2_ do. ''
   case. glqpixels_n_jgl2_ do. ''
   case. glqprintpaper_n_jgl2_ do. ''
   case. glqprintwh_n_jgl2_ do. ''
@@ -1012,6 +1013,12 @@ end.
 path ('reset ()V' jniMethod)~ ''
 0
 )
+and_glqpixelm=: 3 : 0 "1
+if. iOPENGL=gloption do. 0$0 return. end.
+assert. 0~:andcs,andpt
+'w h'=. <. 2{.2}.y
+(h,w)$and_glqpixels y
+)
 and_glqpixels=: 3 : 0 "1
 if. iOPENGL=gloption do. 0$0 return. end.
 assert. 0~:andcs,andpt
@@ -1174,7 +1181,7 @@ qt_glfont2=: chkgl2 @: (('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)
 qt_glfontangle=: chkgl2 @: (('"',libjqt,'" glfontangle >',(IFWIN#'+'),' i i')&cd)
 qt_gllines=: chkgl2 @: (('"',libjqt,'" gllines >',(IFWIN#'+'),' i *i i') cd (;#))
 qt_glnodblbuf=: chkgl2 @: (('"',libjqt,'" glnodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0))
-qt_glpen=: chkgl2 @: (('"',libjqt,'" glpen >',(IFWIN#'+'),' i *i') cd <@:(2&{.))
+qt_glpen=: chkgl2 @: (('"',libjqt,'" glpen >',(IFWIN#'+'),' i *i') cd <@:(2 {. (,&1)))
 qt_glpie=: chkgl2 @: (('"',libjqt,'" glpie >',(IFWIN#'+'),' i *i') cd <)
 qt_glpixel=: chkgl2 @: (('"',libjqt,'" glpixel >',(IFWIN#'+'),' i *i') cd <)
 qt_glpixels=: chkgl2 @: (('"',libjqt,'" glpixels >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
@@ -1210,6 +1217,13 @@ qt_glqwh=: 3 : 0"1
 wh=. 2#2-2
 chkgl2 ('"',libjqt,'" glqwh >',(IFWIN#'+'),' i *i') cd <wh
 wh
+)
+qt_glqpixelm=: 3 : 0"1
+n=. */ 2{.2}.y
+pix=. n#2-2
+shape=. 2#2-2
+chkgl2 ('"',libjqt,'" glqpixelm >',(IFWIN#'+'),' i *i *i *i') cd y;shape;pix
+shape$pix
 )
 qt_glqpixels=: 3 : 0"1
 n=. */ 2{.2}.y
@@ -1399,6 +1413,7 @@ glpixelsx=: (and_glpixelsx`qt_glpixelsx@.GL2Backend_jgl2_)`(glpixelsx_n_jgl2_&gl
 glpolygon=: (and_glpolygon`qt_glpolygon@.GL2Backend_jgl2_)`(glpolygon_n_jgl2_&glbuf)@.glqmark
 glqextent=: (and_glqextent`qt_glqextent@.GL2Backend_jgl2_)`(glqextent_n_jgl2_&glbuf)@.0:
 glqextentw=: (and_glqextentw`qt_glqextentw@.GL2Backend_jgl2_)`(glqextentw_n_jgl2_&glbuf)@.0:
+glqpixelm=: (and_glqpixelm`qt_glqpixelm@.GL2Backend_jgl2_)`(glqpixelm_n_jgl2_&glbuf)@.0:
 glqpixels=: (and_glqpixels`qt_glqpixels@.GL2Backend_jgl2_)`(glqpixels_n_jgl2_&glbuf)@.0:
 glqtextmetrics=: (and_glqtextmetrics`qt_glqtextmetrics@.GL2Backend_jgl2_)`(glqtextmetrics_n_jgl2_&glbuf)@.0:
 glqwh=: (and_glqwh`qt_glqwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
