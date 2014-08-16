@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 Base class for gl2 commands.
 )
 
-VERSION=: '1.0.73'
+VERSION=: '1.0.74'
 
 RELEASE=: 'j803'
 

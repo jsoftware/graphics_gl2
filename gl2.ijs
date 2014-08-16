@@ -1080,7 +1080,7 @@ PLocalec=: boxxopen y
 0
 )
 and_glsetbrush=: and_glbrush @ and_glrgb
-and_glsetpen=: and_glpen @ ((1 0 [ and_glrgb) :((2 {. [) and_glrgb))
+and_glsetpen=: and_glpen @ ((1 1 [ and_glrgb) :((2 {. (,&1)) and_glrgb))
 and_gltext=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:andcs,andpt
@@ -1258,7 +1258,7 @@ chkgl2 ('"',libjqt,'" glqtextmetrics >',(IFWIN#'+'),' i *i') cd tm
 tm
 )
 qt_glsetbrush=: qt_glbrush @ qt_glrgb
-qt_glsetpen=: qt_glpen @ ((1 1 [ qt_glrgb) :(2 {. (,&1)) qt_glrgb))
+qt_glsetpen=: qt_glpen @ ((1 1 [ qt_glrgb) :((2 {. (,&1)) qt_glrgb))
 qt_glprint=: [:
 qt_glprintmore=: [:
 qt_glqprintpaper=: [:
