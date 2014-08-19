@@ -59,6 +59,7 @@ glemfplay_n=: 2086
 glfile_n=: 2066
 glfill_n=: 2093
 glfont_n=: 2012
+glfontextent_n=: 2094
 gllines_n=: 2015
 glnodblbuf_n=: 2070
 glpaint_n=: 2020
@@ -163,6 +164,7 @@ if. #locGL2_jgl2_ do.
   glfill=: glfill__locGL2
   glfont=: glfont__locGL2
   glfontangle=: glfontangle__locGL2
+  glfontextent=: glfontextent__locGL2
   gllines=: gllines__locGL2
   glnodblbuf=: glnodblbuf__locGL2
   glpaint=: glpaint__locGL2
@@ -702,12 +704,12 @@ and_glclipreset''
 and_glwindoworg - andorgx, andorgy
 andorgx=: andorgy=: 0
 and_glrgb 255 255 255
-and_glpen 1 0
+and_glpen 1 1
 and_glbrush''
 and_glrect 0 0,andwh
 and_glbrushnull''
 and_glrgb 0 0 0
-and_glpen 1 0
+and_glpen 1 1
 and_gltextcolor''
 and_glfont PROFONT_jgl2_
 and_glfontangle 0
@@ -777,6 +779,7 @@ while. p<#y do.
   case. glfont_n_jgl2_ do. and_glfont dat{a.
   case. glfont2_n_jgl2_ do. and_glfont2 dat
   case. glfontangle_n_jgl2_ do. and_glfontangle dat
+  case. glfontextent_n_jgl2_ do. and_glfontextent dat{a.
   case. gllines_n_jgl2_ do. and_gllines dat
   case. glnodblbuf_n_jgl2_ do. ''
   case. glnoerasebkgnd_n_jgl2_ do. ''
@@ -1189,6 +1192,7 @@ qt_glfill=: chkgl2 @: (('"',libjqt,'" glfill >',(IFWIN#'+'),' i *i') cd <@:<.)
 qt_glfont=: chkgl2 @: (('"',libjqt,'" glfont >',(IFWIN#'+'),' i *c') cd <@,)
 qt_glfont2=: chkgl2 @: (('"',libjqt,'" glfont2 >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
 qt_glfontangle=: chkgl2 @: (('"',libjqt,'" glfontangle >',(IFWIN#'+'),' i i')&cd)
+qt_glfontextent=: chkgl2 @: (('"',libjqt,'" glfontextent >',(IFWIN#'+'),' i *c') cd <@,)
 qt_gllines=: chkgl2 @: (('"',libjqt,'" gllines >',(IFWIN#'+'),' i *i i') cd (;#))
 qt_glnodblbuf=: chkgl2 @: (('"',libjqt,'" glnodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0))
 qt_glpen=: chkgl2 @: (('"',libjqt,'" glpen >',(IFWIN#'+'),' i *i') cd <@:(2 {. (,&1)))
@@ -1411,6 +1415,7 @@ glellipse=: (and_glellipse`qt_glellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl2_&gl
 glfill=: (and_glfill`qt_glfill@.GL2Backend_jgl2_)`(glfill_n_jgl2_&glbuf)@.glqmark
 glfont=: (and_glfont`qt_glfont@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
 glfontangle=: (and_glfontangle`qt_glfontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
+glfontextent=: (and_glfontextent`qt_glfontextent@.GL2Backend_jgl2_)`(glfontextent_n_jgl2_&glbuf)@.glqmark
 gllines=: (and_gllines`qt_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
 glnodblbuf=: (and_glnodblbuf`qt_glnodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
 glpaint=: (and_glpaint`qt_glpaint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
