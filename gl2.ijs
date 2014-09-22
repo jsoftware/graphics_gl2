@@ -545,6 +545,8 @@ IDC_SIZEALL=: 32646
 IDC_NO=: 32648
 IDC_APPSTARTING=: 32650
 IDC_HELP=: 32651
+NB.! sysdata for move and button events needs work
+NB.! double click may need work
 view_onLayout=: 3 : 0
 jniCheck changed=. '' ('booleanValue ()Z' jniMethod) ochanged=. GetObjectArrayElement (3{y);0
 jniCheck DeleteLocalRef <ochanged
@@ -649,6 +651,7 @@ end.
 destroy ''
 )
 NB cairo gl2
+NB.! should not be same as pie - should not use brush
 and_glarc=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 assert. 0~:andcs,andpt
@@ -932,7 +935,7 @@ and_glpen=: 3 : 0 "1
 if. iOPENGL=gloption do. 0 return. end.
 andpenrgb=: andrgb
 penwidth=. 1.3 >.{.y
-penstyle=. {:y
+penstyle=. {:y NB.! use it
 jniCheck andpt ('setStrokeWidth (F)V' jniMethod)~ penwidth
 0
 )
