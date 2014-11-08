@@ -204,9 +204,9 @@ if. #locGL2_jgl2_ do.
 end.
 EMPTY
 )
-alpha23_z_=: (23 b.) & (0 (26 b.) 16bffffff)
-
-
+setalpha_z_=: 16bff&$: : (4 : 0)
+((_32&(34 b.))^:IF64 _8 (32 b.) x)&(23 b.) 16bffffff (17 b.) y
+)
 glcanvas=: 0&$: : (4 : 0)
 'wh l'=. 2{.y
 if. 0=#>l do.
