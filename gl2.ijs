@@ -1,4 +1,5 @@
 require^:IFJCDROID 'gui/android'
+require^:IFQT 'ide/qt/keys'
 
 coclass 'jgl2'
 
