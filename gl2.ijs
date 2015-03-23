@@ -30,19 +30,29 @@ PS_DOT=: 3
 PS_DASHDOT=: 4
 PS_DASHDOTDOT=: 5
 
-IDC_ARROW=: 32512
-IDC_IBEAM=: 32513
-IDC_WAIT=: 32514
-IDC_CROSS=: 32515
-IDC_UPARROW=: 32516
-IDC_SIZENWSE=: 32642
-IDC_SIZENESW=: 32643
-IDC_SIZEWE=: 32644
-IDC_SIZENS=: 32645
-IDC_SIZEALL=: 32646
-IDC_NO=: 32648
-IDC_APPSTARTING=: 32650
-IDC_HELP=: 32651
+IDC_ARROW=: 0
+IDC_UPARROW=: 1
+IDC_CROSS=: 2
+IDC_WAIT=: 3
+IDC_IBEAM=: 4
+IDC_SIZEVER=: 5
+IDC_SIZEHOR=: 6
+IDC_SIZEBDIAG=: 7
+IDC_SIZEFDIAG=: 8
+IDC_SIZEALL=: 9
+IDC_BLANK=: 10
+IDC_SPLITV=: 11
+IDC_SPLITH=: 12
+IDC_POINTINGHAND=: 13
+IDC_FORBIDDEN=: 14
+IDC_OPENHAND=: 17
+IDC_CLOSEDHAND=: 18
+IDC_WHATSTHIS=: 15
+IDC_BUSY=: 16
+IDC_DRAGMOVE=: 20
+IDC_DRAGCOPY=: 19
+IDC_DRAGLINK=: 21
+IDC_UNSET=: _1
 glarc_n=: 2001
 glbrush_n=: 2004
 glbrushnull_n=: 2005
@@ -99,32 +109,32 @@ glfontangle_n=: 2342
 glrgba_n=: 2343
 3 : 0''
 if. IFQT do.
-  kbBS =: Qt_Key_Backspace_jqtide_
+  kbBS=: Qt_Key_Backspace_jqtide_
   kbTAB=: Qt_Key_Tab_jqtide_
-  kbLF =: Qt_Key_Enter_jqtide_
-  kbENTER =: Qt_Key_Enter_jqtide_
-  kbRETURN =: Qt_Key_Return_jqtide_
-  kbPUP =: Qt_Key_PageUp_jqtide_
-  kbPDOWN =: Qt_Key_PageDown_jqtide_
-  kbEND =: Qt_Key_End_jqtide_
-  kbHOME =: Qt_Key_Home_jqtide_
-  kbLEFT =: Qt_Key_Left_jqtide_
-  kbUP =: Qt_Key_Up_jqtide_
-  kbRIGHT =: Qt_Key_Right_jqtide_
-  kbDOWN =: Qt_Key_Down_jqtide_
-  kbESC =: Qt_Key_Escape_jqtide_
-  kbINS =: Qt_Key_Insert_jqtide_
-  kbDEL =: Qt_Key_Delete_jqtide_
-  kbMETA =: Qt_Key_Meta_jqtide_
-  kbALT =: Qt_Key_Alt_jqtide_
-  kbSHIFT =: Qt_Key_Shift_jqtide_
-  kbCTRL =: Qt_Key_Control_jqtide_
+  kbLF=: Qt_Key_Enter_jqtide_
+  kbENTER=: Qt_Key_Enter_jqtide_
+  kbRETURN=: Qt_Key_Return_jqtide_
+  kbPUP=: Qt_Key_PageUp_jqtide_
+  kbPDOWN=: Qt_Key_PageDown_jqtide_
+  kbEND=: Qt_Key_End_jqtide_
+  kbHOME=: Qt_Key_Home_jqtide_
+  kbLEFT=: Qt_Key_Left_jqtide_
+  kbUP=: Qt_Key_Up_jqtide_
+  kbRIGHT=: Qt_Key_Right_jqtide_
+  kbDOWN=: Qt_Key_Down_jqtide_
+  kbESC=: Qt_Key_Escape_jqtide_
+  kbINS=: Qt_Key_Insert_jqtide_
+  kbDEL=: Qt_Key_Delete_jqtide_
+  kbMETA=: Qt_Key_Meta_jqtide_
+  kbALT=: Qt_Key_Alt_jqtide_
+  kbSHIFT=: Qt_Key_Shift_jqtide_
+  kbCTRL=: Qt_Key_Control_jqtide_
 elseif. 'Android'-:UNAME do.
   kbBS=: 0
   kbTAB=: 0
   kbLF=: 0
   kbENTER=: 0
-  kbRETURN =: 0
+  kbRETURN=: 0
   kbPUP=: 0
   kbPDOWN=: 0
   kbEND=: 0
@@ -136,10 +146,10 @@ elseif. 'Android'-:UNAME do.
   kbESC=: 0
   kbINS=: 0
   kbDEL=: 0
-  kbMETA =: 0
-  kbALT =: 0
-  kbSHIFT =: 0
-  kbCTRL =: 0
+  kbMETA=: 0
+  kbALT=: 0
+  kbSHIFT=: 0
+  kbCTRL=: 0
 end.
 EMPTY
 )
@@ -526,26 +536,6 @@ end.
 codestroy''
 0
 )
-PS_NULL=: 0
-PS_SOLID=: 1
-PS_DASH=: 2
-PS_DOT=: 3
-PS_DASHDOT=: 4
-PS_DASHDOTDOT=: 5
-
-IDC_ARROW=: 32512
-IDC_IBEAM=: 32513
-IDC_WAIT=: 32514
-IDC_CROSS=: 32515
-IDC_UPARROW=: 32516
-IDC_SIZENWSE=: 32642
-IDC_SIZENESW=: 32643
-IDC_SIZEWE=: 32644
-IDC_SIZENS=: 32645
-IDC_SIZEALL=: 32646
-IDC_NO=: 32648
-IDC_APPSTARTING=: 32650
-IDC_HELP=: 32651
 NB.! sysdata for move and button events needs work
 NB.! double click may need work
 view_onLayout=: 3 : 0
