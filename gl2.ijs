@@ -272,7 +272,7 @@ rpcinfinity=: 3 : 0
 <. 0 (I.(_=y)+.__=y)}y
 )
 
-chkgl2=: 13!:8@(3"_)^:(0&~:)
+chkgl2=: 13!:8@3:^:(0&~:)
 gl_arc=: chkgl2 @: (('"',libjqt,'" gl_arc >',(IFWIN#'+'),' i *i') cd <)
 gl_brush=: chkgl2 @: (('"',libjqt,'" gl_brush >',(IFWIN#'+'),' i')&cd bind '')
 gl_brushnull=: chkgl2 @: (('"',libjqt,'" gl_brushnull >',(IFWIN#'+'),' i')&cd bind '')
@@ -1170,7 +1170,7 @@ rpcinfinity=: 3 : 0
 <. 0 (I.(_=y)+.__=y)}y
 )
 
-chkgl2=: 13!:8@(3"_)^:(0&~:)
+chkgl2=: 13!:8@3:^:(0&~:)
 qt_glarc=: chkgl2 @: (('"',libjqt,'" glarc >',(IFWIN#'+'),' i *i') cd <)
 qt_glbrush=: chkgl2 @: (('"',libjqt,'" glbrush >',(IFWIN#'+'),' i')&cd bind '')
 qt_glbrushnull=: chkgl2 @: (('"',libjqt,'" glbrushnull >',(IFWIN#'+'),' i')&cd bind '')
