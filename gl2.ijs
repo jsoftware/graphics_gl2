@@ -18,6 +18,7 @@ if. IFQT do.
   locGL2_jgl2_=: <'jglcanvas'
 elseif. IFJA do.
   GL2Backend=: 1
+  RGBSEQ_j_=: 1
   locGL2_jgl2_=: <'jglcanvas'
 elseif. 'Android'-:UNAME do.
   GL2Backend=: 0
