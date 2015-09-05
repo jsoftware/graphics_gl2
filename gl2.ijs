@@ -281,84 +281,235 @@ else.
 end.
 EMPTY
 )
+gl_arc=: (qtgl_arc`jagl_arc@.GL2Backend_jgl2_)`(glarc_n_jgl2_&glbuf)@.glqmark
+gl_arcx=: (qtgl_arcx`jagl_arcx@.GL2Backend_jgl2_)`(glarcx_n_jgl2_&glbuf)@.glqmark
+gl_brush=: (qtgl_brush`jagl_brush@.GL2Backend_jgl2_)`(glbrush_n_jgl2_&glbuf)@.glqmark
+gl_brushnull=: (qtgl_brushnull`jagl_brushnull@.GL2Backend_jgl2_)`(glbrushnull_n_jgl2_&glbuf)@.glqmark
+gl_capture=: (qtgl_capture`jagl_capture@.GL2Backend_jgl2_)`(glcapture_n_jgl2_&glbuf)@.0:
+gl_caret=: (qtgl_caret`jagl_caret@.GL2Backend_jgl2_)`(glcaret_n_jgl2_&glbuf)@.0:
+gl_clear=: (qtgl_clear`jagl_clear@.GL2Backend_jgl2_)`(glclear_n_jgl2_&glbuf)@.glqmark
+gl_clip=: (qtgl_clip`jagl_clip@.GL2Backend_jgl2_)`(glclip_n_jgl2_&glbuf)@.glqmark
+gl_clipreset=: (qtgl_clipreset`jagl_clipreset@.GL2Backend_jgl2_)`(glclipreset_n_jgl2_&glbuf)@.glqmark
+gl_cmds=: (qtgl_cmds`jagl_cmds@.GL2Backend_jgl2_)`(glcmds_n_jgl2_&glbuf)@.glqmark
+gl_cursor=: (qtgl_cursor`jagl_cursor@.GL2Backend_jgl2_)`(glcursor_n_jgl2_&glbuf)@.0:
+gl_ellipse=: (qtgl_ellipse`jagl_ellipse@.GL2Backend_jgl2_)`(glellipse_n_jgl2_&glbuf)@.glqmark
+gl_fill=: (qtgl_fill`jagl_fill@.GL2Backend_jgl2_)`(glfill_n_jgl2_&glbuf)@.glqmark
+gl_font=: (qtgl_font`jagl_font@.GL2Backend_jgl2_)`(glfont_n_jgl2_&glbuf)@.glqmark
+gl_fontangle=: (qtgl_fontangle`jagl_fontangle@.GL2Backend_jgl2_)`(glfontangle_n_jgl2_&glbuf)@.glqmark
+gl_fontextent=: (qtgl_fontextent`jagl_fontextent@.GL2Backend_jgl2_)`(glfontextent_n_jgl2_&glbuf)@.glqmark
+gl_lines=: (qtgl_lines`jagl_lines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
+gl_nodblbuf=: (qtgl_nodblbuf`jagl_nodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
+gl_paint=: (qtgl_paint`jagl_paint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
+gl_paintx=: (qtgl_paintx`jagl_paintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
+gl_pen=: (qtgl_pen`jagl_pen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
+gl_pie=: (qtgl_pie`jagl_pie@.GL2Backend_jgl2_)`(glpie_n_jgl2_&glbuf)@.glqmark
+gl_pixel=: (qtgl_pixel`jagl_pixel@.GL2Backend_jgl2_)`(glpixel_n_jgl2_&glbuf)@.glqmark
+gl_pixels=: (qtgl_pixels`jagl_pixels@.GL2Backend_jgl2_)`(glpixels_n_jgl2_&glbuf)@.glqmark
+gl_pixelsx=: (qtgl_pixelsx`jagl_pixelsx@.GL2Backend_jgl2_)`(glpixelsx_n_jgl2_&glbuf)@.glqmark
+gl_polygon=: (qtgl_polygon`jagl_polygon@.GL2Backend_jgl2_)`(glpolygon_n_jgl2_&glbuf)@.glqmark
+gl_qextent=: (qtgl_qextent`jagl_qextent@.GL2Backend_jgl2_)`(glqextent_n_jgl2_&glbuf)@.0:
+gl_qextentw=: (qtgl_qextentw`jagl_qextentw@.GL2Backend_jgl2_)`(glqextentw_n_jgl2_&glbuf)@.0:
+gl_qpixelm=: (qtgl_qpixelm`jagl_qpixelm@.GL2Backend_jgl2_)`(glqpixelm_n_jgl2_&glbuf)@.0:
+gl_qpixels=: (qtgl_qpixels`jagl_qpixels@.GL2Backend_jgl2_)`(glqpixels_n_jgl2_&glbuf)@.0:
+gl_qtextmetrics=: (qtgl_qtextmetrics`jagl_qtextmetrics@.GL2Backend_jgl2_)`(glqtextmetrics_n_jgl2_&glbuf)@.0:
+gl_qtype=: (qtgl_qtype`jagl_qtype@.GL2Backend_jgl2_)`(glqtype_n_jgl2_&glbuf)@.0:
+gl_qwh=: (qtgl_qwh`jagl_qwh@.GL2Backend_jgl2_)`(glqwh_n_jgl2_&glbuf)@.0:
+gl_rect=: (qtgl_rect`jagl_rect@.GL2Backend_jgl2_)`(glrect_n_jgl2_&glbuf)@.glqmark
+gl_rgb=: (qtgl_rgb`jagl_rgb@.GL2Backend_jgl2_)`(glrgb_n_jgl2_&glbuf)@.glqmark
+gl_rgba=: (qtgl_rgba`jagl_rgba@.GL2Backend_jgl2_)`(glrgba_n_jgl2_&glbuf)@.glqmark
+gl_sel=: (qtgl_sel`jagl_sel@.GL2Backend_jgl2_)`(glsel_n_jgl2_&glbuf)@.glqmark
+gl_sel2=: (qtgl_sel2`jagl_sel2@.GL2Backend_jgl2_)`(glsel2_n_jgl2_&glbuf)@.glqmark
+gl_setbrush=: (qtgl_setbrush`jagl_setbrush@.GL2Backend_jgl2_)`(glsetbrush_n_jgl2_&glbuf)@.glqmark
+gl_setlocale=: (qtgl_setlocale`jagl_setlocale@.GL2Backend_jgl2_)`(glsetlocale_n_jgl2_&glbuf)@.0:
+gl_setpen=: (qtgl_setpen`jagl_setpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@.0:
+gl_text=: (qtgl_text`jagl_text@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
+gl_textcolor=: (qtgl_textcolor`jagl_textcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
+gl_textxy=: (qtgl_textxy`jagl_textxy@.GL2Backend_jgl2_)`(gltextxy_n_jgl2_&glbuf)@.glqmark
+gl_windoworg=: (qtgl_windoworg`jagl_windoworg@.GL2Backend_jgl2_)`(glwindoworg_n_jgl2_&glbuf)@.glqmark
+gl_print=: qtgl_print`jagl_print@.GL2Backend_jgl2_
+gl_printmore=: qtgl_printmore`jagl_printmore@.GL2Backend_jgl2_
+gl_qhandles=: qtgl_qhandles`jagl_qhandles@.GL2Backend_jgl2_
+gl_qprintpaper=: qtgl_qprintpaper`jagl_qprintpaper@.GL2Backend_jgl2_
+gl_qprintwh=: qtgl_qprintwh`jagl_qprintwh@.GL2Backend_jgl2_
+gl_emfclose=: qtgl_emfclose`jagl_emfclose@.GL2Backend_jgl2_
+gl_emfopen=: qtgl_emfopen`jagl_emfopen@.GL2Backend_jgl2_
+gl_emfplay=: qtgl_emfplay`jagl_emfplay@.GL2Backend_jgl2_
+gl_file=: qtgl_file`jagl_file@.GL2Backend_jgl2_
+gl_roundr=: qtgl_roundr`jagl_roundr@.GL2Backend_jgl2_
 glsel=: glsel1`glsel2@.(2=3!:0)
 rpcinfinity=: 3 : 0
 <. 0 (I.(_=y)+.__=y)}y
 )
 
-chkgl2=: 13!:8@3:^:(0&<)
-gl_arc=: chkgl2 @: (('"',libjqt,'" gl_arc >',(IFWIN#'+'),' i *i') cd <)
-gl_brush=: chkgl2 @: (('"',libjqt,'" gl_brush >',(IFWIN#'+'),' i')&cd bind '')
-gl_brushnull=: chkgl2 @: (('"',libjqt,'" gl_brushnull >',(IFWIN#'+'),' i')&cd bind '')
-gl_capture=: chkgl2 @: (('"',libjqt,'" gl_capture >',(IFWIN#'+'),' i i')&cd)
-gl_caret=: chkgl2 @: (('"',libjqt,'" gl_caret >',(IFWIN#'+'),' i *i') cd <)
-gl_clear=: chkgl2 @: (('"',libjqt,'" gl_clear >',(IFWIN#'+'),' i')&cd bind '')
-gl_clip=: chkgl2 @: (('"',libjqt,'" gl_clip >',(IFWIN#'+'),' i *i') cd <)
-gl_clipreset=: chkgl2 @: (('"',libjqt,'" gl_clipreset >',(IFWIN#'+'),' i')&cd bind '')
-gl_cmds=: chkgl2 @: (('"',libjqt,'" gl_cmds >',(IFWIN#'+'),' i *i i') cd (;#)@:rpcinfinity)
-gl_cursor=: chkgl2 @: (('"',libjqt,'" gl_cursor >',(IFWIN#'+'),' i i')&cd)
-gl_ellipse=: chkgl2 @: (('"',libjqt,'" gl_ellipse >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_fill=: chkgl2 @: (('"',libjqt,'" gl_fill >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_font=: chkgl2 @: (('"',libjqt,'" gl_font >',(IFWIN#'+'),' i *c') cd <@,)
-gl_font2=: chkgl2 @: (('"',libjqt,'" gl_font2 >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
-gl_fontangle=: chkgl2 @: (('"',libjqt,'" gl_fontangle >',(IFWIN#'+'),' i i')&cd)
-gl_lines=: chkgl2 @: (('"',libjqt,'" gl_lines >',(IFWIN#'+'),' i *i i') cd (;#))
-gl_nodblbuf=: chkgl2 @: (('"',libjqt,'" gl_nodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0))
-gl_paint=: chkgl2 @: (('"',libjqt,'" gl_paint >',(IFWIN#'+'),' i')&cd bind '')
-gl_paintx=: chkgl2 @: (('"',libjqt,'" gl_paintx >',(IFWIN#'+'),' i')&cd bind '')
-gl_pen=: chkgl2 @: (('"',libjqt,'" gl_pen >',(IFWIN#'+'),' i *i') cd <@:(2&{.))
-gl_pie=: chkgl2 @: (('"',libjqt,'" gl_pie >',(IFWIN#'+'),' i *i') cd <)
-gl_pixel=: chkgl2 @: (('"',libjqt,'" gl_pixel >',(IFWIN#'+'),' i *i') cd <)
-gl_pixels=: chkgl2 @: (('"',libjqt,'" gl_pixels >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
-gl_pixelsx=: chkgl2 @: (('"',libjqt,'" gl_pixelsx >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_polygon=: chkgl2 @: (('"',libjqt,'" gl_polygon >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
-gl_rect=: chkgl2 @: (('"',libjqt,'" gl_rect >',(IFWIN#'+'),' i *i') cd <@:rpcinfinity)
-gl_rgb=: chkgl2 @: (('"',libjqt,'" gl_rgb >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_rgba=: chkgl2 @: (('"',libjqt,'" gl_rgba >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_sel=: chkgl2 @: (('"',libjqt,'" gl_sel >',(IFWIN#'+'),' i x')&cd)
-gl_sel2=: chkgl2 @: (('"',libjqt,'" gl_sel2 >',(IFWIN#'+'),' i *c') cd <@,)
-gl_text=: chkgl2 @: (('"',libjqt,'" gl_text >',(IFWIN#'+'),' i *c') cd <@,)
-gl_textcolor=: chkgl2 @: (('"',libjqt,'" gl_textcolor >',(IFWIN#'+'),' i')&cd bind '')
-gl_textxy=: chkgl2 @: (('"',libjqt,'" gl_textxy >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_windoworg=: chkgl2 @: (('"',libjqt,'" gl_windoworg >',(IFWIN#'+'),' i *i') cd <@:<.)
-gl_updategl=: chkgl2 @: (('"',libjqt,'" gl_updategl >',(IFWIN#'+'),' i x')&cd)
+jaadverbc=: 1 : 0
+ogl_jni_ (2+#y), m, <.y
+)
 
-gl_setlocale=: chkgl2 @: (('"',libjqt,'" gl_setlocale >',(IFWIN#'+'),' i *c') cd <@,@>)
-gl_qhandles=: 3 : 0"1
+chkgl2=: 13!:8@3:^:(0&<)
+jagl_arc=: chkgl2 @: ((glarc_n_jgl2_ jaadverbc))
+jagl_brush=: chkgl2 @: ((glbrush_n_jgl2_ jaadverbc) bind '')
+jagl_brushnull=: chkgl2 @: ((glbrushnull_n_jgl2_ jaadverbc) bind '')
+jagl_capture=: chkgl2 @: ((glcapture_n_jgl2_ jaadverbc))
+jagl_caret=: chkgl2 @: ((glcaret_n_jgl2_ jaadverbc))
+jagl_clear=: chkgl2 @: ((glclear_n_jgl2_ jaadverbc) bind '')
+jagl_clip=: chkgl2 @: ((glclip_n_jgl2_ jaadverbc))
+jagl_clipreset=: chkgl2 @: ((glclipreset_n_jgl2_ jaadverbc) bind '')
+jagl_cmds=: chkgl2 @: ((glcmds_n_jgl2_ jaadverbc)@:rpcinfinity)
+jagl_cursor=: chkgl2 @: ((glcursor_n_jgl2_ jaadverbc))
+jagl_ellipse=: chkgl2 @: ((glellipse_n_jgl2_ jaadverbc))
+jagl_fill=: chkgl2 @: ((glfill_n_jgl2_ jaadverbc))
+jagl_font=: chkgl2 @: ((glfont_n_jgl2_ jaadverbc)@:(a.&i.)@,)
+jagl_font2=: chkgl2 @: ((glfont2_n_jgl2_ jaadverbc))
+jagl_fontangle=: chkgl2 @: ((glfontangle_n_jgl2_ jaadverbc))
+jagl_fontextent=: chkgl2 @: ((glfontextent_n_jgl2_ jaadverbc)@:(a.&i.)@,)
+jagl_lines=: chkgl2 @: ((gllines_n_jgl2_ jaadverbc))
+jagl_nodblbuf=: chkgl2 @: ((glnodblbuf_n_jgl2_ jaadverbc)@:{.@(,&0))
+jagl_pen=: chkgl2 @: ((glpen_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
+jagl_paint=: chkgl2 @: ((glpaint_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
+jagl_paintx=: chkgl2 @: ((glpaintx_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
+jagl_pie=: chkgl2 @: ((glpie_n_jgl2_ jaadverbc))
+jagl_pixel=: chkgl2 @: ((glpixel_n_jgl2_ jaadverbc))
+jagl_pixels=: chkgl2 @: ((glpixels_n_jgl2_ jaadverbc))
+jagl_pixelsx=: chkgl2 @: ((glpixelsx_n_jgl2_ jaadverbc))
+jagl_polygon=: chkgl2 @: ((glpolygon_n_jgl2_ jaadverbc))
+jagl_rect=: chkgl2 @: ((glrect_n_jgl2_ jaadverbc)@:rpcinfinity)
+jagl_rgb=: chkgl2 @: ((glrgb_n_jgl2_ jaadverbc))
+jagl_rgba=: chkgl2 @: ((glrgba_n_jgl2_ jaadverbc))
+jagl_sel=: chkgl2 @: ((glsel_n_jgl2_ jaadverbc))
+jagl_sel2=: chkgl2 @: ((glsel2_n_jgl2_ jaadverbc)@:(a.&i.)@,)
+jagl_text=: chkgl2 @: ((gltext_n_jgl2_ jaadverbc)@:(a.&i.)@,)
+jagl_textcolor=: chkgl2 @: ((gltextcolor_n_jgl2_ jaadverbc) bind '')
+jagl_textxy=: chkgl2 @: ((gltextxy_n_jgl2_ jaadverbc))
+jagl_windoworg=: chkgl2 @: ((glwindoworg_n_jgl2_ jaadverbc))
+
+jagl_setlocale=: chkgl2 @: ((glsetlocale_n_jgl2_ jaadverbc)@:(a.&i.)@,)
+jagl_qhandles=: 3 : 0"1
+chkgl2 (glqhandles_n_jgl2_ jaadverbc)$0
+glresult_jgl2_
+)
+jagl_qtype=: 3 : 0"1
+chkgl2 (glqtype_n_jgl2_ jaadverbc)$0
+glresult_jgl2_
+)
+jagl_qwh=: 3 : 0"1
+chkgl2 (glqwh_n_jgl2_ jaadverbc)$0
+glresult_jgl2_
+)
+jagl_qpixelm=: 3 : 0"1
+n=. */ 2{.2}.y
+pix=. n#2-2
+shape=. 2#2-2
+chkgl2 (glqpixelm_n_jgl2_ jaadverbc) y
+shape$pix
+)
+jagl_qpixels=: 3 : 0"1
+n=. */ 2{.2}.y
+pix=. n#2-2
+chkgl2 (glqpixels_n_jgl2_ jaadverbc) y
+glresult_jgl2_
+)
+jagl_qextent=: 3 : 0"1
+chkgl2 (glqextent_n_jgl2_ jaadverbc) a.&i. ,y
+glresult_jgl2_
+)
+jagl_qextentw=: 3 : 0"1
+y=. y,(LF~:{:y)#LF [ y=. ,y
+w=. (+/LF=y)#2-2
+chkgl2 (glqextentw_n_jgl2_ jaadverbc) a.&i. ,y
+glresult_jgl2_
+)
+jagl_qtextmetrics=: 3 : 0"1
+chkgl2 (glqtextmetrics_n_jgl2_ jaadverbc)$0
+glresult_jgl2_
+)
+jagl_setbrush=: gl_arcbrush @ gl_arcrgb
+jagl_setpen=: gl_arcpen @ ((1 1 [ gl_arcrgb) :((2 {. (,&1)) gl_arcrgb))
+jagl_print=: [:
+jagl_printmore=: [:
+jagl_qprintpaper=: [:
+jagl_qprintwh=: [:
+jagl_emfclose=: [:
+jagl_emfopen=: [:
+jagl_emfplay=: [:
+jagl_file=: [:
+jagl_roundr=: [:
+rpcinfinity=: 3 : 0
+<. 0 (I.(_=y)+.__=y)}y
+)
+
+chkgl2=: 13!:8@3:^:(0&<)
+qtgl_arc=: chkgl2 @: (('"',libjqt,'" gl_arc >',(IFWIN#'+'),' i *i') cd <)
+qtgl_brush=: chkgl2 @: (('"',libjqt,'" gl_brush >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_brushnull=: chkgl2 @: (('"',libjqt,'" gl_brushnull >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_capture=: chkgl2 @: (('"',libjqt,'" gl_capture >',(IFWIN#'+'),' i i')&cd)
+qtgl_caret=: chkgl2 @: (('"',libjqt,'" gl_caret >',(IFWIN#'+'),' i *i') cd <)
+qtgl_clear=: chkgl2 @: (('"',libjqt,'" gl_clear >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_clip=: chkgl2 @: (('"',libjqt,'" gl_clip >',(IFWIN#'+'),' i *i') cd <)
+qtgl_clipreset=: chkgl2 @: (('"',libjqt,'" gl_clipreset >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_cmds=: chkgl2 @: (('"',libjqt,'" gl_cmds >',(IFWIN#'+'),' i *i i') cd (;#)@:rpcinfinity)
+qtgl_cursor=: chkgl2 @: (('"',libjqt,'" gl_cursor >',(IFWIN#'+'),' i i')&cd)
+qtgl_ellipse=: chkgl2 @: (('"',libjqt,'" gl_ellipse >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_fill=: chkgl2 @: (('"',libjqt,'" gl_fill >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_font=: chkgl2 @: (('"',libjqt,'" gl_font >',(IFWIN#'+'),' i *c') cd <@,)
+qtgl_font2=: chkgl2 @: (('"',libjqt,'" gl_font2 >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
+qtgl_fontangle=: chkgl2 @: (('"',libjqt,'" gl_fontangle >',(IFWIN#'+'),' i i')&cd)
+qtgl_lines=: chkgl2 @: (('"',libjqt,'" gl_lines >',(IFWIN#'+'),' i *i i') cd (;#))
+qtgl_nodblbuf=: chkgl2 @: (('"',libjqt,'" gl_nodblbuf >',(IFWIN#'+'),' i i') cd {.@(,&0))
+qtgl_paint=: chkgl2 @: (('"',libjqt,'" gl_paint >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_paintx=: chkgl2 @: (('"',libjqt,'" gl_paintx >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_pen=: chkgl2 @: (('"',libjqt,'" gl_pen >',(IFWIN#'+'),' i *i') cd <@:(2&{.))
+qtgl_pie=: chkgl2 @: (('"',libjqt,'" gl_pie >',(IFWIN#'+'),' i *i') cd <)
+qtgl_pixel=: chkgl2 @: (('"',libjqt,'" gl_pixel >',(IFWIN#'+'),' i *i') cd <)
+qtgl_pixels=: chkgl2 @: (('"',libjqt,'" gl_pixels >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
+qtgl_pixelsx=: chkgl2 @: (('"',libjqt,'" gl_pixelsx >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_polygon=: chkgl2 @: (('"',libjqt,'" gl_polygon >',(IFWIN#'+'),' i *i i') cd (;#)@:<.)
+qtgl_rect=: chkgl2 @: (('"',libjqt,'" gl_rect >',(IFWIN#'+'),' i *i') cd <@:rpcinfinity)
+qtgl_rgb=: chkgl2 @: (('"',libjqt,'" gl_rgb >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_rgba=: chkgl2 @: (('"',libjqt,'" gl_rgba >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_sel=: chkgl2 @: (('"',libjqt,'" gl_sel >',(IFWIN#'+'),' i x')&cd)
+qtgl_sel2=: chkgl2 @: (('"',libjqt,'" gl_sel2 >',(IFWIN#'+'),' i *c') cd <@,)
+qtgl_text=: chkgl2 @: (('"',libjqt,'" gl_text >',(IFWIN#'+'),' i *c') cd <@,)
+qtgl_textcolor=: chkgl2 @: (('"',libjqt,'" gl_textcolor >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_textxy=: chkgl2 @: (('"',libjqt,'" gl_textxy >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_windoworg=: chkgl2 @: (('"',libjqt,'" gl_windoworg >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_updategl=: chkgl2 @: (('"',libjqt,'" gl_updategl >',(IFWIN#'+'),' i x')&cd)
+
+qtgl_setlocale=: chkgl2 @: (('"',libjqt,'" gl_setlocale >',(IFWIN#'+'),' i *c') cd <@,@>)
+qtgl_qhandles=: 3 : 0"1
 hs=. 3#2-2
 chkgl2 ('"',libjqt,'" gl_qhandles >',(IFWIN#'+'),' i *x') cd <hs
 hs
 )
-gl_qwh=: 3 : 0"1
+qtgl_qwh=: 3 : 0"1
 wh=. 2#2-2
 chkgl2 ('"',libjqt,'" gl_qwh >',(IFWIN#'+'),' i *i') cd <wh
 wh
 )
-gl_qpixelm=: 3 : 0"1
+qtgl_qpixelm=: 3 : 0"1
 n=. */ 2{.2}.y
 pix=. n#2-2
 shape=. 2#2-2
 chkgl2 ('"',libjqt,'" gl_qpixelm >',(IFWIN#'+'),' i *i *i *i') cd y;shape;pix
 shape$pix
 )
-gl_qpixels=: 3 : 0"1
+qtgl_qpixels=: 3 : 0"1
 n=. */ 2{.2}.y
 pix=. n#2-2
 chkgl2 ('"',libjqt,'" gl_qpixels >',(IFWIN#'+'),' i *i *i') cd y;pix
 pix
 )
-gl_qextent=: 3 : 0"1
+qtgl_qextent=: 3 : 0"1
 wh=. 2#2-2
 chkgl2 ('"',libjqt,'" gl_qextent >',(IFWIN#'+'),' i *c *i') cd (,y);wh
 wh
 )
-gl_qextentw=: 3 : 0"1
+qtgl_qextentw=: 3 : 0"1
 y=. y,(LF~:{:y)#LF [ y=. ,y
 w=. (+/LF=y)#2-2
 chkgl2 ('"',libjqt,'" gl_qextentw >',(IFWIN#'+'),' i *c *i') cd y;w
 w
 )
-gl_qtextmetrics=: 3 : 0"1
+qtgl_qtextmetrics=: 3 : 0"1
 tm=. 7#2-2
 chkgl2 ('"',libjqt,'" gl_qtextmetrics >',(IFWIN#'+'),' i *i') cd tm
 tm
