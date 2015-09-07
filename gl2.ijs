@@ -111,6 +111,8 @@ glfont2_n=: 2312
 glfontangle_n=: 2342
 glrgba_n=: 2343
 glsel2_n=: 2344
+glwaitgl_n=: 2345
+glwaitnative_n=: 2346
 3 : 0''
 if. IFQT do.
   kbBS=: Qt_Key_Backspace_jqtide_
@@ -325,6 +327,8 @@ gl_setpen=: (qtgl_setpen`jagl_setpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)
 gl_text=: (qtgl_text`jagl_text@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
 gl_textcolor=: (qtgl_textcolor`jagl_textcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
 gl_textxy=: (qtgl_textxy`jagl_textxy@.GL2Backend_jgl2_)`(gltextxy_n_jgl2_&glbuf)@.glqmark
+gl_waitgl=: (qtgl_waitgl`jagl_waitgl@.GL2Backend_jgl2_)`(glwaitgl_n_jgl2_&glbuf)@.glqmark
+gl_waitnative=: (qtgl_waitnative`jagl_waitnative@.GL2Backend_jgl2_)`(glwaitnative_n_jgl2_&glbuf)@.glqmark
 gl_windoworg=: (qtgl_windoworg`jagl_windoworg@.GL2Backend_jgl2_)`(glwindoworg_n_jgl2_&glbuf)@.glqmark
 gl_print=: qtgl_print`jagl_print@.GL2Backend_jgl2_
 gl_printmore=: qtgl_printmore`jagl_printmore@.GL2Backend_jgl2_
@@ -380,6 +384,8 @@ jagl_sel2=: chkgl2 @: ((glsel2_n_jgl2_ jaadverbc)@:(a.&i.)@,)
 jagl_text=: chkgl2 @: ((gltext_n_jgl2_ jaadverbc)@:(a.&i.)@,)
 jagl_textcolor=: chkgl2 @: ((gltextcolor_n_jgl2_ jaadverbc) bind '')
 jagl_textxy=: chkgl2 @: ((gltextxy_n_jgl2_ jaadverbc))
+jagl_waitgl=: chkgl2 @: ((glwaitgl_n_jgl2_ jaadverbc) bind '')
+jagl_waitnative=: chkgl2 @: ((glwaitnative_n_jgl2_ jaadverbc) bind '')
 jagl_windoworg=: chkgl2 @: ((glwindoworg_n_jgl2_ jaadverbc))
 
 jagl_setlocale=: chkgl2 @: ((glsetlocale_n_jgl2_ jaadverbc)@:(a.&i.)@,)
@@ -471,6 +477,8 @@ qtgl_sel2=: chkgl2 @: (('"',libjqt,'" gl_sel2 >',(IFWIN#'+'),' i *c') cd <@,)
 qtgl_text=: chkgl2 @: (('"',libjqt,'" gl_text >',(IFWIN#'+'),' i *c') cd <@,)
 qtgl_textcolor=: chkgl2 @: (('"',libjqt,'" gl_textcolor >',(IFWIN#'+'),' i')&cd bind '')
 qtgl_textxy=: chkgl2 @: (('"',libjqt,'" gl_textxy >',(IFWIN#'+'),' i *i') cd <@:<.)
+qtgl_waitgl=: chkgl2 @: (('"',libjqt,'" gl_waitgl >',(IFWIN#'+'),' i')&cd bind '')
+qtgl_waitnative=: chkgl2 @: (('"',libjqt,'" gl_waitnative >',(IFWIN#'+'),' i')&cd bind '')
 qtgl_windoworg=: chkgl2 @: (('"',libjqt,'" gl_windoworg >',(IFWIN#'+'),' i *i') cd <@:<.)
 qtgl_updategl=: chkgl2 @: (('"',libjqt,'" gl_updategl >',(IFWIN#'+'),' i x')&cd)
 
@@ -680,6 +688,8 @@ ja_glsel2=: chkgl2 @: ((glsel2_n_jgl2_ jaadverbb)@:(a.&i.)@,)
 ja_gltext=: chkgl2 @: ((gltext_n_jgl2_ jaadverbb)@:(a.&i.)@,)
 ja_gltextcolor=: chkgl2 @: ((gltextcolor_n_jgl2_ jaadverbb) bind '')
 ja_gltextxy=: chkgl2 @: ((gltextxy_n_jgl2_ jaadverbb))
+ja_glwaitgl=: chkgl2 @: ((glwaitgl_n_jgl2_ jaadverbb) bind '')
+ja_glwaitnative=: chkgl2 @: ((glwaitnative_n_jgl2_ jaadverbb) bind '')
 ja_glwindoworg=: chkgl2 @: ((glwindoworg_n_jgl2_ jaadverbb))
 
 ja_glsetlocale=: chkgl2 @: ((glsetlocale_n_jgl2_ jaadverbb)@:(a.&i.)@,)
@@ -782,6 +792,8 @@ qt_glsel2=: chkgl2 @: (('"',libjqt,'" glsel2 >',(IFWIN#'+'),' i *c') cd <@,)
 qt_gltext=: chkgl2 @: (('"',libjqt,'" gltext >',(IFWIN#'+'),' i *c') cd <@,)
 qt_gltextcolor=: chkgl2 @: (('"',libjqt,'" gltextcolor >',(IFWIN#'+'),' i')&cd bind '')
 qt_gltextxy=: chkgl2 @: (('"',libjqt,'" gltextxy >',(IFWIN#'+'),' i *i') cd <@:<.)
+qt_glwaitgl=: chkgl2 @: (('"',libjqt,'" glwaitgl >',(IFWIN#'+'),' i')&cd bind '')
+qt_glwaitnative=: chkgl2 @: (('"',libjqt,'" glwaitnative >',(IFWIN#'+'),' i')&cd bind '')
 qt_glwindoworg=: chkgl2 @: (('"',libjqt,'" glwindoworg >',(IFWIN#'+'),' i *i') cd <@:<.)
 
 qt_glsetlocale=: chkgl2 @: (('"',libjqt,'" glsetlocale >',(IFWIN#'+'),' i *c') cd <@,@>)
@@ -993,6 +1005,8 @@ glsetpen=: (qt_glsetpen`ja_glsetpen@.GL2Backend_jgl2_)`(glsetpen_n_jgl2_&glbuf)@
 gltext=: (qt_gltext`ja_gltext@.GL2Backend_jgl2_)`(gltext_n_jgl2_&glbuf)@.glqmark
 gltextcolor=: (qt_gltextcolor`ja_gltextcolor@.GL2Backend_jgl2_)`(gltextcolor_n_jgl2_&glbuf)@.glqmark
 gltextxy=: (qt_gltextxy`ja_gltextxy@.GL2Backend_jgl2_)`(gltextxy_n_jgl2_&glbuf)@.glqmark
+glwaitgl=: (qt_glwaitgl`ja_glwaitgl@.GL2Backend_jgl2_)`(glwaitgl_n_jgl2_&glbuf)@.glqmark
+glwaitnative=: (qt_glwaitnative`ja_glwaitnative@.GL2Backend_jgl2_)`(glwaitnative_n_jgl2_&glbuf)@.glqmark
 glwindoworg=: (qt_glwindoworg`ja_glwindoworg@.GL2Backend_jgl2_)`(glwindoworg_n_jgl2_&glbuf)@.glqmark
 glprint=: qt_glprint`ja_glprint@.GL2Backend_jgl2_
 glprintmore=: qt_glprintmore`ja_glprintmore@.GL2Backend_jgl2_
