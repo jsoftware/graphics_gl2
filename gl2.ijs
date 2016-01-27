@@ -22,6 +22,10 @@ elseif. IFJA do.
   locGL2_jgl2_=: <'jglcanvas'
 elseif. 'Android'-:UNAME do.
   GL2Backend=: 0
+elseif. do.
+  RGBSEQ_j_=: 1
+  GL2Backend=: 0
+  locGL2_jgl2_=: <'jgl2'
 end.
 EMPTY
 )
@@ -1018,3 +1022,4 @@ glemfopen=: qt_glemfopen`ja_glemfopen@.GL2Backend_jgl2_
 glemfplay=: qt_glemfplay`ja_glemfplay@.GL2Backend_jgl2_
 glfile=: qt_glfile`ja_glfile@.GL2Backend_jgl2_
 glroundr=: qt_glroundr`ja_glroundr@.GL2Backend_jgl2_
+finalize_jgl2_^:(3=(4!:0)@<) 'finalize_jgl2_'
