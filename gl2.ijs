@@ -80,7 +80,6 @@ glfontextent_n=: 2094
 gllines_n=: 2015
 glnodblbuf_n=: 2070
 glpaint_n=: 2020
-glpaints_n=: 2096
 glpaintx_n=: 2021
 glpen_n=: 2022
 glpie_n=: 2023
@@ -190,7 +189,6 @@ if. IFJA +. IFQT *. 0~:#locGL2_jgl2_ do.
   gllines=: gllines__locGL2
   glnodblbuf=: glnodblbuf__locGL2
   glpaint=: glpaint__locGL2
-  glpaints=: glpaints__locGL2
   glpaintx=: glpaintx__locGL2
   glpen=: glpen__locGL2
   glpie=: glpie__locGL2
@@ -251,7 +249,6 @@ else.
   gllines=: 3 : 'gllines__l y [[ l=. locGL2_jgl2_'
   glnodblbuf=: 3 : 'glnodblbuf__l y [[ l=. locGL2_jgl2_'
   glpaint=: 3 : 'glpaint__l y [[ l=. locGL2_jgl2_'
-  glpaints=: 3 : 'glpaints__l y [[ l=. locGL2_jgl2_'
   glpaintx=: 3 : 'glpaintx__l y [[ l=. locGL2_jgl2_'
   glpen=: 3 : 'glpen__l y [[ l=. locGL2_jgl2_'
   glpie=: 3 : 'glpie__l y [[ l=. locGL2_jgl2_'
@@ -309,7 +306,6 @@ gl_fontextent=: (qtgl_fontextent`jagl_fontextent@.GL2Backend_jgl2_)`(glfontexten
 gl_lines=: (qtgl_lines`jagl_lines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
 gl_nodblbuf=: (qtgl_nodblbuf`jagl_nodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
 gl_paint=: (qtgl_paint`jagl_paint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
-gl_paints=: (qtgl_paints`jagl_paints@.GL2Backend_jgl2_)`(glpaints_n_jgl2_&glbuf)@.0:
 gl_paintx=: (qtgl_paintx`jagl_paintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
 gl_pen=: (qtgl_pen`jagl_pen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
 gl_pie=: (qtgl_pie`jagl_pie@.GL2Backend_jgl2_)`(glpie_n_jgl2_&glbuf)@.glqmark
@@ -378,7 +374,6 @@ jagl_lines=: chkgl2 @: ((gllines_n_jgl2_ jaadverbc))
 jagl_nodblbuf=: chkgl2 @: ((glnodblbuf_n_jgl2_ jaadverbc)@:{.@(,&0))
 jagl_pen=: chkgl2 @: ((glpen_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
 jagl_paint=: chkgl2 @: ((glpaint_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
-jagl_paints=: chkgl2 @: ((glpaints_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
 jagl_paintx=: chkgl2 @: ((glpaintx_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
 jagl_pie=: chkgl2 @: ((glpie_n_jgl2_ jaadverbc))
 jagl_pixel=: chkgl2 @: ((glpixel_n_jgl2_ jaadverbc))
@@ -707,13 +702,6 @@ if. #stash_buf do. stash_buf=: 0$0 [ ja_glcmds stash_buf end.
 (glpaint_n_jgl2_ jaadverbb)$0
 0
 )
-ja_glpaints=: 3 : 0 "1
-if. #stash_buf do.
-  (glpaints_n_jgl2_ jaadverbb) stash_buf
-  gltrash''
-end.
-0
-)
 ja_glpaintx=: 3 : 0 "1
 if. #stash_buf do. stash_buf=: 0$0 [ ja_glcmds stash_buf end.
 (glpaintx_n_jgl2_ jaadverbb)$0
@@ -818,13 +806,6 @@ if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
 ('"',libjqt,'" glpaint >',(IFWIN#'+'),' i')&cd ''
 0
 )
-qt_glpaints=: 3 : 0 "1
-if. #stash_buf do.
-  ('"',libjqt,'" glpaints >',(IFWIN#'+'),' i')&cd stash_buf
-  gltrash''
-end.
-0
-)
 qt_glpaintx=: 3 : 0 "1
 if. #stash_buf do. stash_buf=: 0$0 [ qt_glcmds stash_buf end.
 ('"',libjqt,'" glpaintx >',(IFWIN#'+'),' i')&cd ''
@@ -893,8 +874,7 @@ stash_state=: 1
 EMPTY
 )
 gltrash=: 3 : 0"1
-stash_state=: 0 [ stash_buf=: 0$0
-EMPTY
+b [ stash_state=: 0 [ stash_buf=: 0$0 [ b=. stash_buf
 )
 glbuf=: 4 : 0"0 1
 assert. 1=stash_state
@@ -1003,7 +983,6 @@ glfontextent=: (qt_glfontextent`ja_glfontextent@.GL2Backend_jgl2_)`(glfontextent
 gllines=: (qt_gllines`ja_gllines@.GL2Backend_jgl2_)`(gllines_n_jgl2_&glbuf)@.glqmark
 glnodblbuf=: (qt_glnodblbuf`ja_glnodblbuf@.GL2Backend_jgl2_)`(glnodblbuf_n_jgl2_&glbuf)@.0:
 glpaint=: (qt_glpaint`ja_glpaint@.GL2Backend_jgl2_)`(glpaint_n_jgl2_&glbuf)@.0:
-glpaints=: (qt_glpaints`ja_glpaints@.GL2Backend_jgl2_)`(glpaints_n_jgl2_&glbuf)@.0:
 glpaintx=: (qt_glpaintx`ja_glpaintx@.GL2Backend_jgl2_)`(glpaintx_n_jgl2_&glbuf)@.0:
 glpen=: (qt_glpen`ja_glpen@.GL2Backend_jgl2_)`(glpen_n_jgl2_&glbuf)@.glqmark
 glpie=: (qt_glpie`ja_glpie@.GL2Backend_jgl2_)`(glpie_n_jgl2_&glbuf)@.glqmark
