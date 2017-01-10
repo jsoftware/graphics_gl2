@@ -1,5 +1,4 @@
 require^:IFQT 'ide/qt/keys'
-require^:IFJA 'ide/ja/keys'
 
 coclass 'jgl2'
 
@@ -16,12 +15,6 @@ if. IFQT do.
   RGBSEQ_j_=: 1
   GL2Backend=: 0
   locGL2_jgl2_=: <'jglcanvas'
-elseif. IFJA do.
-  GL2Backend=: 1
-  RGBSEQ_j_=: 1
-  locGL2_jgl2_=: <'jglcanvas'
-elseif. 'Android'-:UNAME do.
-  GL2Backend=: 0
 elseif. do.
   RGBSEQ_j_=: 1
   GL2Backend=: 0
@@ -139,32 +132,11 @@ if. IFQT do.
   kbALT=: Qt_Key_Alt_jqtide_
   kbSHIFT=: Qt_Key_Shift_jqtide_
   kbCTRL=: Qt_Key_Control_jqtide_
-elseif. 'Android'-:UNAME do.
-  kbBS=: 0
-  kbTAB=: 0
-  kbLF=: 0
-  kbENTER=: 0
-  kbRETURN=: 0
-  kbPUP=: 0
-  kbPDOWN=: 0
-  kbEND=: 0
-  kbHOME=: 0
-  kbLEFT=: 0
-  kbUP=: 0
-  kbRIGHT=: 0
-  kbDOWN=: 0
-  kbESC=: 0
-  kbINS=: 0
-  kbDEL=: 0
-  kbMETA=: 0
-  kbALT=: 0
-  kbSHIFT=: 0
-  kbCTRL=: 0
 end.
 EMPTY
 )
 3 : 0''
-if. IFJA +. IFQT *. 0~:#locGL2_jgl2_ do.
+if. IFQT *. 0~:#locGL2_jgl2_ do.
   glarc=: glarc__locGL2
   glarcx=: glarcx__locGL2
   glbrush=: glbrush__locGL2
@@ -345,104 +317,6 @@ gl_emfplay=: qtgl_emfplay`jagl_emfplay@.GL2Backend_jgl2_
 gl_file=: qtgl_file`jagl_file@.GL2Backend_jgl2_
 gl_roundr=: qtgl_roundr`jagl_roundr@.GL2Backend_jgl2_
 glsel=: glsel1`glsel2@.(2=3!:0)
-rpcinfinity=: 3 : 0
-<. 0 (I.(_=y)+.__=y)}y
-)
-
-jaadverbc=: 1 : 0
-ogl_jni_ (2+#y), m, <.y
-)
-
-chkgl2=: 13!:8@3:^:(0&<)
-jagl_arc=: chkgl2 @: ((glarc_n_jgl2_ jaadverbc))
-jagl_brush=: chkgl2 @: ((glbrush_n_jgl2_ jaadverbc) bind '')
-jagl_brushnull=: chkgl2 @: ((glbrushnull_n_jgl2_ jaadverbc) bind '')
-jagl_capture=: chkgl2 @: ((glcapture_n_jgl2_ jaadverbc))
-jagl_caret=: chkgl2 @: ((glcaret_n_jgl2_ jaadverbc))
-jagl_clear=: chkgl2 @: ((glclear_n_jgl2_ jaadverbc) bind '')
-jagl_clip=: chkgl2 @: ((glclip_n_jgl2_ jaadverbc))
-jagl_clipreset=: chkgl2 @: ((glclipreset_n_jgl2_ jaadverbc) bind '')
-jagl_cmds=: chkgl2 @: ((glcmds_n_jgl2_ jaadverbc)@:rpcinfinity)
-jagl_cursor=: chkgl2 @: ((glcursor_n_jgl2_ jaadverbc))
-jagl_ellipse=: chkgl2 @: ((glellipse_n_jgl2_ jaadverbc))
-jagl_fill=: chkgl2 @: ((glfill_n_jgl2_ jaadverbc))
-jagl_font=: chkgl2 @: ((glfont_n_jgl2_ jaadverbc)@:(a.&i.)@,)
-jagl_font2=: chkgl2 @: ((glfont2_n_jgl2_ jaadverbc))
-jagl_fontangle=: chkgl2 @: ((glfontangle_n_jgl2_ jaadverbc))
-jagl_fontextent=: chkgl2 @: ((glfontextent_n_jgl2_ jaadverbc)@:(a.&i.)@,)
-jagl_lines=: chkgl2 @: ((gllines_n_jgl2_ jaadverbc))
-jagl_nodblbuf=: chkgl2 @: ((glnodblbuf_n_jgl2_ jaadverbc)@:{.@(,&0))
-jagl_pen=: chkgl2 @: ((glpen_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
-jagl_paint=: chkgl2 @: ((glpaint_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
-jagl_paintx=: chkgl2 @: ((glpaintx_n_jgl2_ jaadverbc)@:(2 {. (,&1)))
-jagl_pie=: chkgl2 @: ((glpie_n_jgl2_ jaadverbc))
-jagl_pixel=: chkgl2 @: ((glpixel_n_jgl2_ jaadverbc))
-jagl_pixels=: chkgl2 @: ((glpixels_n_jgl2_ jaadverbc))
-jagl_pixelsx=: chkgl2 @: ((glpixelsx_n_jgl2_ jaadverbc))
-jagl_polygon=: chkgl2 @: ((glpolygon_n_jgl2_ jaadverbc))
-jagl_rect=: chkgl2 @: ((glrect_n_jgl2_ jaadverbc)@:rpcinfinity)
-jagl_rgb=: chkgl2 @: ((glrgb_n_jgl2_ jaadverbc))
-jagl_rgba=: chkgl2 @: ((glrgba_n_jgl2_ jaadverbc))
-jagl_sel=: chkgl2 @: ((glsel_n_jgl2_ jaadverbc))
-jagl_sel2=: chkgl2 @: ((glsel2_n_jgl2_ jaadverbc)@:(a.&i.)@,)
-jagl_text=: chkgl2 @: ((gltext_n_jgl2_ jaadverbc)@:(a.&i.)@,)
-jagl_textcolor=: chkgl2 @: ((gltextcolor_n_jgl2_ jaadverbc) bind '')
-jagl_textxy=: chkgl2 @: ((gltextxy_n_jgl2_ jaadverbc))
-jagl_waitgl=: chkgl2 @: ((glwaitgl_n_jgl2_ jaadverbc) bind '')
-jagl_waitnative=: chkgl2 @: ((glwaitnative_n_jgl2_ jaadverbc) bind '')
-jagl_windoworg=: chkgl2 @: ((glwindoworg_n_jgl2_ jaadverbc))
-
-jagl_setlocale=: chkgl2 @: ((glsetlocale_n_jgl2_ jaadverbc)@:(a.&i.)@,)
-jagl_qhandles=: 3 : 0"1
-chkgl2 (glqhandles_n_jgl2_ jaadverbc)$0
-glresult_jgl2_
-)
-jagl_qtype=: 3 : 0"1
-chkgl2 (glqtype_n_jgl2_ jaadverbc)$0
-glresult_jgl2_
-)
-jagl_qwh=: 3 : 0"1
-chkgl2 (glqwh_n_jgl2_ jaadverbc)$0
-glresult_jgl2_
-)
-jagl_qpixelm=: 3 : 0"1
-n=. */ 2{.2}.y
-pix=. n#2-2
-shape=. 2#2-2
-chkgl2 (glqpixelm_n_jgl2_ jaadverbc) y
-shape$pix
-)
-jagl_qpixels=: 3 : 0"1
-n=. */ 2{.2}.y
-pix=. n#2-2
-chkgl2 (glqpixels_n_jgl2_ jaadverbc) y
-glresult_jgl2_
-)
-jagl_qextent=: 3 : 0"1
-chkgl2 (glqextent_n_jgl2_ jaadverbc) a.&i. ,y
-glresult_jgl2_
-)
-jagl_qextentw=: 3 : 0"1
-y=. y,(LF~:{:y)#LF [ y=. ,y
-w=. (+/LF=y)#2-2
-chkgl2 (glqextentw_n_jgl2_ jaadverbc) a.&i. ,y
-glresult_jgl2_
-)
-jagl_qtextmetrics=: 3 : 0"1
-chkgl2 (glqtextmetrics_n_jgl2_ jaadverbc)$0
-glresult_jgl2_
-)
-jagl_setbrush=: gl_arcbrush @ gl_arcrgb
-jagl_setpen=: gl_arcpen @ ((1 1 [ gl_arcrgb) :((2 {. (,&1)) gl_arcrgb))
-jagl_print=: [:
-jagl_printmore=: [:
-jagl_qprintpaper=: [:
-jagl_qprintwh=: [:
-jagl_emfclose=: [:
-jagl_emfopen=: [:
-jagl_emfplay=: [:
-jagl_file=: [:
-jagl_roundr=: [:
 rpcinfinity=: 3 : 0
 <. 0 (I.(_=y)+.__=y)}y
 )
@@ -649,114 +523,6 @@ stash_buf=: 0$0
 create=: 0:
 destroy=: codestroy
 
-NB jandroid gl2
-
-rpcinfinity=: 3 : 0
-<. 0 (I.(_=y)+.__=y)}y
-)
-
-jaadverbb=: 1 : 0
-gl2_jni_ (2+#y), m, <.y
-)
-
-chkgl2=: 13!:8@3:^:(0&<)
-ja_glarc=: chkgl2 @: ((glarc_n_jgl2_ jaadverbb))
-ja_glbrush=: chkgl2 @: ((glbrush_n_jgl2_ jaadverbb) bind '')
-ja_glbrushnull=: chkgl2 @: ((glbrushnull_n_jgl2_ jaadverbb) bind '')
-ja_glcapture=: chkgl2 @: ((glcapture_n_jgl2_ jaadverbb))
-ja_glcaret=: chkgl2 @: ((glcaret_n_jgl2_ jaadverbb))
-ja_glclear=: chkgl2 @: ((glclear_n_jgl2_ jaadverbb) bind '')
-ja_glclip=: chkgl2 @: ((glclip_n_jgl2_ jaadverbb))
-ja_glclipreset=: chkgl2 @: ((glclipreset_n_jgl2_ jaadverbb) bind '')
-ja_glcmds=: chkgl2 @: ((glcmds_n_jgl2_ jaadverbb)@:rpcinfinity)
-ja_glcursor=: chkgl2 @: ((glcursor_n_jgl2_ jaadverbb))
-ja_glellipse=: chkgl2 @: ((glellipse_n_jgl2_ jaadverbb))
-ja_glfill=: chkgl2 @: ((glfill_n_jgl2_ jaadverbb))
-ja_glfont=: chkgl2 @: ((glfont_n_jgl2_ jaadverbb)@:(a.&i.)@,)
-ja_glfont2=: chkgl2 @: ((glfont2_n_jgl2_ jaadverbb))
-ja_glfontangle=: chkgl2 @: ((glfontangle_n_jgl2_ jaadverbb))
-ja_glfontextent=: chkgl2 @: ((glfontextent_n_jgl2_ jaadverbb)@:(a.&i.)@,)
-ja_gllines=: chkgl2 @: ((gllines_n_jgl2_ jaadverbb))
-ja_glnodblbuf=: chkgl2 @: ((glnodblbuf_n_jgl2_ jaadverbb)@:{.@(,&0))
-ja_glpen=: chkgl2 @: ((glpen_n_jgl2_ jaadverbb)@:(2 {. (,&1)))
-ja_glpie=: chkgl2 @: ((glpie_n_jgl2_ jaadverbb))
-ja_glpixel=: chkgl2 @: ((glpixel_n_jgl2_ jaadverbb))
-ja_glpixels=: chkgl2 @: ((glpixels_n_jgl2_ jaadverbb))
-ja_glpixelsx=: chkgl2 @: ((glpixelsx_n_jgl2_ jaadverbb))
-ja_glpolygon=: chkgl2 @: ((glpolygon_n_jgl2_ jaadverbb))
-ja_glrect=: chkgl2 @: ((glrect_n_jgl2_ jaadverbb)@:rpcinfinity)
-ja_glrgb=: chkgl2 @: ((glrgb_n_jgl2_ jaadverbb))
-ja_glrgba=: chkgl2 @: ((glrgba_n_jgl2_ jaadverbb))
-ja_glsel=: chkgl2 @: ((glsel_n_jgl2_ jaadverbb))
-ja_glsel2=: chkgl2 @: ((glsel2_n_jgl2_ jaadverbb)@:(a.&i.)@,)
-ja_gltext=: chkgl2 @: ((gltext_n_jgl2_ jaadverbb)@:(a.&i.)@,)
-ja_gltextcolor=: chkgl2 @: ((gltextcolor_n_jgl2_ jaadverbb) bind '')
-ja_gltextxy=: chkgl2 @: ((gltextxy_n_jgl2_ jaadverbb))
-ja_glwaitgl=: chkgl2 @: ((glwaitgl_n_jgl2_ jaadverbb) bind '')
-ja_glwaitnative=: chkgl2 @: ((glwaitnative_n_jgl2_ jaadverbb) bind '')
-ja_glwindoworg=: chkgl2 @: ((glwindoworg_n_jgl2_ jaadverbb))
-
-ja_glsetlocale=: chkgl2 @: ((glsetlocale_n_jgl2_ jaadverbb)@:(a.&i.)@,)
-ja_glpaint=: 3 : 0 "1
-if. #stash_buf do. stash_buf=: 0$0 [ ja_glcmds stash_buf end.
-(glpaint_n_jgl2_ jaadverbb)$0
-0
-)
-ja_glpaintx=: 3 : 0 "1
-if. #stash_buf do. stash_buf=: 0$0 [ ja_glcmds stash_buf end.
-(glpaintx_n_jgl2_ jaadverbb)$0
-0
-)
-ja_glqhandles=: 3 : 0"1
-chkgl2 (glqhandles_n_jgl2_ jaadverbb)$0
-glresult_jgl2_
-)
-ja_glqtype=: 3 : 0"1
-chkgl2 (glqtype_n_jgl2_ jaadverbb)$0
-glresult_jgl2_
-)
-ja_glqwh=: 3 : 0"1
-chkgl2 (glqwh_n_jgl2_ jaadverbb)$0
-glresult_jgl2_
-)
-ja_glqpixelm=: 3 : 0"1
-n=. */ 2{.2}.y
-pix=. n#2-2
-shape=. 2#2-2
-chkgl2 (glqpixelm_n_jgl2_ jaadverbb) y
-shape$pix
-)
-ja_glqpixels=: 3 : 0"1
-n=. */ 2{.2}.y
-pix=. n#2-2
-chkgl2 (glqpixels_n_jgl2_ jaadverbb) y
-glresult_jgl2_
-)
-ja_glqextent=: 3 : 0"1
-chkgl2 (glqextent_n_jgl2_ jaadverbb) a.&i. ,y
-glresult_jgl2_
-)
-ja_glqextentw=: 3 : 0"1
-y=. y,(LF~:{:y)#LF [ y=. ,y
-w=. (+/LF=y)#2-2
-chkgl2 (glqextentw_n_jgl2_ jaadverbb) a.&i. ,y
-glresult_jgl2_
-)
-ja_glqtextmetrics=: 3 : 0"1
-chkgl2 (glqtextmetrics_n_jgl2_ jaadverbb)$0
-glresult_jgl2_
-)
-ja_glsetbrush=: ja_glbrush @ ja_glrgb
-ja_glsetpen=: ja_glpen @ ((1 1 [ ja_glrgb) :((2 {. (,&1)) ja_glrgb))
-ja_glprint=: [:
-ja_glprintmore=: [:
-ja_glqprintpaper=: [:
-ja_glqprintwh=: [:
-ja_glemfclose=: [:
-ja_glemfopen=: [:
-ja_glemfplay=: [:
-ja_glfile=: [:
-ja_glroundr=: [:
 NB qt gl2
 
 rpcinfinity=: 3 : 0
