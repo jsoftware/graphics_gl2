@@ -8,7 +8,9 @@ Base class for gl2 commands.
 
 VERSION=: '1.0.95'
 
-RELEASE=: 'j806 j807'
+RELEASE=: 'j806'
+
+FOLDER=: 'graphics/gl2'
 
 FILES=: 0 : 0
 gl2.ijs
