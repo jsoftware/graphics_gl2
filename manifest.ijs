@@ -6,9 +6,9 @@ DESCRIPTION=: 0 : 0
 Base class for gl2 commands.
 )
 
-VERSION=: '1.0.95'
+VERSION=: '1.0.96'
 
-RELEASE=: 'j806'
+RELEASE=: 'j806 j807'
 
 FOLDER=: 'graphics/gl2'
 
